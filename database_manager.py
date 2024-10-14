@@ -18,7 +18,7 @@ class DatabaseManager:
         design_str = """CREATE TABLE IF NOT EXISTS Design (
                             design_id INT PRIMARY KEY,
                             name VARCHAR(50) NOT NULL,
-                            theme VARCHAR(50) NOT NULL
+                            theme VARCHAR(50)
                         );"""
         self.cursor.execute(design_str)
 
@@ -44,9 +44,9 @@ class DatabaseManager:
 
         component_str = """CREATE TABLE IF NOT EXISTS Component (
                                component_id INT PRIMARY KEY,
-                               name VARCHAR(50),
-                               stock INT,
-                               low_stock_warning INT
+                               name VARCHAR(50) NOT NULL,
+                               stock INT NOT NULL,
+                               low_stock_warning INT NOT NULL
                            );"""
         self.cursor.execute(component_str)
 
