@@ -1,0 +1,38 @@
+product
+	- type/category (earring/necklace/bauble etc)
+	- design/family (web, heart etc)
+	- colour
+	- stock
+	- items used to make (hooks, rings etc)
+	- packaging used
+	
+boxes
+	- size
+	- colour
+	- stock
+	
+pouches
+	- size
+	- material
+	- stock
+
+panda wrapping paper
+	- stock
+
+earring stoppers
+	- stock
+
+earring jump rings
+	-size
+	
+earring hooks
+	- metal type
+	- hook or clip-on
+	
+-----------------------------------------------------------------
+
+low stock check for prints
+low stock check for accessories/packaging/other
+low stock checks whenever stock is adjusted?
+click button whenever item is sold to automatically adjust stock level of item
+	and all accessories (e.g. hooks, rings, packaging)
