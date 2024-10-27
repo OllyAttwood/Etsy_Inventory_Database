@@ -57,5 +57,22 @@ class DatabaseManager:
                                 FOREIGN KEY(product_id) REFERENCES Product(product_id),
                                 FOREIGN KEY(component_id) REFERENCES Component(component_id)
                             );"""
+        self.cursor.execute(made_using_str)
+
+        self.connection.commit()
+
+    #insert a single row of data to a table
+    #user must not be able to type in table_name directly as SQL injection placeholder
+    #doesn't work with table names - table_name must be picked from drop-down list
+    def insert_data(self, table_name, data_row):
+        #as data_row has variable number of elements depending on which table is
+        #being inserted into, the number of question marks in the insertion
+        #string must also vary
+        question_mark_str = "?"
+        for _ in range(len(data_row) - 1):
+            question_mark_str += ", ?"
+
+        insert_str = f"INSERT INTO {table_name} VALUES ({question_mark_str})"
+        self.cursor.execute(insert_str, data_row)
 
         self.connection.commit()
