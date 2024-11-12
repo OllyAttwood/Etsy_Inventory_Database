@@ -65,4 +65,9 @@ def insert_dummy_data(db):
         db.insert_data("MadeUsing", made_using_row)
 
 db = DatabaseManager()
-insert_dummy_data(db)
+
+#insert_dummy_data(db)
+db.view_filtered_products(name_search="Web necklace - black", design="Web", design_theme="halloween", type="necklace", subtype="metal chain", colour="black", stock_level=1)
+#db.view_filtered_products(name_search="Web necklace - black", colour="black", stock_level=1)
+
+db.close_connection()

@@ -89,3 +89,41 @@ class DatabaseManager:
         self.cursor.execute(insert_str, data_row)
 
         self.connection.commit()
+
+    #queries the database for products
+    def view_filtered_products(self, name_search=None, design=None, design_theme=None,
+                               type=None, subtype=None, colour=None, stock_level=None):
+        params = (name_search, design, design_theme, type, subtype, colour,
+                  stock_level)
+        product_query = """SELECT *
+                           FROM Product
+                           JOIN Design
+                           ON Product.design_id=Design.design_id
+                           JOIN ProductType
+                           ON Product.product_type_id=ProductType.product_type_id"""
+
+        #if at least one filter should be applied, add a WHERE clause
+        if not all([param is None for param in params]):
+            product_query += " WHERE "
+
+            if name_search:
+                product_query += f"Product.name='{name_search}' AND "
+            if design:
+                product_query += f"Design.name='{design}' AND "
+            if design_theme:
+                product_query += f"Design.theme='{design_theme}' AND "
+            if type:
+                product_query += f"ProductType.type='{type}' AND "
+            if subtype:
+                product_query += f"ProductType.sub_type='{subtype}' AND "
+            if colour:
+                product_query += f"Product.colour='{colour}' AND "
+            if stock_level:
+                product_query += f"Product.stock={stock_level} AND"
+
+            product_query = product_query[:-4] #remove final " AND"
+
+
+        res = self.cursor.execute(product_query)
+        for row in res.fetchall():
+            print(row)
