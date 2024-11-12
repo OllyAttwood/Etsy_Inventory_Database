@@ -90,6 +90,11 @@ class DatabaseManager:
 
         self.connection.commit()
 
+    #creates each step of the WHERE clause
+    def build_where_clause(self, db_col_name):
+        clause = f"{db_col_name}= ? AND "
+        return clause
+
     #queries the database for products
     def view_filtered_products(self, name_search=None, design=None, design_theme=None,
                                type=None, subtype=None, colour=None, stock_level=None):
@@ -101,29 +106,37 @@ class DatabaseManager:
                            ON Product.design_id=Design.design_id
                            JOIN ProductType
                            ON Product.product_type_id=ProductType.product_type_id"""
+        query_vals = []
 
-        #if at least one filter should be applied, add a WHERE clause
+        #if at least one filter should be applied, add the WHERE clause
         if not all([param is None for param in params]):
             product_query += " WHERE "
 
             if name_search:
-                product_query += f"Product.name='{name_search}' AND "
+                product_query += self.build_where_clause("Product.name")
+                query_vals.append(name_search)
             if design:
-                product_query += f"Design.name='{design}' AND "
+                product_query += self.build_where_clause("Design.name")
+                query_vals.append(design)
             if design_theme:
-                product_query += f"Design.theme='{design_theme}' AND "
+                product_query += self.build_where_clause("Design.theme")
+                query_vals.append(design_theme)
             if type:
-                product_query += f"ProductType.type='{type}' AND "
+                product_query += self.build_where_clause("ProductType.type")
+                query_vals.append(type)
             if subtype:
-                product_query += f"ProductType.sub_type='{subtype}' AND "
+                product_query += self.build_where_clause("ProductType.sub_type")
+                query_vals.append(subtype)
             if colour:
-                product_query += f"Product.colour='{colour}' AND "
+                product_query += self.build_where_clause("Product.colour")
+                query_vals.append(colour)
             if stock_level:
-                product_query += f"Product.stock={stock_level} AND"
+                product_query += self.build_where_clause("Product.stock")
+                query_vals.append(stock_level)
 
             product_query = product_query[:-4] #remove final " AND"
 
 
-        res = self.cursor.execute(product_query)
+        res = self.cursor.execute(product_query, query_vals)
         for row in res.fetchall():
             print(row)
