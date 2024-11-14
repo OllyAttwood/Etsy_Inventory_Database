@@ -91,8 +91,9 @@ class DatabaseManager:
         self.connection.commit()
 
     #creates each step of the WHERE clause
-    def build_where_clause(self, db_col_name):
+    def build_where_clause(self, db_col_name, query_vals, query_value):
         clause = f"{db_col_name}= ? AND "
+        query_vals.append(query_value)
         return clause
 
     #queries the database for products
@@ -113,26 +114,19 @@ class DatabaseManager:
             product_query += " WHERE "
 
             if name_search:
-                product_query += self.build_where_clause("Product.name")
-                query_vals.append(name_search)
+                product_query += self.build_where_clause("Product.name", query_vals, name_search)
             if design:
-                product_query += self.build_where_clause("Design.name")
-                query_vals.append(design)
+                product_query += self.build_where_clause("Design.name", query_vals, design)
             if design_theme:
-                product_query += self.build_where_clause("Design.theme")
-                query_vals.append(design_theme)
+                product_query += self.build_where_clause("Design.theme", query_vals, design_theme)
             if type:
-                product_query += self.build_where_clause("ProductType.type")
-                query_vals.append(type)
+                product_query += self.build_where_clause("ProductType.type", query_vals, type)
             if subtype:
-                product_query += self.build_where_clause("ProductType.sub_type")
-                query_vals.append(subtype)
+                product_query += self.build_where_clause("ProductType.sub_type", query_vals, subtype)
             if colour:
-                product_query += self.build_where_clause("Product.colour")
-                query_vals.append(colour)
+                product_query += self.build_where_clause("Product.colour", query_vals, colour)
             if stock_level:
-                product_query += self.build_where_clause("Product.stock")
-                query_vals.append(stock_level)
+                product_query += self.build_where_clause("Product.stock", query_vals, stock_level)
 
             product_query = product_query[:-4] #remove final " AND"
 
