@@ -91,8 +91,22 @@ class DatabaseManager:
         self.connection.commit()
 
     #creates each step of the WHERE clause
-    def build_where_clause(self, db_col_name, query_vals, query_value):
-        clause = f"{db_col_name}= ? AND "
+    #like should only be True if we are using LIKE in the WHERE clause rather
+    #than an equality check
+    def build_where_clause(self, db_col_name, query_vals, query_value, like=False):
+        clause = db_col_name
+
+        #if we should us LIKE or = in the query
+        if like:
+            clause += " LIKE ?"
+             #we can't put % signs directly around ? as it doesn't work
+             # see https://stackoverflow.com/a/3105370
+            query_value = f"%{query_value}%"
+        else:
+            clause += " = ?"
+
+        clause += " AND "
+
         query_vals.append(query_value)
         return clause
 
@@ -115,8 +129,10 @@ class DatabaseManager:
         #loop through params and add to where clause where there is a value to filter
         for param, db_column in params_with_db_cols:
             if param:
-                #TODO if param is name_search:
-                where_clauses.append(self.build_where_clause(db_column, query_vals, param))
+                if param is name_search:
+                    where_clauses.append(self.build_where_clause(db_column, query_vals, param, like=True))
+                else:
+                    where_clauses.append(self.build_where_clause(db_column, query_vals, param))
 
         if where_clauses:
             product_query += " WHERE " + "".join(where_clauses)
