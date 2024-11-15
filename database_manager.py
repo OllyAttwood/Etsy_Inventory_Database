@@ -96,40 +96,31 @@ class DatabaseManager:
         query_vals.append(query_value)
         return clause
 
-    #queries the database for products
+    #queries the database for roducts
     def view_filtered_products(self, name_search=None, design=None, design_theme=None,
                                type=None, subtype=None, colour=None, stock_level=None):
-        params = (name_search, design, design_theme, type, subtype, colour,
-                  stock_level)
+        params_with_db_cols = ((name_search, "Product.name"), (design, "Design.name"),
+                                 (design_theme, "Design.theme"), (type, "ProductType.type"),
+                                 (subtype, "ProductType.sub_type"),
+                                 (colour, "Product.colour"), (stock_level, "Product.stock"))
         product_query = """SELECT *
                            FROM Product
                            JOIN Design
                            ON Product.design_id=Design.design_id
                            JOIN ProductType
                            ON Product.product_type_id=ProductType.product_type_id"""
+        where_clauses = []
         query_vals = []
 
-        #if at least one filter should be applied, add the WHERE clause
-        if not all([param is None for param in params]):
-            product_query += " WHERE "
+        #loop through params and add to where clause where there is a value to filter
+        for param, db_column in params_with_db_cols:
+            if param:
+                #TODO if param is name_search:
+                where_clauses.append(self.build_where_clause(db_column, query_vals, param))
 
-            if name_search:
-                product_query += self.build_where_clause("Product.name", query_vals, name_search)
-            if design:
-                product_query += self.build_where_clause("Design.name", query_vals, design)
-            if design_theme:
-                product_query += self.build_where_clause("Design.theme", query_vals, design_theme)
-            if type:
-                product_query += self.build_where_clause("ProductType.type", query_vals, type)
-            if subtype:
-                product_query += self.build_where_clause("ProductType.sub_type", query_vals, subtype)
-            if colour:
-                product_query += self.build_where_clause("Product.colour", query_vals, colour)
-            if stock_level:
-                product_query += self.build_where_clause("Product.stock", query_vals, stock_level)
-
+        if where_clauses:
+            product_query += " WHERE " + "".join(where_clauses)
             product_query = product_query[:-4] #remove final " AND"
-
 
         res = self.cursor.execute(product_query, query_vals)
         for row in res.fetchall():
