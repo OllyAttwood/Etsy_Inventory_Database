@@ -110,19 +110,13 @@ class DatabaseManager:
         query_vals.append(query_value)
         return clause
 
-    #queries the database for roducts
-    def view_filtered_products(self, name_search=None, design=None, design_theme=None,
-                               type=None, subtype=None, colour=None, stock_level=None):
-        params_with_db_cols = ((name_search, "Product.name"), (design, "Design.name"),
-                                 (design_theme, "Design.theme"), (type, "ProductType.type"),
-                                 (subtype, "ProductType.sub_type"),
-                                 (colour, "Product.colour"), (stock_level, "Product.stock"))
-        product_query = """SELECT *
-                           FROM Product
-                           JOIN Design
-                           ON Product.design_id=Design.design_id
-                           JOIN ProductType
-                           ON Product.product_type_id=ProductType.product_type_id"""
+    #queries the database for products/components
+    #this method shouldn't be called directly - use view_filtered_products() or
+    #view_filtered_components() instead
+    def view_filtered_items(self, params_with_db_cols, query_without_where_clause, name_search=None,
+                            design=None, design_theme=None, type=None, subtype=None, colour=None,
+                            stock_level=None):
+        product_query = query_without_where_clause
         where_clauses = []
         query_vals = []
 
@@ -141,3 +135,27 @@ class DatabaseManager:
         res = self.cursor.execute(product_query, query_vals)
         for row in res.fetchall():
             print(row)
+
+    def view_filtered_products(self, name_search=None, design=None, design_theme=None,
+                               type=None, subtype=None, colour=None, stock_level=None):
+        product_query = """SELECT *
+                           FROM Product
+                           JOIN Design
+                           ON Product.design_id=Design.design_id
+                           JOIN ProductType
+                           ON Product.product_type_id=ProductType.product_type_id"""
+
+        params_with_db_cols = ((name_search, "Product.name"), (design, "Design.name"),
+                               (design_theme, "Design.theme"), (type, "ProductType.type"),
+                               (subtype, "ProductType.sub_type"), (colour, "Product.colour"),
+                               (stock_level, "Product.stock"))
+
+        self.view_filtered_items(params_with_db_cols, product_query, name_search, design,
+                                 design_theme, type, subtype, stock_level)
+
+    def view_filtered_components(self, name_search=None, stock_level=None):
+        product_query = """SELECT *
+                           FROM Component"""
+        params_with_db_cols = ((name_search, "Component.name"), (stock_level, "Component.stock"))
+
+        self.view_filtered_items(params_with_db_cols, product_query, name_search, stock_level)
