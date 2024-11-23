@@ -37,16 +37,16 @@ def insert_dummy_data(db):
                  ["Planet bauble - blue", "blue", 1, 1, 3, 4],
                  ["Chunky chain necklace - yellow", "yellow", 1, 1, 4, 3],
                  ["Chunky chain necklace - pink", "pink", 1, 1, 4, 3],
-                 ["Chunky chain necklace - pink", "pink", 1, 1, 4, 3]]
+                 ["Chunky chain necklace - blue", "blue", 1, 1, 4, 3]]
 
     for prod_row in prod_rows:
         db.insert_data("Product", prod_row)
 
     #components
     comp_rows = [["Jump ring - small", 146, 50],
-                 ["Jump ring - large", 52, 15],
+                 ["Jump ring - large", 12, 15],
                  ["Earring back", 123, 50],
-                 ["Earring hook - stainless steel", 77, 50],
+                 ["Earring hook - stainless steel", 46, 50],
                  ["Necklace chain - stainless steel", 8, 5],
                  ["Bauble ribbon", 23, 10]]
 
@@ -69,6 +69,7 @@ db = DatabaseManager()
 #insert_dummy_data(db)
 #db.view_filtered_products(name_search="Web necklace - black", design="Web", design_theme="halloween", type="necklace", subtype="metal chain", colour="black", stock_level=1)
 #db.view_filtered_products(name_search="Web necklace", design="Web", design_theme="halloween", type="necklace", subtype="metal chain", stock_level=1)
-db.view_filtered_components(name_search="Earring")
+#db.view_filtered_components(name_search="Earring")
+db.view_low_stock_items()
 
 db.close_connection()

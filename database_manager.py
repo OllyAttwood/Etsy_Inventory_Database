@@ -159,3 +159,26 @@ class DatabaseManager:
         params_with_db_cols = ((name_search, "Component.name"), (stock_level, "Component.stock"))
 
         self.view_filtered_items(params_with_db_cols, product_query, name_search, stock_level)
+
+    def view_low_stock_items(self, products=True, components=True):
+        def create_query(table_name):
+            return f"""SELECT name, stock, low_stock_warning
+                       FROM {table_name}
+                       WHERE stock <= low_stock_warning"""
+
+        product_query = create_query("Product")
+        component_query = create_query("Component")
+        full_query = ""
+
+        items_and_queries = [(products, product_query), (components, component_query)]
+
+        for item, query in items_and_queries:
+            if item:
+                if len(full_query) > 0:
+                    full_query += " UNION "
+
+                full_query += query
+
+        res = self.cursor.execute(full_query)
+        for row in res.fetchall():
+            print(row)
