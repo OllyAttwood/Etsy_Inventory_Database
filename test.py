@@ -69,7 +69,9 @@ db = DatabaseManager()
 #insert_dummy_data(db)
 #db.view_filtered_products(name_search="Web necklace - black", design="Web", design_theme="halloween", type="necklace", subtype="metal chain", colour="black", stock_level=1)
 #db.view_filtered_products(name_search="Web necklace", design="Web", design_theme="halloween", type="necklace", subtype="metal chain", stock_level=1)
-#db.view_filtered_components(name_search="Earring")
+#db.view_filtered_components(name_search="Jump ring")
+#db.update_component_stock_level(2, 7) #Jump ring - large
+db.update_product_stock_level(14, 0) #chunky yellow chain necklace
 db.view_low_stock_items()
 
 db.close_connection()
