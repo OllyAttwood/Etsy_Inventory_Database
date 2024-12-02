@@ -7,7 +7,7 @@ class DBTabView(customtkinter.CTkTabview):
     tab_names = ("View Items", "Add New Item", "Low Stock")
 
     def __init__(self, master, **kwargs):
-        super().__init__(master, **kwargs)
+        super().__init__(master, border_width=3, **kwargs)
 
         for tab_name in DBTabView.tab_names:
             self.add(tab_name)
@@ -19,6 +19,6 @@ class DBTabView(customtkinter.CTkTabview):
 
         for i, frame in enumerate([self.view_items_frame, self.add_new_item_frame,
                                    self.low_stock_frame]):
-            frame.grid(row=0, column=0)
+            frame.grid(row=0, column=0, sticky="nesw")
             self.tab(self.tab_names[i]).grid_rowconfigure(0, weight=1)
             self.tab(self.tab_names[i]).grid_columnconfigure(0, weight=1)
