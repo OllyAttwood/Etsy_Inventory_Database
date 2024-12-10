@@ -1,4 +1,5 @@
 import customtkinter
+from spinbox import Spinbox
 
 class AddNewItemFrame(customtkinter.CTkFrame):
     def __init__(self, master):
@@ -63,22 +64,14 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         # stock
         stock_lbl = customtkinter.CTkLabel(self, text="Stock:")
         self.add_label(stock_lbl, row=7)
-        stock_minus_button = self.create_plus_minus_button("-")
-        self.add_label(stock_minus_button, row=7, col=1)
-        stock_entry = customtkinter.CTkEntry(self)
-        self.add_label(stock_entry, row=7, col=2)
-        stock_plus_button = self.create_plus_minus_button("+")
-        self.add_label(stock_plus_button, row=7, col=3)
+        stock_spinbox = Spinbox(self)
+        self.add_input_widget(stock_spinbox, row=7)
 
         # low stock
         low_stock_lbl = customtkinter.CTkLabel(self, text="Low Stock Warning:")
         self.add_label(low_stock_lbl, row=8)
-        low_stock_minus_button = self.create_plus_minus_button("-")
-        self.add_label(low_stock_minus_button, row=8, col=1)
-        low_stock_entry = customtkinter.CTkEntry(self)
-        self.add_label(low_stock_entry, row=8, col=2)
-        low_stock_plus_button = self.create_plus_minus_button("+")
-        self.add_label(low_stock_plus_button, row=8, col=3)
+        low_stock_spinbox = Spinbox(self)
+        self.add_input_widget(low_stock_spinbox, row=8)
 
     def add_label(self, lbl_widget, row, col=0):
         lbl_widget.grid(row=row, column=col)
