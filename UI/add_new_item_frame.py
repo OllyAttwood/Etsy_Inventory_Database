@@ -5,6 +5,7 @@ class AddNewItemFrame(customtkinter.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
 
+        self.manage_component_window = None
         self.widget_grid = []
 
         # item type
@@ -59,6 +60,12 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         low_stock_spinbox = Spinbox(self)
         self.widget_grid.append([low_stock_lbl_str, low_stock_spinbox])
 
+        # components
+        components_lbl_str = "Components:"
+        components_button = customtkinter.CTkButton(self, text="Manage components...",
+                                                    command=self.component_button_click)
+        self.widget_grid.append([components_lbl_str, components_button])
+
         #loop through widget_grid, adding widgets
         for row_num, row_widgets in enumerate(self.widget_grid):
             for col_num, widget in enumerate(row_widgets):
@@ -67,3 +74,53 @@ class AddNewItemFrame(customtkinter.CTkFrame):
                     widget = customtkinter.CTkLabel(self, text=widget)
 
                 widget.grid(row=row_num, column=col_num)
+
+    def component_button_click(self):
+        if not self.manage_component_window:
+            self.manage_component_window = ManageComponentWindow()
+        else:
+            self.manage_component_window.reappear()
+
+class ManageComponentWindow(customtkinter.CTkToplevel):
+    def __init__(self):
+        super().__init__()
+
+        # lock popup at front
+        self.attributes("-topmost", "true")
+        # make main window unclickable until popup is closed
+        self.lock_at_front()
+
+        # override the exit button as exiting produces an error, so we just
+        # hide the window and restore it if necessary
+        self.protocol("WM_DELETE_WINDOW", self.release_focus_and_hide)
+
+        #CHANGE THIS - hard-coded examples
+        component_data = [["Earring hook", 11],
+                          ["Jump ring - large", 31],
+                          ["Necklace chain", 4],
+                          ["Earring back", 77],
+                          ["Earring pouch", 27]]
+
+        self.display_components(component_data)
+
+    # hides window
+    def release_focus_and_hide(self):
+        self.grab_release()
+        self.withdraw()
+
+    # make main window unclickable until popup is closed
+    def lock_at_front(self):
+        self.wait_visibility() # https://raspberrypi.stackexchange.com/a/105522
+        self.grab_set()
+
+    def reappear(self):
+        self.deiconify()
+        self.lock_at_front()
+
+    def display_components(self, component_data):
+        #loop through component_data, adding widgets
+        for row_num, component_row in enumerate(component_data):
+            label = customtkinter.CTkLabel(self, text=component_row[0])
+            label.grid(row=row_num, column=0)
+            stock_spinbox = Spinbox(self, initial_value=component_row[1])
+            stock_spinbox.grid(row=row_num, column=1)

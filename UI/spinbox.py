@@ -8,11 +8,13 @@ class Spinbox(customtkinter.CTkFrame):
                  height: int = 32,
                  step_size: int = 1,
                  command: Callable = None,
+                 initial_value=0,
                  **kwargs):
         super().__init__(*args, width=width, height=height, **kwargs)
 
         self.step_size = step_size
         self.command = command
+        self.initial_value = initial_value
 
         self.grid_columnconfigure((0, 2), weight=0)  # buttons don't expand
         self.grid_columnconfigure(1, weight=1)  # entry expands
@@ -31,7 +33,7 @@ class Spinbox(customtkinter.CTkFrame):
         self.add_button.grid(row=0, column=2, padx=(0, 3), pady=3)
 
         # default value
-        self.entry.insert(0, "0")
+        self.entry.insert(0, str(self.initial_value))
 
     def button_callback(self, add_or_subtract):
         if self.command is not None:
