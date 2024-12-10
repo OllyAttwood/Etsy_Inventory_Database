@@ -67,6 +67,3 @@ class AddNewItemFrame(customtkinter.CTkFrame):
                     widget = customtkinter.CTkLabel(self, text=widget)
 
                 widget.grid(row=row_num, column=col_num)
-
-    def create_plus_minus_button(self, char):
-        return customtkinter.CTkButton(self, text=char, width=self.plus_minus_button_width)
