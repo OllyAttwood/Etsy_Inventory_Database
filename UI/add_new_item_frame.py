@@ -5,8 +5,6 @@ class AddNewItemFrame(customtkinter.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
 
-        self.plus_minus_button_width = 30
-
         # item type
         product_component_lbl = customtkinter.CTkLabel(self, text="Item Type:")
         self.add_label(product_component_lbl, row=0)
