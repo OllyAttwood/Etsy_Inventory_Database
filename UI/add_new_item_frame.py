@@ -75,6 +75,11 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 
                 widget.grid(row=row_num, column=col_num)
 
+        # add new item button
+        add_item_button = customtkinter.CTkButton(self, text="Add item")
+        row_num += 1 #cheeky reuse of loop variable
+        add_item_button.grid(row=row_num, column=1)
+
     def component_button_click(self):
         if not self.manage_component_window:
             self.manage_component_window = ManageComponentWindow()
