@@ -84,6 +84,7 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 class ManageComponentWindow(customtkinter.CTkToplevel):
     def __init__(self):
         super().__init__()
+        self.title("Manage Components")
 
         # lock popup at front
         self.attributes("-topmost", "true")
