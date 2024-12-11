@@ -125,3 +125,7 @@ class ManageComponentWindow(customtkinter.CTkToplevel):
             label.grid(row=row_num, column=0)
             stock_spinbox = Spinbox(self, initial_value=component_row[1])
             stock_spinbox.grid(row=row_num, column=1)
+
+        close_button = customtkinter.CTkButton(self, text="Close", command=self.release_focus_and_hide)
+        row_num += 1 # using the loop variable - cheeky
+        close_button.grid(row=row_num, column=0)
