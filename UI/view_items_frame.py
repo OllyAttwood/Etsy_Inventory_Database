@@ -18,3 +18,6 @@ class ViewItemsFrame(customtkinter.CTkFrame):
         self.table.grid(row=1, column=0)
 
         self.grid_columnconfigure(0, weight=1)
+
+    def update_table(self, data=[]):
+        self.table.grid_forget()
