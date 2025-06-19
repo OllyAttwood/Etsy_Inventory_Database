@@ -72,6 +72,6 @@ db = DatabaseManager()
 #db.view_filtered_components(name_search="Jump ring")
 #db.update_component_stock_level(2, 7) #Jump ring - large
 db.update_product_stock_level(14, 0) #chunky yellow chain necklace
-db.view_low_stock_items()
+print(db.view_low_stock_items())
 
 db.close_connection()
