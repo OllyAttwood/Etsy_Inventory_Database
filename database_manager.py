@@ -133,8 +133,11 @@ class DatabaseManager:
             product_query = product_query[:-4] #remove final " AND"
 
         res = self.cursor.execute(product_query, query_vals)
+        return_list = []
         for row in res.fetchall():
-            print(row)
+            return_list.append(row)
+
+        return return_list
 
     def view_filtered_products(self, name_search=None, design=None, design_theme=None,
                                type=None, subtype=None, colour=None, stock_level=None):
@@ -150,7 +153,7 @@ class DatabaseManager:
                                (subtype, "ProductType.sub_type"), (colour, "Product.colour"),
                                (stock_level, "Product.stock"))
 
-        self.view_filtered_items(params_with_db_cols, product_query, name_search, design,
+        return self.view_filtered_items(params_with_db_cols, product_query, name_search, design,
                                  design_theme, type, subtype, stock_level)
 
     def view_filtered_components(self, name_search=None, stock_level=None):
@@ -158,7 +161,7 @@ class DatabaseManager:
                            FROM Component"""
         params_with_db_cols = ((name_search, "Component.name"), (stock_level, "Component.stock"))
 
-        self.view_filtered_items(params_with_db_cols, product_query, name_search, stock_level)
+        return self.view_filtered_items(params_with_db_cols, product_query, name_search, stock_level)
 
     def view_low_stock_items(self, products=True, components=True):
         def create_query(table_name):
@@ -180,8 +183,11 @@ class DatabaseManager:
                 full_query += query
 
         res = self.cursor.execute(full_query)
+        return_list = []
         for row in res.fetchall():
-            print(row)
+            return_list.append(row)
+
+        return return_list
 
     #alters stock level for products/components
     #this method shouldn't be called directly - use update_product_stock_level() or
