@@ -2,6 +2,7 @@
 from UI.app import App
 from presenter import Presenter
 
-presenter = Presenter()
-app = App(presenter)
-app.mainloop()
+if __name__ == "__main__":
+    presenter = Presenter()
+    app = App(presenter)
+    app.mainloop()
