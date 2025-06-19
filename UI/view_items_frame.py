@@ -1,11 +1,13 @@
 import customtkinter
 from tkinter import StringVar
-from custom_table import CustomTable
-from filter_bar_frame import FilterBarFrame
+from UI.custom_table import CustomTable
+from UI.filter_bar_frame import FilterBarFrame
 
 class ViewItemsFrame(customtkinter.CTkFrame):
-    def __init__(self, master):
+    def __init__(self, master, presenter):
         super().__init__(master)
+
+        self.presenter = presenter
 
         filter_bar = FilterBarFrame(self)
         filter_bar.grid(row=0, column=0, pady=10)

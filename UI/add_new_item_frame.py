@@ -1,5 +1,5 @@
 import customtkinter
-from spinbox import Spinbox
+from UI.spinbox import Spinbox
 
 class AddNewItemFrame(customtkinter.CTkFrame):
     def __init__(self, master):

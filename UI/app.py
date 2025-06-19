@@ -1,9 +1,11 @@
 import customtkinter
-from db_tab_view import DBTabView
+from UI.db_tab_view import DBTabView
 
 class App(customtkinter.CTk):
-    def __init__(self):
+    def __init__(self, presenter):
         super().__init__()
+
+        self.presenter = presenter
 
         customtkinter.set_appearance_mode("dark")
         self.title("Product Database")
@@ -14,10 +16,7 @@ class App(customtkinter.CTk):
         self.geometry(f"{screen_width}x{screen_height}")
 
         # tab view
-        self.tab_view = DBTabView(master=self)
+        self.tab_view = DBTabView(master=self, presenter=presenter)
         self.tab_view.grid(row=0, column=0, sticky="nesw")
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
-
-app = App()
-app.mainloop()
