@@ -21,3 +21,5 @@ class ViewItemsFrame(customtkinter.CTkFrame):
 
     def update_table(self, data=[]):
         self.table.grid_forget()
+
+        #TODO update table with new filters
