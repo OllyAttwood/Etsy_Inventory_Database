@@ -137,7 +137,12 @@ class DatabaseManager:
         for row in res.fetchall():
             return_list.append(row)
 
-        return return_list
+        column_names = self.get_column_names_most_recent_query()
+
+        return {
+            "column_names": column_names,
+            "data": return_list
+        }
 
     def view_filtered_products(self, name_search=None, design=None, design_theme=None,
                                type=None, subtype=None, colour=None, stock_level=None):
@@ -187,7 +192,12 @@ class DatabaseManager:
         for row in res.fetchall():
             return_list.append(row)
 
-        return return_list
+        column_names = self.get_column_names_most_recent_query()
+
+        return {
+            "column_names": column_names,
+            "data": return_list
+        }
 
     #alters stock level for products/components
     #this method shouldn't be called directly - use update_product_stock_level() or
@@ -211,3 +221,6 @@ class DatabaseManager:
 
     def update_component_stock_level(self, id, new_stock_level):
         self.update_item_stock_level("Component", id, new_stock_level)
+
+    def get_column_names_most_recent_query(self):
+        return [col[0] for col in self.cursor.description]
