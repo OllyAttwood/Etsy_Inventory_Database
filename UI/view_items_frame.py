@@ -12,8 +12,8 @@ class ViewItemsFrame(customtkinter.CTkFrame):
         filter_bar = FilterBarFrame(self)
         filter_bar.grid(row=0, column=0, pady=10)
 
-        full_data = self.presenter.get_filtered_products()
-        #TODO convert column names into more user-friendly names (capitalise, remove underscores etc)
+        full_data = self.presenter.get_filtered_products() #gets initial data
+
         self.table = CustomTable(self, full_data["data"], full_data["column_names"])
         self.table.grid(row=1, column=0)
 
