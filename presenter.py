@@ -6,12 +6,14 @@ class Presenter:
 
     def get_filtered_items(self, filters_dict=None):
         """Get the products according to the provided filters, and tidy up the column names"""
-        if filters_dict is None: #no filters applied
+        if filters_dict is None: #no filters applied initially
             filtered_items = self.db_manager.view_filtered_products()
         elif filters_dict["Item Type"] == "Product":
             filtered_items = self.db_manager.view_filtered_products(filters_dict["Name"], filters_dict["Design"],
                                                                     filters_dict["Theme"], filters_dict["Type"],
                                                                     filters_dict["Sub-type"], filters_dict["Colour"])
+        elif filters_dict["Item Type"] == "Component":
+            filtered_items = self.db_manager.view_filtered_components(filters_dict["Name"])
 
         filtered_items["column_names"] = self.process_column_names(filtered_items["column_names"])
 
