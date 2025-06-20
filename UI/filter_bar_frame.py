@@ -60,6 +60,9 @@ class FilterBarFrame(customtkinter.CTkFrame):
         self.colour_dropdown = customtkinter.CTkOptionMenu(self, values=colour_options)
         self.add_input_widget(self.colour_dropdown)
 
+        #initialise the filter state dictionary - to be used to check if the filters have actually been changed
+        self.current_filter_values = self.get_current_filter_values()
+
     def add_label(self, lbl_widget):
         lbl_widget.grid(row=0, column=self.current_widget_num, padx=self.lbl_padx, pady=self.pady)
         self.current_widget_num += 1
@@ -69,15 +72,22 @@ class FilterBarFrame(customtkinter.CTkFrame):
         self.current_widget_num += 1
         self.add_command_to_widget(widget) # update data table when filter is changed
 
+    def on_filter_widget_update(self, event):
+        """Function to be run when any of the filter widgets have been updated, regardless of whether their values have actually been changed"""
+        new_filter_values = self.get_current_filter_values()
+
+        #check whether table needs updating
+        if new_filter_values != self.current_filter_values:
+            self.master.update_table(new_filter_values)
+            self.current_filter_values = new_filter_values
+
     # update data table when filter is changed
     def add_command_to_widget(self, widget):
-        cmd = lambda event: self.master.update_table(self.get_current_filter_values())
-
         # if the widget is a CTkEntry then the command needs to be added differently to other widgets
         if isinstance(widget, customtkinter.CTkEntry):
-            widget.bind("<KeyRelease>", command=cmd)
+            widget.bind("<KeyRelease>", command=self.on_filter_widget_update)
         else:
-            widget.configure(command=cmd)
+            widget.configure(command=self.on_filter_widget_update)
 
     def get_current_filter_values(self):
         return {
