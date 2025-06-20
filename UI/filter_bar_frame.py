@@ -1,5 +1,5 @@
 import customtkinter
-from tkinter import StringVar
+from tkinter import StringVar, DISABLED, NORMAL
 
 class FilterBarFrame(customtkinter.CTkFrame):
     def __init__(self, master, design_options, theme_options, type_options, sub_type_options, colour_options):
@@ -15,6 +15,7 @@ class FilterBarFrame(customtkinter.CTkFrame):
         self.pady = 10 # pady for both labels and other widgets
         # widget position counter
         self.current_widget_num = 0
+        self.input_widgets = []
 
         # item type
         product_component_lbl = customtkinter.CTkLabel(self, text="Item Type:")
@@ -71,6 +72,7 @@ class FilterBarFrame(customtkinter.CTkFrame):
         widget.grid(row=0, column=self.current_widget_num, padx=self.widget_padx, pady=self.pady)
         self.current_widget_num += 1
         self.add_command_to_widget(widget) # update data table when filter is changed
+        self.input_widgets.append(widget)
 
     def on_filter_widget_update(self, event):
         """Function to be run when any of the filter widgets have been updated, regardless of whether their values have actually been changed"""
@@ -78,8 +80,15 @@ class FilterBarFrame(customtkinter.CTkFrame):
 
         #check whether table needs updating
         if new_filter_values != self.current_filter_values:
+            #updates table after applying new filters and keeps self.current_filter_values up-to-date
             self.master.update_table(new_filter_values)
             self.current_filter_values = new_filter_values
+
+            #greys out filter widgets which aren't applicable to components
+            if event == "Component":
+                self.change_product_widgets_state(DISABLED)
+            elif event == "Product":
+                self.change_product_widgets_state(NORMAL)
 
     # update data table when filter is changed
     def add_command_to_widget(self, widget):
@@ -104,3 +113,10 @@ class FilterBarFrame(customtkinter.CTkFrame):
         """Inserts an empty string at the beginning of each of the lists, to use as the default (unfiltered) value for a dropdown mennu"""
         for options in list_of_options_lists:
             options.insert(0, "")
+
+    def change_product_widgets_state(self, new_state):
+        """Sets whether the widgets that are used for filtering just products (not components) should be greyed out or not"""
+        component_compatible_widgets = [self.product_component_switch, self.name_entry] #widgets that shouldn't be greyed out ever
+        for widget in self.input_widgets:
+            if widget not in component_compatible_widgets:
+                widget.configure(state=new_state)
