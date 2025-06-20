@@ -245,7 +245,7 @@ class DatabaseManager:
         return self.view_single_column_from_single_table("theme", "Design")
 
     def view_type_names(self):
-        return self.view_single_column_from_single_table("name", "ProductType")
+        return self.view_single_column_from_single_table("type", "ProductType")
 
     def view_sub_type_names(self):
         return self.view_single_column_from_single_table("sub_type", "ProductType")
