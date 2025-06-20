@@ -4,14 +4,20 @@ class Presenter:
     def __init__(self):
         self.db_manager = DatabaseManager()
 
-    def get_filtered_products(self):
+    def get_filtered_items(self, filters_dict=None):
         """Get the products according to the provided filters, and tidy up the column names"""
-        filtered_products = self.db_manager.view_filtered_products()
-        filtered_products["column_names"] = self.process_column_names(filtered_products["column_names"])
+        if filters_dict is None: #no filters applied
+            filtered_items = self.db_manager.view_filtered_products()
+        elif filters_dict["Item Type"] == "Product":
+            filtered_items = self.db_manager.view_filtered_products(filters_dict["Name"], filters_dict["Design"],
+                                                                    filters_dict["Theme"], filters_dict["Type"],
+                                                                    filters_dict["Sub-type"], filters_dict["Colour"])
+
+        filtered_items["column_names"] = self.process_column_names(filtered_items["column_names"])
 
         #***********************************************************     SORT OUT DISPLAYED COLUMN NAMES (SOME COLUMN NAMES ARE THE SAME ETC) - PERHAPS EITHER PROCESS THEM OR CHANGE NAMES IN DATABASE E.G. FROM (DESIGN.)NAME -> (DESIGN.)DESIGN_NAME
 
-        return filtered_products
+        return filtered_items
 
     def process_column_names(self, column_names):
         """Converts the raw database column names into more human-friendly ones e.g. 'product_id' -> 'Product ID' """

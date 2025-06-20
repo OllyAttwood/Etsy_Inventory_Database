@@ -71,7 +71,7 @@ class FilterBarFrame(customtkinter.CTkFrame):
 
     # update data table when filter is changed
     def add_command_to_widget(self, widget):
-        cmd = lambda event: self.master.update_table()
+        cmd = lambda event: self.master.update_table(self.get_current_filter_values())
 
         # if the widget is a CTkEntry then the command needs to be added differently to other widgets
         if isinstance(widget, customtkinter.CTkEntry):

@@ -12,16 +12,15 @@ class ViewItemsFrame(customtkinter.CTkFrame):
         self.init_filter_bar()
 
         #set up table
-        full_data = self.presenter.get_filtered_products() #gets initial data
-        self.table = CustomTable(self, full_data["data"], full_data["column_names"])
-        self.table.grid(row=1, column=0)
+        full_data = self.presenter.get_filtered_items() #gets initial data
+        self.create_table(full_data["data"], full_data["column_names"])
 
         self.grid_columnconfigure(0, weight=1)
 
-    def update_table(self, data=[]):
+    def update_table(self, filters):
         self.table.grid_forget()
-
-        #TODO update table with new filters
+        full_data = self.presenter.get_filtered_items(filters)
+        self.create_table(full_data["data"], full_data["column_names"])
 
     def init_filter_bar(self):
         design_options = self.presenter.get_product_designs()
@@ -32,3 +31,7 @@ class ViewItemsFrame(customtkinter.CTkFrame):
 
         self.filter_bar = FilterBarFrame(self, design_options, theme_options, type_options, sub_type_options, colour_options)
         self.filter_bar.grid(row=0, column=0, pady=10)
+
+    def create_table(self, data_rows, column_names):
+        self.table = CustomTable(self, data_rows, column_names)
+        self.table.grid(row=1, column=0)
