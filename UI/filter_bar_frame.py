@@ -2,9 +2,12 @@ import customtkinter
 from tkinter import StringVar
 
 class FilterBarFrame(customtkinter.CTkFrame):
-    def __init__(self, master):
+    def __init__(self, master, design_options, theme_options, type_options, sub_type_options, colour_options):
         super().__init__(master)
         self.master = master
+
+        #add the empty option to the dropdown menus as the default
+        self.add_empty_string_option([design_options, theme_options, type_options, sub_type_options, colour_options])
 
         # padding vars
         self.lbl_padx = 10
@@ -30,31 +33,31 @@ class FilterBarFrame(customtkinter.CTkFrame):
         # design
         design_lbl = customtkinter.CTkLabel(self, text="Design:")
         self.add_label(design_lbl)
-        self.design_dropdown = customtkinter.CTkOptionMenu(self, values = ["", "Design1", "Design2", "Design3"])
+        self.design_dropdown = customtkinter.CTkOptionMenu(self, values=design_options)
         self.add_input_widget(self.design_dropdown)
 
         # design theme
         design_theme_lbl = customtkinter.CTkLabel(self, text="Theme:")
         self.add_label(design_theme_lbl)
-        self.design_theme_dropdown = customtkinter.CTkOptionMenu(self, values = ["", "Theme1", "Theme2", "Theme3"])
+        self.design_theme_dropdown = customtkinter.CTkOptionMenu(self, values=theme_options)
         self.add_input_widget(self.design_theme_dropdown)
 
         # type
         type_lbl = customtkinter.CTkLabel(self, text="Type:")
         self.add_label(type_lbl)
-        self.type_dropdown = customtkinter.CTkOptionMenu(self, values = ["", "Type1", "Type2", "Type3"])
+        self.type_dropdown = customtkinter.CTkOptionMenu(self, values=type_options)
         self.add_input_widget(self.type_dropdown)
 
         # sub-type
         sub_type_lbl = customtkinter.CTkLabel(self, text="Sub-type:")
         self.add_label(sub_type_lbl)
-        self.sub_type_dropdown = customtkinter.CTkOptionMenu(self, values = ["", "Sub-type1", "Sub-type2", "Sub-type3"])
+        self.sub_type_dropdown = customtkinter.CTkOptionMenu(self, values=sub_type_options)
         self.add_input_widget(self.sub_type_dropdown)
 
         # colour
         colour_lbl = customtkinter.CTkLabel(self, text="Colour:")
         self.add_label(colour_lbl)
-        self.colour_dropdown = customtkinter.CTkOptionMenu(self, values = ["", "Colour1", "Colour2", "Colour3"])
+        self.colour_dropdown = customtkinter.CTkOptionMenu(self, values=colour_options)
         self.add_input_widget(self.colour_dropdown)
 
     def add_label(self, lbl_widget):
@@ -86,3 +89,8 @@ class FilterBarFrame(customtkinter.CTkFrame):
             "Sub-type": self.sub_type_dropdown.get(),
             "Colour": self.colour_dropdown.get()
         }
+
+    def add_empty_string_option(self, list_of_options_lists):
+        """Inserts an empty string at the beginning of each of the lists, to use as the default (unfiltered) value for a dropdown mennu"""
+        for options in list_of_options_lists:
+            options.insert(0, "")

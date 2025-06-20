@@ -224,3 +224,31 @@ class DatabaseManager:
 
     def get_column_names_most_recent_query(self):
         return [col[0] for col in self.cursor.description]
+
+    def view_single_column_from_single_table(self, column_name, table_name, no_duplicates=True):
+        """Performs a simple SELECT call with given column and table.
+        *** WARNING *** - placeholders (i.e. '?') cannot be used for column or table names, therefore this function is VULNERABLE to SQL injection if exposed to the user
+        """
+        distinct = "DISTINCT " if no_duplicates else ""
+        query = f"SELECT {distinct}{column_name} FROM {table_name} WHERE {column_name} IS NOT NULL" #exclude None values
+        res = self.cursor.execute(query)
+        return_list = []
+        for row in res.fetchall():
+            return_list.append(row[0]) #[0] needed otherwise each row is a tuple rather than just the value e.g. ('Heart',)
+
+        return return_list
+
+    def view_design_names(self):
+        return self.view_single_column_from_single_table("name", "Design")
+
+    def view_theme_names(self):
+        return self.view_single_column_from_single_table("theme", "Design")
+
+    def view_type_names(self):
+        return self.view_single_column_from_single_table("name", "ProductType")
+
+    def view_sub_type_names(self):
+        return self.view_single_column_from_single_table("sub_type", "ProductType")
+
+    def view_colour_names(self):
+        return self.view_single_column_from_single_table("colour", "Product")
