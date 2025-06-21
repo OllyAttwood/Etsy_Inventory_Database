@@ -18,6 +18,7 @@ class Presenter:
         filtered_items["column_names"] = self.process_column_names(filtered_items["column_names"])
 
         #***********************************************************     SORT OUT DISPLAYED COLUMN NAMES (SOME COLUMN NAMES ARE THE SAME ETC) - PERHAPS EITHER PROCESS THEM OR CHANGE NAMES IN DATABASE E.G. FROM (DESIGN.)NAME -> (DESIGN.)DESIGN_NAME
+        #***********************************************************     MAYBE SPECIFY WHICH ACTUAL COLUMNS ARE WANTED IN THE SELECT STATEMENTcd
 
         return filtered_items
 
