@@ -146,9 +146,9 @@ class DatabaseManager:
 
     def view_filtered_products(self, name_search=None, design=None, design_theme=None,
                                type=None, subtype=None, colour=None, stock_level=None):
-        product_query = """SELECT Product.product_id, Product.name, Product.colour, Product.stock,
-                                  Product.low_stock_warning, Design.name, Design.theme, ProductType.name,
-                                  ProductType.type, ProductType.sub_type
+        product_query = """SELECT Product.product_id, Product.name AS 'Product Name', Product.colour,
+                                  Product.stock, Product.low_stock_warning, Design.name AS 'Design Name',
+                                  Design.theme, ProductType.type, ProductType.sub_type
                            FROM Product
                            JOIN Design
                            ON Product.design_id=Design.design_id
