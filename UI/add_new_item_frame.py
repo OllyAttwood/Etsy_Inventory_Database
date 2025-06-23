@@ -2,11 +2,14 @@ import customtkinter
 from UI.spinbox import Spinbox
 
 class AddNewItemFrame(customtkinter.CTkFrame):
-    def __init__(self, master):
+    def __init__(self, master, presenter):
         super().__init__(master)
 
         self.manage_component_window = None
         self.widget_grid = []
+        self.presenter = presenter
+        # values for the optionmenus / comboboxes
+        self.load_menu_options_values()
 
         # item type
         product_component_lbl_str = "Item Type:"
@@ -22,18 +25,18 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 
         # design
         design_lbl_str = "Design:"
-        design_dropdown = customtkinter.CTkOptionMenu(self, values = ["", "Design1", "Design2", "Design3"])
+        design_dropdown = customtkinter.CTkOptionMenu(self, values=self.design_options)
         new_design_button = customtkinter.CTkButton(self, text="Add new design... ")
         self.widget_grid.append([design_lbl_str, design_dropdown, new_design_button])
 
         # colour
         colour_lbl_str = "Colour:"
-        colour_dropdown = customtkinter.CTkComboBox(self, values = ["", "colour1", "colour2", "colour3"])
+        colour_dropdown = customtkinter.CTkComboBox(self, values=self.colour_options)
         self.widget_grid.append([colour_lbl_str, colour_dropdown])
 
         # type
         type_lbl_str = "Type:"
-        type_dropdown = customtkinter.CTkOptionMenu(self, values = ["", "type1", "type2", "type3"])
+        type_dropdown = customtkinter.CTkOptionMenu(self, values=self.type_options)
         new_type_button = customtkinter.CTkButton(self, text="Add new type... ")
         self.widget_grid.append([type_lbl_str, type_dropdown, new_type_button])
 
@@ -72,6 +75,20 @@ class AddNewItemFrame(customtkinter.CTkFrame):
             self.manage_component_window = ManageComponentWindow()
         else:
             self.manage_component_window.reappear()
+
+    def load_menu_options_values(self):
+        self.design_options = self.presenter.get_product_designs()
+        self.colour_options = self.presenter.get_product_colours()
+        self.type_options = self.presenter.get_product_types()
+
+        self.add_empty_string_option([self.design_options, self.colour_options, self.type_options])
+
+    def add_empty_string_option(self, list_of_options_lists):
+        """Inserts an empty string at the beginning of each of the lists, to use as the default (unfiltered) value for a dropdown mennu"""
+        for options in list_of_options_lists:
+            options.insert(0, "")
+
+
 
 class ManageComponentWindow(customtkinter.CTkToplevel):
     def __init__(self):

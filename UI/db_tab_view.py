@@ -15,8 +15,8 @@ class DBTabView(customtkinter.CTkTabview):
             self.add(tab_name)
 
         # setup the different tab's frames
-        self.view_items_frame = ViewItemsFrame(master=self.tab(self.tab_names[0]), presenter= presenter)
-        self.add_new_item_frame = AddNewItemFrame(master=self.tab(self.tab_names[1]))
+        self.view_items_frame = ViewItemsFrame(master=self.tab(self.tab_names[0]), presenter=presenter)
+        self.add_new_item_frame = AddNewItemFrame(master=self.tab(self.tab_names[1]), presenter=presenter)
         self.low_stock_frame = LowStockFrame(master=self.tab(self.tab_names[2]))
 
         for i, frame in enumerate([self.view_items_frame, self.add_new_item_frame,
