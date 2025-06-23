@@ -45,3 +45,6 @@ class Presenter:
 
     def get_product_colours(self):
         return self.db_manager.view_colour_names()
+
+    def get_component_names(self):
+        return self.db_manager.view_component_names()

@@ -254,3 +254,6 @@ class DatabaseManager:
 
     def view_colour_names(self):
         return self.view_single_column_from_single_table("colour", "Product")
+
+    def view_component_names(self):
+        return self.view_single_column_from_single_table("name", "Component")

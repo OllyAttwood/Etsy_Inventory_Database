@@ -72,7 +72,7 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 
     def component_button_click(self):
         if not self.manage_component_window:
-            self.manage_component_window = ManageComponentWindow()
+            self.manage_component_window = ManageComponentWindow(self.presenter)
         else:
             self.manage_component_window.reappear()
 
@@ -91,9 +91,11 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 
 
 class ManageComponentWindow(customtkinter.CTkToplevel):
-    def __init__(self):
+    def __init__(self, presenter):
         super().__init__()
         self.title("Manage Components")
+
+        self.presenter = presenter
 
         # lock popup at front
         self.attributes("-topmost", "true")
@@ -104,14 +106,9 @@ class ManageComponentWindow(customtkinter.CTkToplevel):
         # hide the window and restore it if necessary
         self.protocol("WM_DELETE_WINDOW", self.release_focus_and_hide)
 
-        #CHANGE THIS - hard-coded examples
-        component_data = [["Earring hook", 11],
-                          ["Jump ring - large", 31],
-                          ["Necklace chain", 4],
-                          ["Earring back", 77],
-                          ["Earring pouch", 27]]
-
-        self.display_components(component_data)
+        # display component info
+        component_names = self.presenter.get_component_names()
+        self.display_components([[com_name, 0] for com_name in component_names])
 
     # hides window
     def release_focus_and_hide(self):
