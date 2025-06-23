@@ -20,12 +20,6 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         name_entry = customtkinter.CTkEntry(self)
         self.widget_grid.append([name_lbl_str, name_entry])
 
-        # theme
-        theme_lbl_str = "Theme:"
-        theme_dropdown = customtkinter.CTkOptionMenu(self, values = ["", "Theme1", "Theme2", "Theme3"])
-        new_theme_button = customtkinter.CTkButton(self, text="Add new theme... ")
-        self.widget_grid.append([theme_lbl_str, theme_dropdown, new_theme_button])
-
         # design
         design_lbl_str = "Design:"
         design_dropdown = customtkinter.CTkOptionMenu(self, values = ["", "Design1", "Design2", "Design3"])
@@ -34,21 +28,14 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 
         # colour
         colour_lbl_str = "Colour:"
-        colour_dropdown = customtkinter.CTkOptionMenu(self, values = ["", "colour1", "colour2", "colour3"])
-        new_colour_button = customtkinter.CTkButton(self, text="Add new colour... ")
-        self.widget_grid.append([colour_lbl_str, colour_dropdown, new_colour_button])
+        colour_dropdown = customtkinter.CTkComboBox(self, values = ["", "colour1", "colour2", "colour3"])
+        self.widget_grid.append([colour_lbl_str, colour_dropdown])
 
         # type
         type_lbl_str = "Type:"
         type_dropdown = customtkinter.CTkOptionMenu(self, values = ["", "type1", "type2", "type3"])
         new_type_button = customtkinter.CTkButton(self, text="Add new type... ")
         self.widget_grid.append([type_lbl_str, type_dropdown, new_type_button])
-
-        # subtype
-        subtype_lbl_str = "Sub-Type:"
-        subtype_dropdown = customtkinter.CTkOptionMenu(self, values = ["", "subtype1", "subtype2", "subtype3"])
-        new_subtype_button = customtkinter.CTkButton(self, text="Add new subtype... ")
-        self.widget_grid.append([subtype_lbl_str, subtype_dropdown, new_subtype_button])
 
         # stock
         stock_lbl_str = "Stock:"
