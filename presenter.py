@@ -48,3 +48,11 @@ class Presenter:
 
     def get_component_names(self):
         return self.db_manager.view_component_names()
+
+    def save_new_design(self, name, theme):
+        """Saves a new design into the database"""
+        self.db_manager.insert_new_design(name, theme)
+
+    def save_new_product_type(self, name, type, sub_type):
+        """Saves a new product type into the database"""
+        self.db_manager.insert_new_product_type(name, type, sub_type)

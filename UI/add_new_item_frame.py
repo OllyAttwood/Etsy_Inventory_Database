@@ -1,5 +1,6 @@
 import customtkinter
 from UI.spinbox import Spinbox
+from UI.multi_input_dialog import MultiInputDialog
 
 class AddNewItemFrame(customtkinter.CTkFrame):
     def __init__(self, master, presenter):
@@ -10,6 +11,9 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         self.presenter = presenter
         # values for the optionmenus / comboboxes
         self.load_menu_options_values()
+        # input field text for the input dialogs
+        self.design_input_field_names = ["Name", "Theme"]
+        self.product_type_input_field_names = ["Name", "Type", "Sub-Type"]
 
         # item type
         product_component_lbl_str = "Item Type:"
@@ -26,7 +30,9 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         # design
         design_lbl_str = "Design:"
         design_dropdown = customtkinter.CTkOptionMenu(self, values=self.design_options)
-        new_design_button = customtkinter.CTkButton(self, text="Add new design... ")
+        design_button_command = lambda: self.on_add_button_click(design_dropdown, self.design_input_field_names,
+                                                                 "Design", self.presenter.save_new_design)
+        new_design_button = customtkinter.CTkButton(self, text="Add new design... ", command=design_button_command)
         self.widget_grid.append([design_lbl_str, design_dropdown, new_design_button])
 
         # colour
@@ -37,7 +43,9 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         # type
         type_lbl_str = "Type:"
         type_dropdown = customtkinter.CTkOptionMenu(self, values=self.type_options)
-        new_type_button = customtkinter.CTkButton(self, text="Add new type... ")
+        type_button_command = lambda: self.on_add_button_click(type_dropdown, self.product_type_input_field_names,
+                                                               "Product Type", self.presenter.save_new_product_type)
+        new_type_button = customtkinter.CTkButton(self, text="Add new type... ", command=type_button_command)
         self.widget_grid.append([type_lbl_str, type_dropdown, new_type_button])
 
         # stock
@@ -87,6 +95,21 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         """Inserts an empty string at the beginning of each of the lists, to use as the default (unfiltered) value for a dropdown mennu"""
         for options in list_of_options_lists:
             options.insert(0, "")
+
+    def on_add_button_click(self, option_menu_to_update, input_field_names, subject_name, save_func):
+        """Adds a new option to an optionmenu from the user input, and saves it to database"""
+        input_dialog = MultiInputDialog(input_field_names, subject_name)
+        input_dict = input_dialog.get_user_input()
+
+        if input_dict: # if input_dict == None then user closed the dialog
+            user_inputs = [input_dict[key] for key in input_field_names]
+            save_func(*user_inputs) # unpacks the list into individual variables so the function can accept it
+            self.add_new_option_to_optionmenu(input_dict["Name"], option_menu_to_update)
+
+    def add_new_option_to_optionmenu(self, new_option, optionmenu):
+        current_options = list(optionmenu._values)  # _values is the internal list of options
+        current_options.append(new_option)
+        optionmenu.configure(values=current_options)
 
 
 

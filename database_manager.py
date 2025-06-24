@@ -257,3 +257,9 @@ class DatabaseManager:
 
     def view_component_names(self):
         return self.view_single_column_from_single_table("name", "Component")
+
+    def insert_new_design(self, name, theme):
+        self.insert_data("Design", [name, theme])
+
+    def insert_new_product_type(self, name, type, sub_type):
+        self.insert_data("ProductType", [name, type, sub_type])
