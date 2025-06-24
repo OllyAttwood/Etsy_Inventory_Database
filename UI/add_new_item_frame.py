@@ -1,6 +1,7 @@
 import customtkinter
 from UI.spinbox import Spinbox
 from UI.multi_input_dialog import MultiInputDialog
+from tkinter import NORMAL, DISABLED
 
 class AddNewItemFrame(customtkinter.CTkFrame):
     def __init__(self, master, presenter):
@@ -8,6 +9,7 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 
         self.manage_component_window = None
         self.widget_grid = []
+        self.component_compatible_widgets = [] # widgets which should not be greyed out when adding a component
         self.presenter = presenter
         # values for the optionmenus / comboboxes
         self.load_menu_options_values()
@@ -18,14 +20,16 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         # item type
         product_component_lbl_str = "Item Type:"
         product_component_vals = ["Product", "Component"]
-        product_component_switch = customtkinter.CTkSegmentedButton(self, values=product_component_vals)
+        product_component_switch = customtkinter.CTkSegmentedButton(self, values=product_component_vals, command=self.change_product_widgets_state)
         product_component_switch.set(product_component_vals[0])
         self.widget_grid.append([product_component_lbl_str, product_component_switch])
+        self.component_compatible_widgets.append(product_component_switch)
 
         # name
         name_lbl_str = "Name:"
         name_entry = customtkinter.CTkEntry(self)
         self.widget_grid.append([name_lbl_str, name_entry])
+        self.component_compatible_widgets.append(name_entry)
 
         # design
         design_lbl_str = "Design:"
@@ -52,11 +56,13 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         stock_lbl_str = "Stock:"
         stock_spinbox = Spinbox(self)
         self.widget_grid.append([stock_lbl_str, stock_spinbox])
+        self.component_compatible_widgets.append(stock_spinbox)
 
         # low stock
         low_stock_lbl_str = "Low Stock Warning:"
         low_stock_spinbox = Spinbox(self)
         self.widget_grid.append([low_stock_lbl_str, low_stock_spinbox])
+        self.component_compatible_widgets.append(low_stock_spinbox)
 
         # components
         components_lbl_str = "Components:"
@@ -110,6 +116,21 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         current_options = list(optionmenu._values)  # _values is the internal list of options
         current_options.append(new_option)
         optionmenu.configure(values=current_options)
+
+    def change_product_widgets_state(self, selected_item_type):
+        """Disable any non-applicable widgets when 'Components' is selected, otherwise enable them all"""
+        new_state = None
+
+        if selected_item_type == "Product":
+            new_state = NORMAL
+        elif selected_item_type == "Component": #disable unnecessary widgets
+            new_state = DISABLED
+
+        for row in self.widget_grid:
+            for widget in row:
+                # if not a component widget and also is an actual widget (not a string)
+                if widget not in self.component_compatible_widgets and not isinstance(widget, str):
+                    widget.configure(state=new_state)
 
 
 
