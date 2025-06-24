@@ -246,11 +246,14 @@ class DatabaseManager:
     def view_theme_names(self):
         return self.view_single_column_from_single_table("theme", "Design")
 
-    def view_type_names(self):
+    def view_type_types(self):
         return self.view_single_column_from_single_table("type", "ProductType")
 
     def view_sub_type_names(self):
         return self.view_single_column_from_single_table("sub_type", "ProductType")
+
+    def view_type_names(self):
+        return self.view_single_column_from_single_table("name", "ProductType")
 
     def view_colour_names(self):
         return self.view_single_column_from_single_table("colour", "Product")
@@ -258,8 +261,37 @@ class DatabaseManager:
     def view_component_names(self):
         return self.view_single_column_from_single_table("name", "Component")
 
+    def view_single_column_from_single_table_with_where_clause(self, column_to_obtain, table_name, column_to_match, value_to_match):
+        """Performs a simple SELECT query with a WHERE clause
+        WARNING *** - placeholders (i.e. '?') cannot be used for column or table names, therefore this function is VULNERABLE to SQL injection if exposed to the user
+        """
+        query = f"SELECT {column_to_obtain} FROM {table_name} WHERE {column_to_match}='{value_to_match}'"
+        res = self.cursor.execute(query)
+        query_list = []
+        for row in res.fetchall():
+            query_list.append(row[0]) #[0] needed otherwise each row is a tuple rather than just the value e.g. ('Heart',)
+
+        return query_list
+
     def insert_new_design(self, name, theme):
         self.insert_data("Design", [name, theme])
 
     def insert_new_product_type(self, name, type, sub_type):
         self.insert_data("ProductType", [name, type, sub_type])
+
+    def insert_new_component(self, name, stock, low_stock_warning):
+        self.insert_data("Component", [name, stock, low_stock_warning])
+
+    def insert_new_product(self, name, design, colour, product_type, stock, low_stock_warning, components):
+        # obtain design and product type IDs
+        design_id = self.view_single_column_from_single_table_with_where_clause("design_id", "Design", "name", design)[0] # [0] because a list is returned by the function
+        product_type_id = self.view_single_column_from_single_table_with_where_clause("product_type_id", "ProductType", "name", product_type)[0]
+
+        #add the record to Product
+        self.insert_data("Product", [name, colour, stock, low_stock_warning, design_id, product_type_id])
+
+        #add any records to MadeUsing
+        for component_name, quantity in components:
+            product_id = self.view_single_column_from_single_table_with_where_clause("product_id", "Product", "name", name)[0]
+            component_id = self.view_single_column_from_single_table_with_where_clause("component_id", "Component", "name", component_name)[0]
+            self.insert_data("MadeUsing", [product_id, component_id, quantity])

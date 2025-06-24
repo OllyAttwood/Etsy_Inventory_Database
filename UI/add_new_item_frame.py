@@ -20,49 +20,49 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         # item type
         product_component_lbl_str = "Item Type:"
         product_component_vals = ["Product", "Component"]
-        product_component_switch = customtkinter.CTkSegmentedButton(self, values=product_component_vals, command=self.change_product_widgets_state)
-        product_component_switch.set(product_component_vals[0])
-        self.widget_grid.append([product_component_lbl_str, product_component_switch])
-        self.component_compatible_widgets.append(product_component_switch)
+        self.product_component_switch = customtkinter.CTkSegmentedButton(self, values=product_component_vals, command=self.change_product_widgets_state)
+        self.product_component_switch.set(product_component_vals[0])
+        self.widget_grid.append([product_component_lbl_str, self.product_component_switch])
+        self.component_compatible_widgets.append(self.product_component_switch)
 
         # name
         name_lbl_str = "Name:"
-        name_entry = customtkinter.CTkEntry(self)
-        self.widget_grid.append([name_lbl_str, name_entry])
-        self.component_compatible_widgets.append(name_entry)
+        self.name_entry = customtkinter.CTkEntry(self)
+        self.widget_grid.append([name_lbl_str, self.name_entry])
+        self.component_compatible_widgets.append(self.name_entry)
 
         # design
         design_lbl_str = "Design:"
-        design_dropdown = customtkinter.CTkOptionMenu(self, values=self.design_options)
-        design_button_command = lambda: self.on_add_button_click(design_dropdown, self.design_input_field_names,
+        self.design_dropdown = customtkinter.CTkOptionMenu(self, values=self.design_options)
+        design_button_command = lambda: self.on_add_button_click(self.design_dropdown, self.design_input_field_names,
                                                                  "Design", self.presenter.save_new_design)
         new_design_button = customtkinter.CTkButton(self, text="Add new design... ", command=design_button_command)
-        self.widget_grid.append([design_lbl_str, design_dropdown, new_design_button])
+        self.widget_grid.append([design_lbl_str, self.design_dropdown, new_design_button])
 
         # colour
         colour_lbl_str = "Colour:"
-        colour_dropdown = customtkinter.CTkComboBox(self, values=self.colour_options)
-        self.widget_grid.append([colour_lbl_str, colour_dropdown])
+        self.colour_dropdown = customtkinter.CTkComboBox(self, values=self.colour_options)
+        self.widget_grid.append([colour_lbl_str, self.colour_dropdown])
 
         # type
         type_lbl_str = "Type:"
-        type_dropdown = customtkinter.CTkOptionMenu(self, values=self.type_options)
-        type_button_command = lambda: self.on_add_button_click(type_dropdown, self.product_type_input_field_names,
+        self.type_dropdown = customtkinter.CTkOptionMenu(self, values=self.type_options)
+        type_button_command = lambda: self.on_add_button_click(self.type_dropdown, self.product_type_input_field_names,
                                                                "Product Type", self.presenter.save_new_product_type)
         new_type_button = customtkinter.CTkButton(self, text="Add new type... ", command=type_button_command)
-        self.widget_grid.append([type_lbl_str, type_dropdown, new_type_button])
+        self.widget_grid.append([type_lbl_str, self.type_dropdown, new_type_button])
 
         # stock
         stock_lbl_str = "Stock:"
-        stock_spinbox = Spinbox(self)
-        self.widget_grid.append([stock_lbl_str, stock_spinbox])
-        self.component_compatible_widgets.append(stock_spinbox)
+        self.stock_spinbox = Spinbox(self)
+        self.widget_grid.append([stock_lbl_str, self.stock_spinbox])
+        self.component_compatible_widgets.append(self.stock_spinbox)
 
         # low stock
         low_stock_lbl_str = "Low Stock Warning:"
-        low_stock_spinbox = Spinbox(self)
-        self.widget_grid.append([low_stock_lbl_str, low_stock_spinbox])
-        self.component_compatible_widgets.append(low_stock_spinbox)
+        self.low_stock_spinbox = Spinbox(self)
+        self.widget_grid.append([low_stock_lbl_str, self.low_stock_spinbox])
+        self.component_compatible_widgets.append(self.low_stock_spinbox)
 
         # components
         components_lbl_str = "Components:"
@@ -80,7 +80,7 @@ class AddNewItemFrame(customtkinter.CTkFrame):
                 widget.grid(row=row_num, column=col_num)
 
         # add new item button
-        add_item_button = customtkinter.CTkButton(self, text="Add item")
+        add_item_button = customtkinter.CTkButton(self, text="Add item", command=self.on_add_item_button_click)
         row_num += 1 #cheeky reuse of loop variable
         add_item_button.grid(row=row_num, column=1)
 
@@ -93,7 +93,7 @@ class AddNewItemFrame(customtkinter.CTkFrame):
     def load_menu_options_values(self):
         self.design_options = self.presenter.get_product_designs()
         self.colour_options = self.presenter.get_product_colours()
-        self.type_options = self.presenter.get_product_types()
+        self.type_options = self.presenter.get_product_type_names()
 
         self.add_empty_string_option([self.design_options, self.colour_options, self.type_options])
 
@@ -132,6 +132,31 @@ class AddNewItemFrame(customtkinter.CTkFrame):
                 if widget not in self.component_compatible_widgets and not isinstance(widget, str):
                     widget.configure(state=new_state)
 
+    def on_add_item_button_click(self):
+        """Save the new item to the database"""
+        item_type = self.product_component_switch.get()
+
+        if item_type == "Product":
+            name = self.name_entry.get()
+            design = self.design_dropdown.get()
+            colour = self.colour_dropdown.get()
+            product_type = self.type_dropdown.get()
+            stock = self.stock_spinbox.get()
+            low_stock_warning = self.low_stock_spinbox.get()
+            try:
+                components = self.manage_component_window.get_selected_components()
+            except AttributeError: #ManageComponentWindow was never opened by the user
+                components = []
+
+            self.presenter.save_new_product(name, design, colour, product_type, stock, low_stock_warning, components)
+
+        elif item_type == "Component":
+            name = self.name_entry.get()
+            stock = self.stock_spinbox.get()
+            low_stock_warning = self.low_stock_spinbox.get()
+
+            self.presenter.save_new_component(name, stock, low_stock_warning)
+
 
 
 class ManageComponentWindow(customtkinter.CTkToplevel):
@@ -140,6 +165,7 @@ class ManageComponentWindow(customtkinter.CTkToplevel):
         self.title("Manage Components")
 
         self.presenter = presenter
+        self.spinboxes = []
 
         # lock popup at front
         self.attributes("-topmost", "true")
@@ -151,8 +177,8 @@ class ManageComponentWindow(customtkinter.CTkToplevel):
         self.protocol("WM_DELETE_WINDOW", self.release_focus_and_hide)
 
         # display component info
-        component_names = self.presenter.get_component_names()
-        self.display_components([[com_name, 0] for com_name in component_names])
+        self.component_names = self.presenter.get_component_names()
+        self.display_components([[com_name, 0] for com_name in self.component_names])
 
     # hides window
     def release_focus_and_hide(self):
@@ -175,7 +201,22 @@ class ManageComponentWindow(customtkinter.CTkToplevel):
             label.grid(row=row_num, column=0)
             stock_spinbox = Spinbox(self, initial_value=component_row[1])
             stock_spinbox.grid(row=row_num, column=1)
+            self.spinboxes.append(stock_spinbox)
 
         close_button = customtkinter.CTkButton(self, text="Close", command=self.release_focus_and_hide)
         row_num += 1 # using the loop variable - cheeky
         close_button.grid(row=row_num, column=0)
+
+    def get_selected_components(self):
+        """Returns a list of tuples of the component names of which more than 0 quantity has been selected, and their quantities
+        e.g. [('Jump ring - large', 4), ('Earring hook', 2), ('Earring back', 2)]
+        """
+        component_list = []
+
+        for component_name, component_spinbox in zip(self.component_names, self.spinboxes):
+            quantity = component_spinbox.get()
+
+            if quantity > 0:
+                component_list.append((component_name, quantity))
+
+        return component_list

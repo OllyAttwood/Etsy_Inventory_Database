@@ -38,10 +38,13 @@ class Presenter:
         return self.db_manager.view_theme_names()
 
     def get_product_types(self):
-        return self.db_manager.view_type_names()
+        return self.db_manager.view_type_types()
 
     def get_product_sub_types(self):
         return self.db_manager.view_sub_type_names()
+
+    def get_product_type_names(self):
+        return self.db_manager.view_type_names()
 
     def get_product_colours(self):
         return self.db_manager.view_colour_names()
@@ -56,3 +59,11 @@ class Presenter:
     def save_new_product_type(self, name, type, sub_type):
         """Saves a new product type into the database"""
         self.db_manager.insert_new_product_type(name, type, sub_type)
+
+    def save_new_component(self, name, stock, low_stock_warning):
+        """Saves a new component into the database"""
+        self.db_manager.insert_new_component(name, stock, low_stock_warning)
+
+    def save_new_product(self, name, design, colour, product_type, stock, low_stock_warning, components):
+        """Saves a new product into the database"""
+        self.db_manager.insert_new_product(name, design, colour, product_type, stock, low_stock_warning, components)
