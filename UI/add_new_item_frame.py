@@ -111,7 +111,9 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         if input_dict: # if input_dict == None then user closed the dialog
             user_inputs = [input_dict[key] for key in input_field_names]
             save_func(*user_inputs) # unpacks the list into individual variables so the function can accept it
-            self.add_new_option_to_optionmenu(input_dict["Name"], option_menu_to_update)
+            new_option = input_dict["Name"]
+            self.add_new_option_to_optionmenu(new_option, option_menu_to_update)
+            option_menu_to_update.set(new_option)
 
     def add_new_option_to_optionmenu(self, new_option, optionmenu):
         current_options = list(optionmenu._values)  # _values is the internal list of options
