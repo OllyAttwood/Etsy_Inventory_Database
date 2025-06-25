@@ -150,7 +150,10 @@ class AddNewItemFrame(customtkinter.CTkFrame):
                 components = []
 
             self.presenter.save_new_product(name, design, colour, product_type, stock, low_stock_warning, components)
+
+            #reloads UI elements that need updating after new item has been added
             self.tab_view.reload_view_items_frame()
+            self.tab_view.reload_add_new_item_frame()
 
         elif item_type == "Component":
             name = self.name_entry.get()

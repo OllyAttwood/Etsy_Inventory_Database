@@ -49,3 +49,7 @@ class DBTabView(customtkinter.CTkTabview):
     def reload_view_items_frame(self):
         replacement_frame = self.create_view_items_frame()
         self._reload_tab_contents(self.VIEW_ITEMS_FRAME_INDEX, replacement_frame)
+
+    def reload_add_new_item_frame(self):
+        replacement_frame = self.create_add_new_item_frame()
+        self._reload_tab_contents(self.ADD_NEW_ITEM_FRAME_INDEX, replacement_frame)
