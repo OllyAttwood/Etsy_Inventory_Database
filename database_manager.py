@@ -22,14 +22,14 @@ class DatabaseManager:
         #NULL as the primary key value
         design_str = """CREATE TABLE IF NOT EXISTS Design (
                             design_id INTEGER PRIMARY KEY,
-                            name VARCHAR(50) NOT NULL,
+                            name VARCHAR(50) NOT NULL UNIQUE,
                             theme VARCHAR(50)
                         );"""
         self.cursor.execute(design_str)
 
         type_str = """CREATE TABLE IF NOT EXISTS ProductType (
                           product_type_id INTEGER PRIMARY KEY,
-                          name VARCHAR(50) NOT NULL,
+                          name VARCHAR(50) NOT NULL UNIQUE,
                           type VARCHAR(50) NOT NULL,
                           sub_type VARCHAR(50)
                       );"""
@@ -37,7 +37,7 @@ class DatabaseManager:
 
         prod_str = """CREATE TABLE IF NOT EXISTS Product (
                           product_id INTEGER PRIMARY KEY,
-                          name VARCHAR(50) NOT NULL,
+                          name VARCHAR(50) NOT NULL UNIQUE,
                           colour VARCHAR(30) NOT NULL,
                           stock INT NOT NULL,
                           low_stock_warning INT NOT NULL,
@@ -50,7 +50,7 @@ class DatabaseManager:
 
         component_str = """CREATE TABLE IF NOT EXISTS Component (
                                component_id INTEGER PRIMARY KEY,
-                               name VARCHAR(50) NOT NULL,
+                               name VARCHAR(50) NOT NULL UNIQUE,
                                stock INT NOT NULL,
                                low_stock_warning INT NOT NULL
                            );"""
