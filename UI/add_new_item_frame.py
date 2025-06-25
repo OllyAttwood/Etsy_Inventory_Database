@@ -152,8 +152,7 @@ class AddNewItemFrame(customtkinter.CTkFrame):
             self.presenter.save_new_product(name, design, colour, product_type, stock, low_stock_warning, components)
 
             #reloads UI elements that need updating after new item has been added
-            self.tab_view.reload_view_items_frame()
-            self.tab_view.reload_add_new_item_frame()
+            self.tab_view.reload_all_frames()
 
         elif item_type == "Component":
             name = self.name_entry.get()
@@ -229,10 +228,15 @@ class ManageComponentWindow(customtkinter.CTkToplevel):
 """
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-ADD PRODUCT / COMPONENT FUNCTIONALITY
-	check UI updates after item  has been added e.g. in manage components window and view items frame - https://stackoverflow.com/questions/19477636/does-tkinter-have-a-refresh-method
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-tidy up look of multi input dialog
+do I need to reload the low stock frame as well as the other two after adding a new item?
+
+update all code to use leading underscore for all private function names
+
+select the option (design/type) that was just added
+
+fix why theme dropdown has a blank line (not the top option) - it's because product_id=4 record has a blank theme (probably just need to ignore blank results from database call when getting all themes)
 
 make name in each table UNIQUE?
 """

@@ -46,10 +46,19 @@ class DBTabView(customtkinter.CTkTabview):
         frame.destroy()
         self.display_frame_in_grid(replacement_frame)
 
-    def reload_view_items_frame(self):
+    def _reload_view_items_frame(self):
         replacement_frame = self.create_view_items_frame()
         self._reload_tab_contents(self.VIEW_ITEMS_FRAME_INDEX, replacement_frame)
 
-    def reload_add_new_item_frame(self):
+    def _reload_add_new_item_frame(self):
         replacement_frame = self.create_add_new_item_frame()
         self._reload_tab_contents(self.ADD_NEW_ITEM_FRAME_INDEX, replacement_frame)
+
+    def _reload_low_stock_frame(self):
+        replacement_frame = self.create_low_stock_frame()
+        self._reload_tab_contents(self.LOW_STOCK_FRAME_INDEX, replacement_frame)
+
+    def reload_all_frames(self):
+        self._reload_view_items_frame()
+        self._reload_add_new_item_frame()
+        self._reload_low_stock_frame()
