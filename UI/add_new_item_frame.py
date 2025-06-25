@@ -153,15 +153,15 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 
             self.presenter.save_new_product(name, design, colour, product_type, stock, low_stock_warning, components)
 
-            #reloads UI elements that need updating after new item has been added
-            self.tab_view.reload_all_frames()
-
         elif item_type == "Component":
             name = self.name_entry.get()
             stock = self.stock_spinbox.get()
             low_stock_warning = self.low_stock_spinbox.get()
 
             self.presenter.save_new_component(name, stock, low_stock_warning)
+
+        #reloads UI elements that need updating after new item has been added
+        self.tab_view.reload_all_frames()
 
 
 
@@ -230,15 +230,11 @@ class ManageComponentWindow(customtkinter.CTkToplevel):
 """
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-do I need to reload the low stock frame as well as the other two after adding a new item?
-
 update all code to use leading underscore for all private function names
-
-select the option (design/type) that was just added
 
 fix why theme dropdown has a blank line (not the top option) - it's because product_id=4 record has a blank theme (probably just need to ignore blank results from database call when getting all themes)
 
 make name in each table UNIQUE?
+
+do I need to make make some of the fields (such as type, sub_type, theme) combobxes in the MultInputDialogs so that the user can choose existing options as well as adding new ones?
 """
