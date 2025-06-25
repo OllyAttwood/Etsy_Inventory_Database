@@ -24,4 +24,4 @@ class LowStockFrame(customtkinter.CTkFrame):
         self.grid_columnconfigure(0, weight=1) #puts everything in the middle
 
     def create_label(self, text, font_size=25):
-        return customtkinter.CTkLabel(self, text="Low Stock Products", font=(None, font_size))
+        return customtkinter.CTkLabel(self, text=text, font=(None, font_size))
