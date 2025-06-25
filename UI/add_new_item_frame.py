@@ -4,13 +4,14 @@ from UI.multi_input_dialog import MultiInputDialog
 from tkinter import NORMAL, DISABLED
 
 class AddNewItemFrame(customtkinter.CTkFrame):
-    def __init__(self, master, presenter):
+    def __init__(self, master, presenter, tab_view):
         super().__init__(master)
 
         self.manage_component_window = None
         self.widget_grid = []
         self.component_compatible_widgets = [] # widgets which should not be greyed out when adding a component
         self.presenter = presenter
+        self.tab_view = tab_view
         # values for the optionmenus / comboboxes
         self.load_menu_options_values()
         # input field text for the input dialogs
@@ -149,6 +150,7 @@ class AddNewItemFrame(customtkinter.CTkFrame):
                 components = []
 
             self.presenter.save_new_product(name, design, colour, product_type, stock, low_stock_warning, components)
+            self.tab_view.reload_view_items_frame()
 
         elif item_type == "Component":
             name = self.name_entry.get()
@@ -220,3 +222,14 @@ class ManageComponentWindow(customtkinter.CTkToplevel):
                 component_list.append((component_name, quantity))
 
         return component_list
+
+"""
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ADD PRODUCT / COMPONENT FUNCTIONALITY
+	check UI updates after item  has been added e.g. in manage components window and view items frame - https://stackoverflow.com/questions/19477636/does-tkinter-have-a-refresh-method
+
+tidy up look of multi input dialog
+
+make name in each table UNIQUE?
+"""
