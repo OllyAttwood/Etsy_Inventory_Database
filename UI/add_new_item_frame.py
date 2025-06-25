@@ -186,7 +186,6 @@ class ManageComponentWindow(customtkinter.CTkToplevel):
     def __init__(self, presenter):
         super().__init__()
         self.title("Manage Components")
-
         self.presenter = presenter
         self.spinboxes = []
 
@@ -249,7 +248,8 @@ class ManageComponentWindow(customtkinter.CTkToplevel):
 
 update all code to use leading underscore for all private function names
 
-fix why theme dropdown has a blank line (not the top option) - it's because product_id=4 record has a blank theme (probably just need to ignore blank results from database call when getting all themes)
+do I need to make make some of the fields (such as type, sub_type, theme) comboboxes in the MultInputDialogs so that the user can choose existing options as well as adding new ones?
 
-do I need to make make some of the fields (such as type, sub_type, theme) combobxes in the MultInputDialogs so that the user can choose existing options as well as adding new ones?
+tidy up UI
+	make sure all frames are centralised where appropriate, add padding between widgets etc
 """

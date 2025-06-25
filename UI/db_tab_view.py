@@ -36,7 +36,7 @@ class DBTabView(customtkinter.CTkTabview):
         return AddNewItemFrame(master=self.tab(self.TAB_NAMES[self.ADD_NEW_ITEM_FRAME_INDEX]), presenter=self.presenter, tab_view=self)
 
     def create_low_stock_frame(self):
-        return LowStockFrame(master=self.tab(self.TAB_NAMES[self.LOW_STOCK_FRAME_INDEX]))
+        return LowStockFrame(master=self.tab(self.TAB_NAMES[self.LOW_STOCK_FRAME_INDEX]), presenter=self.presenter)
 
     def display_frame_in_grid(self, frame):
         frame.grid(row=0, column=0, sticky="nesw")

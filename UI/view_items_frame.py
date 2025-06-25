@@ -6,7 +6,6 @@ from UI.filter_bar_frame import FilterBarFrame
 class ViewItemsFrame(customtkinter.CTkFrame):
     def __init__(self, master, presenter):
         super().__init__(master)
-
         self.presenter = presenter
 
         self.init_filter_bar()

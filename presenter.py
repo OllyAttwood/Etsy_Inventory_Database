@@ -52,6 +52,12 @@ class Presenter:
     def get_component_names(self):
         return self.db_manager.view_component_names()
 
+    def get_low_stock_items(self, products=True, components=True):
+        low_stock_items = self.db_manager.view_low_stock_items(products, components)
+        low_stock_items["column_names"] = self.process_column_names(low_stock_items["column_names"])
+
+        return low_stock_items
+
     def save_new_design(self, name, theme):
         """Saves a new design into the database"""
         self.db_manager.insert_new_design(name, theme)
