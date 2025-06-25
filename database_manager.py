@@ -232,7 +232,7 @@ class DatabaseManager:
         *** WARNING *** - placeholders (i.e. '?') cannot be used for column or table names, therefore this function is VULNERABLE to SQL injection if exposed to the user
         """
         distinct = "DISTINCT " if no_duplicates else ""
-        query = f"SELECT {distinct}{column_name} FROM {table_name} WHERE {column_name} IS NOT NULL" #exclude None values
+        query = f"SELECT {distinct}{column_name} FROM {table_name} WHERE {column_name} IS NOT NULL AND {column_name} != ''" #exclude None values and empty strings
         res = self.cursor.execute(query)
         return_list = []
         for row in res.fetchall():

@@ -156,7 +156,7 @@ class AddNewItemFrame(customtkinter.CTkFrame):
                 components = self.manage_component_window.get_selected_components()
             except AttributeError: #ManageComponentWindow was never opened by the user
                 components = []
-                
+
             try:
                 self.presenter.save_new_product(name, design, colour, product_type, stock, low_stock_warning, components)
             except sqlite3.IntegrityError: # catch error where duplicate 'name' has been entered by the user
@@ -250,8 +250,6 @@ class ManageComponentWindow(customtkinter.CTkToplevel):
 update all code to use leading underscore for all private function names
 
 fix why theme dropdown has a blank line (not the top option) - it's because product_id=4 record has a blank theme (probably just need to ignore blank results from database call when getting all themes)
-
-make name in each table UNIQUE?
 
 do I need to make make some of the fields (such as type, sub_type, theme) combobxes in the MultInputDialogs so that the user can choose existing options as well as adding new ones?
 """
