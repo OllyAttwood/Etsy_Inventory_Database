@@ -2,6 +2,8 @@ import customtkinter
 from UI.spinbox import Spinbox
 from UI.multi_input_dialog import MultiInputDialog
 from tkinter import NORMAL, DISABLED
+from UI.messagebox import MessageBox
+import sqlite3
 
 class AddNewItemFrame(customtkinter.CTkFrame):
     def __init__(self, master, presenter, tab_view):
@@ -110,7 +112,11 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 
         if input_dict: # if input_dict == None then user closed the dialog
             user_inputs = [input_dict[key] for key in input_field_names]
-            save_func(*user_inputs) # unpacks the list into individual variables so the function can accept it
+            try:
+                save_func(*user_inputs) # unpacks the list into individual variables so the function can accept it
+            except sqlite3.IntegrityError: # catch error where duplicate 'name' has been entered by the user
+                self.create_name_error_popup()
+                return
             new_option = input_dict["Name"]
             self.add_new_option_to_optionmenu(new_option, option_menu_to_update)
             option_menu_to_update.set(new_option)
@@ -150,18 +156,29 @@ class AddNewItemFrame(customtkinter.CTkFrame):
                 components = self.manage_component_window.get_selected_components()
             except AttributeError: #ManageComponentWindow was never opened by the user
                 components = []
-
-            self.presenter.save_new_product(name, design, colour, product_type, stock, low_stock_warning, components)
+                
+            try:
+                self.presenter.save_new_product(name, design, colour, product_type, stock, low_stock_warning, components)
+            except sqlite3.IntegrityError: # catch error where duplicate 'name' has been entered by the user
+                self.create_name_error_popup()
+                return
 
         elif item_type == "Component":
             name = self.name_entry.get()
             stock = self.stock_spinbox.get()
             low_stock_warning = self.low_stock_spinbox.get()
 
-            self.presenter.save_new_component(name, stock, low_stock_warning)
+            try:
+                self.presenter.save_new_component(name, stock, low_stock_warning)
+            except sqlite3.IntegrityError: # catch error where duplicate 'name' has been entered by the user
+                self.create_name_error_popup()
+                return
 
         #reloads UI elements that need updating after new item has been added
         self.tab_view.reload_all_frames()
+
+    def create_name_error_popup(self):
+        MessageBox("Name Error", "That name is already in use!")
 
 
 
