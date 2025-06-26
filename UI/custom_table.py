@@ -11,7 +11,8 @@ class CustomTable(customtkinter.CTkFrame):
 
         self.data = data
         self.columns = columns
-        self.column_widths = self.calculate_column_widths(columns, font_size)
+        self.combined_data = [columns] + data
+        self.column_widths = self.calculate_column_widths(self.combined_data, font_size)
         self.font = (None, font_size)
         self.cell_hover_colour = cell_hover_colour
         self.data_colour = data_colour
@@ -22,9 +23,7 @@ class CustomTable(customtkinter.CTkFrame):
         self.check_is_data_correct_shape()
 
         # display table
-        combined_data = [columns] + data
-
-        for row_num, row in enumerate(combined_data):
+        for row_num, row in enumerate(self.combined_data):
             for col_num, cell_text in enumerate(row):
                 cell_width = self.column_widths[col_num]
                 cell = customtkinter.CTkEntry(self, textvariable=StringVar(self, cell_text),
@@ -84,13 +83,15 @@ class CustomTable(customtkinter.CTkFrame):
         if row_num != self.selected_row:
             self.change_row_colour(row_num, grid_info, colour)
 
-    def calculate_column_widths(self, column_names, font_size, min_width=100):
+    def calculate_column_widths(self, full_data, font_size, min_width=100, max_width=350):
         font = tkfont.Font(size=font_size)
-        column_widths = []
+        column_widths = [min_width] * len(full_data[0])
 
-        for column_name in column_names:
-            width = font.measure(column_name)
-            width = max(width, min_width) # set to min_width if calculated width is smaller
-            column_widths.append(width)
+        for row in full_data:
+            for column_num, cell_text in enumerate(row):
+                width = font.measure(cell_text)
+
+                if width > min_width and width < max_width and width > column_widths[column_num]:
+                    column_widths[column_num] = width
 
         return column_widths
