@@ -253,6 +253,8 @@ class ManageComponentWindow(customtkinter.CTkToplevel):
 """
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+in CustomTable, stretch columns so all text fits in (or if you hover over it, text will be displayed)
+
 update all code to use leading underscore for all private function names
 
 do I need to make make some of the fields (such as type, sub_type, theme) comboboxes in the MultInputDialogs so that the user can choose existing options as well as adding new ones?
