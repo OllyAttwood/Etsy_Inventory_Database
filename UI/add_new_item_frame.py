@@ -14,6 +14,9 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         self.component_compatible_widgets = [] # widgets which should not be greyed out when adding a component
         self.presenter = presenter
         self.tab_view = tab_view
+        self.centre_frame = customtkinter.CTkFrame(self) # needed to make widgets display in centre of screen
+        self.centre_frame.grid(row=0, column=0)
+        self.grid_columnconfigure(0, weight=1) # centralises the centre_frame
         # values for the optionmenus / comboboxes
         self.load_menu_options_values()
         # input field text for the input dialogs
@@ -23,53 +26,56 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         # item type
         product_component_lbl_str = "Item Type:"
         product_component_vals = ["Product", "Component"]
-        self.product_component_switch = customtkinter.CTkSegmentedButton(self, values=product_component_vals, command=self.change_product_widgets_state)
+        self.product_component_switch = customtkinter.CTkSegmentedButton(self.centre_frame, values=product_component_vals,
+                                                                         command=self.change_product_widgets_state)
         self.product_component_switch.set(product_component_vals[0])
         self.widget_grid.append([product_component_lbl_str, self.product_component_switch])
         self.component_compatible_widgets.append(self.product_component_switch)
 
         # name
         name_lbl_str = "Name:"
-        self.name_entry = customtkinter.CTkEntry(self)
+        self.name_entry = customtkinter.CTkEntry(self.centre_frame)
         self.widget_grid.append([name_lbl_str, self.name_entry])
         self.component_compatible_widgets.append(self.name_entry)
 
         # design
         design_lbl_str = "Design:"
-        self.design_dropdown = customtkinter.CTkOptionMenu(self, values=self.design_options)
+        self.design_dropdown = customtkinter.CTkOptionMenu(self.centre_frame, values=self.design_options)
         design_button_command = lambda: self.on_add_button_click(self.design_dropdown, self.design_input_field_names,
                                                                  "Design", self.presenter.save_new_design)
-        new_design_button = customtkinter.CTkButton(self, text="Add new design... ", command=design_button_command)
+        new_design_button = customtkinter.CTkButton(self.centre_frame, text="Add new design... ",
+                                                    command=design_button_command)
         self.widget_grid.append([design_lbl_str, self.design_dropdown, new_design_button])
 
         # colour
         colour_lbl_str = "Colour:"
-        self.colour_dropdown = customtkinter.CTkComboBox(self, values=self.colour_options)
+        self.colour_dropdown = customtkinter.CTkComboBox(self.centre_frame, values=self.colour_options)
         self.widget_grid.append([colour_lbl_str, self.colour_dropdown])
 
         # type
         type_lbl_str = "Type:"
-        self.type_dropdown = customtkinter.CTkOptionMenu(self, values=self.type_options)
+        self.type_dropdown = customtkinter.CTkOptionMenu(self.centre_frame, values=self.type_options)
         type_button_command = lambda: self.on_add_button_click(self.type_dropdown, self.product_type_input_field_names,
                                                                "Product Type", self.presenter.save_new_product_type)
-        new_type_button = customtkinter.CTkButton(self, text="Add new type... ", command=type_button_command)
+        new_type_button = customtkinter.CTkButton(self.centre_frame, text="Add new type... ",
+                                                  command=type_button_command)
         self.widget_grid.append([type_lbl_str, self.type_dropdown, new_type_button])
 
         # stock
         stock_lbl_str = "Stock:"
-        self.stock_spinbox = Spinbox(self)
+        self.stock_spinbox = Spinbox(self.centre_frame)
         self.widget_grid.append([stock_lbl_str, self.stock_spinbox])
         self.component_compatible_widgets.append(self.stock_spinbox)
 
         # low stock
         low_stock_lbl_str = "Low Stock Warning:"
-        self.low_stock_spinbox = Spinbox(self)
+        self.low_stock_spinbox = Spinbox(self.centre_frame)
         self.widget_grid.append([low_stock_lbl_str, self.low_stock_spinbox])
         self.component_compatible_widgets.append(self.low_stock_spinbox)
 
         # components
         components_lbl_str = "Components:"
-        components_button = customtkinter.CTkButton(self, text="Manage components...",
+        components_button = customtkinter.CTkButton(self.centre_frame, text="Manage components...",
                                                     command=self.component_button_click)
         self.widget_grid.append([components_lbl_str, components_button])
 
@@ -78,12 +84,13 @@ class AddNewItemFrame(customtkinter.CTkFrame):
             for col_num, widget in enumerate(row_widgets):
                 #create label widget from label strings
                 if col_num == 0:
-                    widget = customtkinter.CTkLabel(self, text=widget)
+                    widget = customtkinter.CTkLabel(self.centre_frame, text=widget)
 
                 widget.grid(row=row_num, column=col_num)
 
         # add new item button
-        add_item_button = customtkinter.CTkButton(self, text="Add item", command=self.on_add_item_button_click)
+        add_item_button = customtkinter.CTkButton(self.centre_frame, text="Add item",
+                                                  command=self.on_add_item_button_click)
         row_num += 1 #cheeky reuse of loop variable
         add_item_button.grid(row=row_num, column=1)
 
@@ -252,4 +259,6 @@ do I need to make make some of the fields (such as type, sub_type, theme) combob
 
 tidy up UI
 	make sure all frames are centralised where appropriate, add padding between widgets etc
+
+add README
 """
