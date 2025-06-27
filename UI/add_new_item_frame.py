@@ -253,7 +253,13 @@ class ManageComponentWindow(customtkinter.CTkToplevel):
 """
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-in CustomTable, stretch columns so all text fits in (or if you hover over it, text will be displayed)
+make tooltip flip to left when cursor gets too far to the right
+
+set delay for tooltip appearing?
+
+don't show blank tooltips
+
+display full cell value on hover, on CustomTable
 
 update all code to use leading underscore for all private function names
 

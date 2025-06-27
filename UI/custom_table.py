@@ -18,6 +18,7 @@ class CustomTable(customtkinter.CTkFrame):
         self.data_colour = data_colour
         self.selected_row_colour = selected_row_colour
         self.selected_row = None
+        self.tooltip = None
 
         # verify data is correct
         self.check_is_data_correct_shape()
@@ -37,8 +38,9 @@ class CustomTable(customtkinter.CTkFrame):
                 # data rows
                 else:
                     # hover bindings
-                    cell.bind("<Enter>", lambda event: self.mouse_hover_data_cell(event, cell_hover_colour))
-                    cell.bind("<Leave>", lambda event: self.mouse_hover_data_cell(event, data_colour))
+                    cell.bind("<Enter>", self.on_mouse_enter_cell)
+                    cell.bind("<Leave>", self.on_mouse_leave_cell)
+                    cell.bind("<Motion>", self.on_mouse_motion)
                     #click binding
                     cell.bind("<Button-1>", self.click_row)
 
@@ -74,7 +76,7 @@ class CustomTable(customtkinter.CTkFrame):
         self.change_row_colour(row_num, grid_info, self.selected_row_colour)
         print(row_num)
 
-    def mouse_hover_data_cell(self, event, colour):
+    def update_table_appearance(self, event, colour):
         # must use event.widget.master below instead of just event.widget
         # see https://stackoverflow.com/questions/75361805/customtkinter-why-does-this-event-widget-lose-the-proper-grid-information
         grid_info = event.widget.master.grid_info()
@@ -82,6 +84,36 @@ class CustomTable(customtkinter.CTkFrame):
 
         if row_num != self.selected_row:
             self.change_row_colour(row_num, grid_info, colour)
+
+    def on_mouse_enter_cell(self, event):
+        self.update_table_appearance(event, self.cell_hover_colour)
+
+    def on_mouse_leave_cell(self, event):
+        self.update_table_appearance(event, self.data_colour)
+
+        # remove tooltip
+        if self.tooltip is not None:
+            self.tooltip.destroy()
+            self.tooltip = None
+
+    def on_mouse_motion(self, event):
+        # calculate tooltip position
+        absolute_x = event.widget.winfo_rootx() + event.x # the position of it in the whole window
+        absolute_y = event.widget.winfo_rooty() + event.y
+        relative_x = absolute_x - self.winfo_rootx() # subtract the position of the CustomTable frame - needed for correct tooltip placement
+        relative_y = absolute_y - self.winfo_rooty()
+
+        self.show_tooltip(event.widget.get(), relative_x, relative_y)
+
+    def show_tooltip(self, text, x, y):
+        x_offset = 10
+        y_offset = -25
+
+        # create tooltip if deleted / not created yet
+        if self.tooltip == None:
+            self.tooltip = customtkinter.CTkLabel(self, text=text, padx=20)
+
+        self.tooltip.place(x=x+x_offset, y=y+y_offset) # slightly adjust x and y so tooltip is not covered by cursor or cut off at bottom
 
     def calculate_column_widths(self, full_data, font_size, min_width=100, max_width=350):
         font = tkfont.Font(size=font_size)
