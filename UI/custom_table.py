@@ -9,6 +9,7 @@ class CustomTable(customtkinter.CTkFrame):
                  selected_row_colour = "SteelBlue1"):
         super().__init__(master)
 
+        self.master = master
         self.data = data
         self.columns = columns
         self.combined_data = [columns] + data
@@ -100,18 +101,22 @@ class CustomTable(customtkinter.CTkFrame):
         # calculate tooltip position
         absolute_x = event.widget.winfo_rootx() + event.x # the position of it in the whole window
         absolute_y = event.widget.winfo_rooty() + event.y
-        relative_x = absolute_x - self.winfo_rootx() # subtract the position of the CustomTable frame - needed for correct tooltip placement
-        relative_y = absolute_y - self.winfo_rooty()
+        relative_x = absolute_x - self.master.winfo_rootx() # subtract the position of the CustomTable frame - needed for correct tooltip placement
+        relative_y = absolute_y - self.master.winfo_rooty()
 
         self.show_tooltip(event.widget.get(), relative_x, relative_y)
 
     def show_tooltip(self, text, x, y):
+        """Shows the tooltip for a CustomTable. The x and y values are for the master frame the CustomTable
+        is contained within, as the tooltip will be placed on the frame rather than the CustomTable so that
+        the tooltip is still displayed when its outside of the bounds of the CustomTable.
+        """
         x_offset = 10
         y_offset = -25
 
         # create tooltip if deleted / not created yet
         if self.tooltip == None:
-            self.tooltip = customtkinter.CTkLabel(self, text=text, padx=20)
+            self.tooltip = customtkinter.CTkLabel(self.master, text=text, padx=20)
 
         self.tooltip.place(x=x+x_offset, y=y+y_offset) # slightly adjust x and y so tooltip is not covered by cursor or cut off at bottom
 
