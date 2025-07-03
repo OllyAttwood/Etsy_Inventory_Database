@@ -3,7 +3,7 @@ from UI.spinbox import Spinbox
 
 class AdjustStockLevelPopup(customtkinter.CTkToplevel):
     """A popup window to adjust the stock level of a given item"""
-    def __init__(self, item_name, item_id, item_type, presenter):
+    def __init__(self, item_name, item_id, item_type, presenter, tab_view):
         super().__init__()
         self.title("Adjust Stock Level")
         self.geometry("500x250")
@@ -12,6 +12,7 @@ class AdjustStockLevelPopup(customtkinter.CTkToplevel):
         self.item_id = item_id
         self.item_type = item_type
         self.presenter = presenter
+        self.tab_view = tab_view
 
         # lock popup at front
         self.attributes("-topmost", "true")
@@ -53,10 +54,11 @@ class AdjustStockLevelPopup(customtkinter.CTkToplevel):
         if stock_level_change > 0:
             # increase stock
             self.presenter.update_stock_level(self.item_id, self.item_type, stock_level_change)
+            self.tab_view.reload_all_frames() # reloads UI to show new values
         elif stock_level_change < 0:
             # ask user if they want to automatically reduce the stock level of the product's components too
             if self.item_type == "Product":
-                ReduceComponentStockLevelPopup(self.item_id, self.item_type, stock_level_change, self.presenter)
+                ReduceComponentStockLevelPopup(self.item_id, self.item_type, stock_level_change, self.presenter, self.tab_view)
 
         # if stock_level_change == 0 then do nothing other tan close the window
 
@@ -64,7 +66,7 @@ class AdjustStockLevelPopup(customtkinter.CTkToplevel):
 
 class ReduceComponentStockLevelPopup(customtkinter.CTkToplevel):
     """This window asks the user if they also want to reduce the stock levels of the components that the item is made with"""
-    def __init__(self, item_id, item_type, stock_level_change, presenter):
+    def __init__(self, item_id, item_type, stock_level_change, presenter, tab_view):
         super().__init__()
         self.title("Reduce Component Stock Levels?")
         self.geometry("300x150")
@@ -73,6 +75,7 @@ class ReduceComponentStockLevelPopup(customtkinter.CTkToplevel):
         self.item_type = item_type
         self.stock_level_change = stock_level_change
         self.presenter = presenter
+        self.tab_view = tab_view
 
         # lock popup at front
         self.attributes("-topmost", "true")
@@ -112,7 +115,9 @@ class ReduceComponentStockLevelPopup(customtkinter.CTkToplevel):
     def on_no_button_click(self):
         self.presenter.update_stock_level(self.item_id, self.item_type, self.stock_level_change)
         self.close_window()
+        self.tab_view.reload_all_frames() # reloads UI to show new values
 
     def on_yes_button_click(self):
         self.presenter.update_product_stock_level_and_its_components_stock_levels(self.item_id, self.stock_level_change)
         self.close_window()
+        self.tab_view.reload_all_frames() # reloads UI to show new values

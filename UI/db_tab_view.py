@@ -30,7 +30,7 @@ class DBTabView(customtkinter.CTkTabview):
             self.tab(self.TAB_NAMES[i]).grid_columnconfigure(0, weight=1)
 
     def create_view_items_frame(self):
-        return ViewItemsFrame(master=self.tab(self.TAB_NAMES[self.VIEW_ITEMS_FRAME_INDEX]), presenter=self.presenter)
+        return ViewItemsFrame(master=self.tab(self.TAB_NAMES[self.VIEW_ITEMS_FRAME_INDEX]), presenter=self.presenter, tab_view=self)
 
     def create_add_new_item_frame(self):
         return AddNewItemFrame(master=self.tab(self.TAB_NAMES[self.ADD_NEW_ITEM_FRAME_INDEX]), presenter=self.presenter, tab_view=self)

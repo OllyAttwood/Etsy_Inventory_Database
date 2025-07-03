@@ -5,9 +5,11 @@ from UI.filter_bar_frame import FilterBarFrame
 from UI.adjust_stock_level_popup import AdjustStockLevelPopup
 
 class ViewItemsFrame(customtkinter.CTkFrame):
-    def __init__(self, master, presenter):
+    def __init__(self, master, presenter, tab_view):
         super().__init__(master)
+        self.master = master
         self.presenter = presenter
+        self.tab_view = tab_view
 
         self.init_filter_bar()
 
@@ -46,4 +48,4 @@ class ViewItemsFrame(customtkinter.CTkFrame):
         selected_item_name, selected_item_id = self.table.get_selected_row_item_name_and_id()
         selected_item_type = self.filter_bar.get_current_filter_values()["Item Type"]
 
-        AdjustStockLevelPopup(selected_item_name, selected_item_id, selected_item_type, self.presenter)
+        AdjustStockLevelPopup(selected_item_name, selected_item_id, selected_item_type, self.presenter, self.tab_view)

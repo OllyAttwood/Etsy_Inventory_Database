@@ -320,5 +320,4 @@ class DatabaseManager:
         for row in res.fetchall():
             components_list.append(row)
 
-        print(components_list)
         return components_list
