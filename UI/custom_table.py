@@ -132,3 +132,12 @@ class CustomTable(customtkinter.CTkFrame):
                     column_widths[column_num] = width
 
         return column_widths
+
+    def get_selected_row_item_name_and_id(self):
+        """Returns the item name and ID of the selected item, as a tuple e.g. (item_name, item_ID)"""
+        selected_data_row = self.selected_row - 1 # -1 as the column name row counts as row 0
+        row_data = self.data[selected_data_row]
+        item_name = row_data[1]
+        item_id = row_data[0]
+
+        return (item_name, item_id)

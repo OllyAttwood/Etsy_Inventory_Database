@@ -253,13 +253,17 @@ class ManageComponentWindow(customtkinter.CTkToplevel):
 """
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-make tooltip flip to left when cursor gets too far to the right
+update UI after updating stock levels
 
-set delay for tooltip appearing?
+change background colour of central frames
 
-don't show blank tooltips
+check that database is protected against SQL injections
 
-display full cell value on hover, on CustomTable
+possibly remove update_item_stock_level(), update_product_stock_level(), and update_component_stock_level() in DatabaseManager as they now basically duplicate the update_stock_level() method which I just created
+
+make all popup windows a subclass of a new class which implements all the common functionality between them such as locking the popup at the front
+
+don't show blank tooltips?
 
 update all code to use leading underscore for all private function names
 
@@ -267,6 +271,7 @@ do I need to make make some of the fields (such as type, sub_type, theme) combob
 
 tidy up UI
 	make sure all frames are centralised where appropriate, add padding between widgets etc
+    add popup confirmation boxes when adding items, updating stock levels etc
 
 add README
 """

@@ -295,3 +295,30 @@ class DatabaseManager:
             product_id = self.view_single_column_from_single_table_with_where_clause("product_id", "Product", "name", name)[0]
             component_id = self.view_single_column_from_single_table_with_where_clause("component_id", "Component", "name", component_name)[0]
             self.insert_data("MadeUsing", [product_id, component_id, quantity])
+
+    def update_stock_level(self, item_id, table_name, increase_decrease_amount):
+        """Increases or decreases the stock level of the given item by the sepcified amount,
+        e.g. if the current stock level is 5 and increase_decrease_amount is -1, then the new
+        stock level will be 4
+        """
+        id_column_name = table_name.lower() + "_id" # produces either "product_id" or "component_id"
+        update_sql = f"""UPDATE {table_name}
+                         SET stock = stock + {increase_decrease_amount}
+                         WHERE {id_column_name} = {item_id}"""
+        self.cursor.execute(update_sql)
+        self.connection.commit()
+
+    def view_components_of_product(self, product_id):
+        """Returns a list of the components that are used to create a product, as well as the quantity of each.
+        Each component and quantity is stored as a tuple, e.g. the entire list will look like [(2, 1), (0, 2), (7, 1)]
+        The first element of a tuple is the component ID and the second element is the quantity used in the product"""
+        query = """SELECT component_id, num_components_used
+                   FROM MadeUsing
+                   WHERE product_id = ?"""
+        res = self.cursor.execute(query, (str(product_id)))
+        components_list = []
+        for row in res.fetchall():
+            components_list.append(row)
+
+        print(components_list)
+        return components_list
