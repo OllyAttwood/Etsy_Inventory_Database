@@ -273,10 +273,12 @@ class DatabaseManager:
             component_id = self.view_single_column_from_single_table_with_where_clause("component_id", "Component", "name", component_name)[0]
             self.insert_data("MadeUsing", [product_id, component_id, quantity])
 
-    def update_stock_level(self, item_id, table_name, increase_decrease_amount):
+    def _update_item_stock_level(self, item_id, table_name, increase_decrease_amount):
         """Increases or decreases the stock level of the given item by the sepcified amount,
         e.g. if the current stock level is 5 and increase_decrease_amount is -1, then the new
-        stock level will be 4
+        stock level will be 4.
+        This method shouldn't be called directly, rather either update_product_stock_level() or
+        update_component_stock_level() should be called
         """
         id_column_name = table_name.lower() + "_id" # produces either "product_id" or "component_id"
         update_sql = f"""UPDATE {table_name}
@@ -284,6 +286,13 @@ class DatabaseManager:
                          WHERE {id_column_name} = ?"""
         self.cursor.execute(update_sql, (increase_decrease_amount, item_id))
         self.connection.commit()
+
+    def update_product_stock_level(self, product_id, increase_decrease_amount):
+        self._update_item_stock_level(product_id, "Product", increase_decrease_amount)
+
+    def update_component_stock_level(self, component_id, increase_decrease_amount):
+        self._update_item_stock_level(component_id, "Component", increase_decrease_amount)
+
 
     def view_components_of_product(self, product_id):
         """Returns a list of the components that are used to create a product, as well as the quantity of each.

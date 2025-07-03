@@ -74,23 +74,29 @@ class Presenter:
         """Saves a new product into the database"""
         self.db_manager.insert_new_product(name, design, colour, product_type, stock, low_stock_warning, components)
 
-    def update_stock_level(self, item_id, product_or_component, increase_decrease_amount):
-        """Increases or decreases the stock level of the given item by the sepcified amount,
+    def update_product_stock_level(self, product_id, increase_decrease_amount):
+        """Increases or decreases the stock level of the given product by the sepcified amount,
         e.g. if the current stock level is 5 and increase_decrease_amount is -1, then the new
         stock level will be 4.
-        product_or_component should be either 'Product' or 'Component'.
         """
-        self.db_manager.update_stock_level(item_id, product_or_component, increase_decrease_amount)
+        self.db_manager.update_product_stock_level(product_id, increase_decrease_amount)
+
+    def update_component_stock_level(self, component_id, increase_decrease_amount):
+        """Increases or decreases the stock level of the given component by the sepcified amount,
+        e.g. if the current stock level is 5 and increase_decrease_amount is -1, then the new
+        stock level will be 4.
+        """
+        self.db_manager.update_component_stock_level(component_id, increase_decrease_amount)
 
     def update_product_stock_level_and_its_components_stock_levels(self, product_id, product_stock_level_change):
-        """Does the same thing as update_stock_level() but also updates the stock levels of the components used to make the product"""
+        """Does the same thing as update_product_stock_level() but also updates the stock levels of the components used to make the product"""
         components_and_quantities = self.get_components_of_product(product_id)
         # reduce the stock level of each component that is used to make the product
         for component_id, component_quantity in components_and_quantities:
             component_update_amount = product_stock_level_change * component_quantity
-            self.update_stock_level(component_id, "Component", component_update_amount)
+            self.update_component_stock_level(component_id, component_update_amount)
 
-        self.update_stock_level(product_id, "Product", product_stock_level_change) # update product stock
+        self.update_product_stock_level(product_id, product_stock_level_change) # update product stock
 
     def get_components_of_product(self, product_id):
         """Returns a list of the components that are used to create a product, as well as the quantity of each.
