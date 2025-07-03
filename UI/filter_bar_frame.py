@@ -120,3 +120,10 @@ class FilterBarFrame(customtkinter.CTkFrame):
         for widget in self.input_widgets:
             if widget not in component_compatible_widgets:
                 widget.configure(state=new_state)
+
+    def display_components(self):
+        """Shows the components rather than the product. This method is needed so that
+        after adjusting a component's stock levels, the UI will still be showing the
+        components after the UI refreshes."""
+        self.product_component_switch.set("Component")
+        self.on_filter_widget_update(None) # forces the components to be displayed, as setting the switch doesn't do that

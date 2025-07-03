@@ -253,11 +253,11 @@ class ManageComponentWindow(customtkinter.CTkToplevel):
 """
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+add to ViewItemsFrame a button to view the product's components?
+
 change background colour of central frames
 
 check that database is protected against SQL injections
-
-possibly remove update_item_stock_level(), update_product_stock_level(), and update_component_stock_level() in DatabaseManager as they now basically duplicate the update_stock_level() method which I just created
 
 make all popup windows a subclass of a new class which implements all the common functionality between them such as locking the popup at the front
 

@@ -55,10 +55,10 @@ class AdjustStockLevelPopup(customtkinter.CTkToplevel):
             # increase stock
             if self.item_type == "Product":
                 self.presenter.update_product_stock_level(self.item_id, stock_level_change)
+                self.tab_view.reload_all_frames() # reloads UI to show new values
             elif self.item_type == "Component":
                 self.presenter.update_component_stock_level(self.item_id, stock_level_change)
-
-            self.tab_view.reload_all_frames() # reloads UI to show new values
+                self.tab_view.reload_all_frames(display_components_in_view_items_frame=True) # reloads UI to show new values
         elif stock_level_change < 0:
             if self.item_type == "Product":
                 # ask user if they want to automatically reduce the stock level of the product's components too
@@ -66,7 +66,7 @@ class AdjustStockLevelPopup(customtkinter.CTkToplevel):
             elif self.item_type == "Component":
                 # increase stock
                 self.presenter.update_component_stock_level(self.item_id, stock_level_change)
-                self.tab_view.reload_all_frames() # reloads UI to show new values
+                self.tab_view.reload_all_frames(display_components_in_view_items_frame=True) # reloads UI to show new values
 
         # if stock_level_change == 0 then do nothing other tan close the window
 
