@@ -253,8 +253,6 @@ class ManageComponentWindow(customtkinter.CTkToplevel):
 """
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-update UI after updating stock levels
-
 change background colour of central frames
 
 check that database is protected against SQL injections

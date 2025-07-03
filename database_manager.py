@@ -201,29 +201,6 @@ class DatabaseManager:
             "data": return_list
         }
 
-    #alters stock level for products/components
-    #this method shouldn't be called directly - use update_product_stock_level() or
-    #update_component_stock_level() instead
-    def update_item_stock_level(self, item_type, id, new_stock_level):
-        #names of the id fields for each table
-        id_field_dict = {
-            "Product": "product_id",
-            "Component": "component_id"
-        }
-
-        update_sql = f"""UPDATE {item_type}
-                         SET stock = ?
-                         WHERE {id_field_dict[item_type]} = ?"""
-
-        self.cursor.execute(update_sql, (new_stock_level, id))
-        self.connection.commit()
-
-    def update_product_stock_level(self, id, new_stock_level):
-        self.update_item_stock_level("Product", id, new_stock_level)
-
-    def update_component_stock_level(self, id, new_stock_level):
-        self.update_item_stock_level("Component", id, new_stock_level)
-
     def get_column_names_most_recent_query(self):
         return [col[0] for col in self.cursor.description]
 
