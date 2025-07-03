@@ -280,9 +280,9 @@ class DatabaseManager:
         """
         id_column_name = table_name.lower() + "_id" # produces either "product_id" or "component_id"
         update_sql = f"""UPDATE {table_name}
-                         SET stock = stock + {increase_decrease_amount}
-                         WHERE {id_column_name} = {item_id}"""
-        self.cursor.execute(update_sql)
+                         SET stock = stock + ?
+                         WHERE {id_column_name} = ?"""
+        self.cursor.execute(update_sql, (increase_decrease_amount, item_id))
         self.connection.commit()
 
     def view_components_of_product(self, product_id):
