@@ -219,7 +219,7 @@ class ManageComponentWindow(SmallPopup):
 
         close_button = customtkinter.CTkButton(self, text="Close", command=self.release_focus_and_hide)
         row_num += 1 # using the loop variable - cheeky
-        close_button.grid(row=row_num, column=0)
+        close_button.grid(row=row_num, column=0, columnspan=2)
 
     def get_selected_components(self):
         """Returns a list of tuples of the component names of which more than 0 quantity has been selected, and their quantities
@@ -247,6 +247,8 @@ class ManageComponentWindow(SmallPopup):
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 check that database is protected against SQL injections
+
+add scrolling to custom tables in case there are too many items to fit on screen
 
 don't show blank tooltips?
 
