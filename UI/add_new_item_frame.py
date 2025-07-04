@@ -254,6 +254,7 @@ class ManageComponentWindow(customtkinter.CTkToplevel):
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 add to ViewItemsFrame a button to view the product's components?
+    make sure it only works when products are being selected, not components
 
 change background colour of central frames
 
@@ -270,6 +271,9 @@ do I need to make make some of the fields (such as type, sub_type, theme) combob
 tidy up UI
 	make sure all frames are centralised where appropriate, add padding between widgets etc
     add popup confirmation boxes when adding items, updating stock levels etc
+    grey out the 'adjust stock' and 'view product's components' buttons until a product has been selected
+    sort out which buttons need ellipses in their text
+    standardise button text capitalisation
 
 add README
 """

@@ -103,3 +103,6 @@ class Presenter:
         Each component and quantity is stored as a tuple, e.g. the entire list will look like [(2, 1), (0, 2), (7, 1)]
         The first element of a tuple is the component ID and the second element is the quantity used in the product"""
         return self.db_manager.view_components_of_product(product_id)
+
+    def get_component_name_from_id(self, component_id):
+        return self.db_manager. view_component_name_from_id(component_id)

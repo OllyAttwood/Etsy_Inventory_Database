@@ -307,3 +307,6 @@ class DatabaseManager:
             components_list.append(row)
 
         return components_list
+
+    def view_component_name_from_id(self, component_id):
+        return self.view_single_column_from_single_table_with_where_clause("name", "Component", "component_id", component_id)
