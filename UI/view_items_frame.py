@@ -46,13 +46,13 @@ class ViewItemsFrame(customtkinter.CTkFrame):
         buttons_frame = customtkinter.CTkFrame(self)
         buttons_frame.grid(row=2, column=0)
 
-        self.adjust_stock_level_button = customtkinter.CTkButton(buttons_frame, text="Adjust stock level...", command=self.on_adjust_stock_level_button_click)
+        self.adjust_stock_level_button = customtkinter.CTkButton(buttons_frame, text="Adjust Stock Level...", command=self.on_adjust_stock_level_button_click)
         self.adjust_stock_level_button.grid(row=0, column=0)
 
-        self.view_components_button = customtkinter.CTkButton(buttons_frame, text="View product's components", command=self.on_view_components_button_click)
+        self.view_components_button = customtkinter.CTkButton(buttons_frame, text="View Product's Components", command=self.on_view_components_button_click)
         self.view_components_button.grid(row=0, column=1)
 
-        self.delete_item_button = customtkinter.CTkButton(buttons_frame, text="Delete item", command=self.on_delete_button)
+        self.delete_item_button = customtkinter.CTkButton(buttons_frame, text="Delete Item", command=self.on_delete_button)
         self.delete_item_button.grid(row=0, column=2)
 
     def on_adjust_stock_level_button_click(self):

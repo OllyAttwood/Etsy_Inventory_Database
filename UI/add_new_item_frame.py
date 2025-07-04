@@ -44,7 +44,7 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         self.design_dropdown = customtkinter.CTkOptionMenu(self.centre_frame, values=self.design_options)
         design_button_command = lambda: self.on_add_button_click(self.design_dropdown, self.design_input_field_names,
                                                                  "Design", self.presenter.save_new_design)
-        new_design_button = customtkinter.CTkButton(self.centre_frame, text="Add new design... ",
+        new_design_button = customtkinter.CTkButton(self.centre_frame, text="Add New Design... ",
                                                     command=design_button_command)
         self.widget_grid.append([design_lbl_str, self.design_dropdown, new_design_button])
 
@@ -58,7 +58,7 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         self.type_dropdown = customtkinter.CTkOptionMenu(self.centre_frame, values=self.type_options)
         type_button_command = lambda: self.on_add_button_click(self.type_dropdown, self.product_type_input_field_names,
                                                                "Product Type", self.presenter.save_new_product_type)
-        new_type_button = customtkinter.CTkButton(self.centre_frame, text="Add new type... ",
+        new_type_button = customtkinter.CTkButton(self.centre_frame, text="Add New Type... ",
                                                   command=type_button_command)
         self.widget_grid.append([type_lbl_str, self.type_dropdown, new_type_button])
 
@@ -76,7 +76,7 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 
         # components
         components_lbl_str = "Components:"
-        components_button = customtkinter.CTkButton(self.centre_frame, text="Manage components...",
+        components_button = customtkinter.CTkButton(self.centre_frame, text="Manage Components...",
                                                     command=self.component_button_click)
         self.widget_grid.append([components_lbl_str, components_button])
 
@@ -90,7 +90,7 @@ class AddNewItemFrame(customtkinter.CTkFrame):
                 widget.grid(row=row_num, column=col_num)
 
         # add new item button
-        add_item_button = customtkinter.CTkButton(self.centre_frame, text="Add item",
+        add_item_button = customtkinter.CTkButton(self.centre_frame, text="Add Item",
                                                   command=self.on_add_item_button_click)
         row_num += 1 #cheeky reuse of loop variable
         add_item_button.grid(row=row_num, column=1)
@@ -246,8 +246,6 @@ class ManageComponentWindow(SmallPopup):
 """
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-change background colour of central frames
-
 check that database is protected against SQL injections
 
 don't show blank tooltips?
@@ -260,8 +258,8 @@ tidy up UI
 	make sure all frames are centralised where appropriate, add padding between widgets etc
     add popup confirmation boxes when adding items, updating stock levels etc
     grey out the 'adjust stock' and 'view product's components' buttons until an item/product has been selected
-    sort out which buttons need ellipses in their text
     standardise button text capitalisation
+    change background colour of central frames
 
 add README
 """
