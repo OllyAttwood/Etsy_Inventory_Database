@@ -199,7 +199,10 @@ class ManageComponentWindow(SmallPopup):
 
         # display component info
         self.component_names = self.presenter.get_component_names()
-        self.display_components([[com_name, 0] for com_name in self.component_names])
+        if len(self.component_names) > 0: # check whether there are any components to show
+            self.display_components([[com_name, 0] for com_name in self.component_names])
+        else:
+            self.display_no_components_message()
 
     def reappear(self):
         self.deiconify()
@@ -232,10 +235,16 @@ class ManageComponentWindow(SmallPopup):
 
         return component_list
 
+    def display_no_components_message(self):
+        self.geometry("400x200")
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+
+        label = customtkinter.CTkLabel(self, text="No components have been added to the database yet!")
+        label.grid(row=0, column=0)
+
 """
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-cascade delete (i.e. delete the MadeUsing rows) when deleting a component (not product)
 
 change background colour of central frames
 
