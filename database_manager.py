@@ -61,8 +61,8 @@ class DatabaseManager:
                                 component_id INT,
                                 num_components_used INT NOT NULL,
                                 PRIMARY KEY(product_id, component_id),
-                                FOREIGN KEY(product_id) REFERENCES Product(product_id),
-                                FOREIGN KEY(component_id) REFERENCES Component(component_id)
+                                FOREIGN KEY(product_id) REFERENCES Product(product_id) ON DELETE CASCADE,
+                                FOREIGN KEY(component_id) REFERENCES Component(component_id) ON DELETE CASCADE
                             );"""
         self.cursor.execute(made_using_str)
 

@@ -235,7 +235,7 @@ class ManageComponentWindow(SmallPopup):
 """
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-add delete item button?
+cascade delete (i.e. delete the MadeUsing rows) when deleting a component (not product)
 
 change background colour of central frames
 
