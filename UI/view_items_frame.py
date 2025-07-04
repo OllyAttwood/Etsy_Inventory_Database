@@ -52,6 +52,9 @@ class ViewItemsFrame(customtkinter.CTkFrame):
         self.view_components_button = customtkinter.CTkButton(buttons_frame, text="View product's components", command=self.on_view_components_button_click)
         self.view_components_button.grid(row=0, column=1)
 
+        self.delete_item_button = customtkinter.CTkButton(buttons_frame, text="Delete item", command=self.on_delete_button)
+        self.delete_item_button.grid(row=0, column=2)
+
     def on_adjust_stock_level_button_click(self):
         selected_item_name, selected_item_id = self.table.get_selected_row_item_name_and_id()
         selected_item_type = self.filter_bar.get_current_filter_values()["Item Type"]
@@ -69,6 +72,12 @@ class ViewItemsFrame(customtkinter.CTkFrame):
         else:
             MessageBox("Incorrect Item Type", "You must select a product (not a component) to be able to view its components!")
 
+    def on_delete_button(self):
+        selected_item_name, selected_item_id = self.table.get_selected_row_item_name_and_id()
+        selected_item_type = self.filter_bar.get_current_filter_values()["Item Type"]
+
+        ConfirmItemDeletePopup(selected_item_name, selected_item_id, selected_item_type, self.presenter, self.tab_view)
+
 
 class ViewProductsComponentsPopup(SmallPopup):
     def __init__(self, product_name, component_ids_and_quantities, presenter):
@@ -81,3 +90,44 @@ class ViewProductsComponentsPopup(SmallPopup):
         component_names = [self.presenter.get_component_name_from_id(component_id)[0] for component_id in component_ids]
         table = CustomTable(self, list(zip(component_names, quantities)), ["Component Name", "Quantity"])
         table.grid(row=0, column=0)
+
+class ConfirmItemDeletePopup(SmallPopup):
+    def __init__(self, item_name, item_id, item_type, presenter, tab_view):
+        super().__init__()
+        self.geometry("350x200")
+        self.title(f"Delete {item_type}?")
+
+        self.item_id = item_id
+        self.item_type = item_type
+        self.presenter = presenter
+        self.tab_view = tab_view
+
+        self.grid_columnconfigure(0, weight=1)
+
+        self.text_label = customtkinter.CTkLabel(self, text=f"""Are you sure you want to delete the following {item_type.lower()}:
+                                                             \n{item_name}""",
+                                                       wraplength=300)
+        self.text_label.grid(row=0, column=0)
+
+        # buttons
+        button_frame = customtkinter.CTkFrame(self)
+        button_frame.grid(row=1, column=0)
+
+        yes_button = customtkinter.CTkButton(button_frame, text="Yes", command=self.on_yes_button_click)
+        yes_button.grid(row=0, column=0)
+
+        no_button = customtkinter.CTkButton(button_frame, text="No", command=self.on_no_button_click)
+        no_button.grid(row=0, column=1)
+
+    def on_yes_button_click(self):
+        if self.item_type == "Product":
+            self.presenter.delete_product(self.item_id)
+            self.tab_view.reload_all_frames()
+            self.release_focus_and_hide()
+        elif self.item_type == "Component":
+            self.presenter.delete_component(self.item_id)
+            self.tab_view.reload_all_frames(display_components_in_view_items_frame=True)
+            self.release_focus_and_hide()
+
+    def on_no_button_click(self):
+        self.release_focus_and_hide()

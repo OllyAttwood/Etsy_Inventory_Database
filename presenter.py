@@ -106,3 +106,9 @@ class Presenter:
 
     def get_component_name_from_id(self, component_id):
         return self.db_manager. view_component_name_from_id(component_id)
+
+    def delete_product(self, product_id):
+        self.db_manager.delete_product(product_id)
+
+    def delete_component(self, component_id):
+        self.db_manager.delete_component(component_id)

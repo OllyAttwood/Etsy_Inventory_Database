@@ -241,8 +241,6 @@ change background colour of central frames
 
 check that database is protected against SQL injections
 
-make all popup windows a subclass of a new class which implements all the common functionality between them such as locking the popup at the front
-
 don't show blank tooltips?
 
 update all code to use leading underscore for all private function names

@@ -310,3 +310,15 @@ class DatabaseManager:
 
     def view_component_name_from_id(self, component_id):
         return self.view_single_column_from_single_table_with_where_clause("name", "Component", "component_id", component_id)
+
+    def delete_product(self, product_id):
+        sql = f"""DELETE FROM Product
+                  WHERE product_id = ?"""
+        self.cursor.execute(sql, (str(product_id)))
+        self.connection.commit()
+
+    def delete_component(self, component_id):
+        sql = f"""DELETE FROM Component
+                  WHERE component_id = ?"""
+        self.cursor.execute(sql, (str(component_id)))
+        self.connection.commit()
