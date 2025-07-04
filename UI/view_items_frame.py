@@ -4,6 +4,7 @@ from UI.custom_table import CustomTable
 from UI.filter_bar_frame import FilterBarFrame
 from UI.adjust_stock_level_popup import AdjustStockLevelPopup
 from UI.messagebox import MessageBox
+from UI.small_popup import SmallPopup
 
 class ViewItemsFrame(customtkinter.CTkFrame):
     def __init__(self, master, presenter, tab_view):
@@ -69,33 +70,14 @@ class ViewItemsFrame(customtkinter.CTkFrame):
             MessageBox("Incorrect Item Type", "You must select a product (not a component) to be able to view its components!")
 
 
-class ViewProductsComponentsPopup(customtkinter.CTkToplevel):
+class ViewProductsComponentsPopup(SmallPopup):
     def __init__(self, product_name, component_ids_and_quantities, presenter):
         super().__init__()
         self.title(f"{product_name} Components")
         self.presenter = presenter
-
-        # lock popup at front
-        self.attributes("-topmost", "true")
-        # make main window unclickable until popup is closed
-        self.lock_at_front()
-
-        # override the exit button as exiting produces an error, so we just
-        # hide the window and restore it if necessary
-        self.protocol("WM_DELETE_WINDOW", self.release_focus_and_hide)
 
         component_ids = [component_data[0] for component_data in component_ids_and_quantities]
         quantities = [component_data[1] for component_data in component_ids_and_quantities]
         component_names = [self.presenter.get_component_name_from_id(component_id)[0] for component_id in component_ids]
         table = CustomTable(self, list(zip(component_names, quantities)), ["Component Name", "Quantity"])
         table.grid(row=0, column=0)
-
-    # hides window
-    def release_focus_and_hide(self):
-        self.grab_release()
-        self.withdraw()
-
-    # make main window unclickable until popup is closed
-    def lock_at_front(self):
-        self.wait_visibility() # https://raspberrypi.stackexchange.com/a/105522
-        self.grab_set()

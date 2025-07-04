@@ -1,7 +1,8 @@
 import customtkinter
 from UI.spinbox import Spinbox
+from UI.small_popup import SmallPopup
 
-class AdjustStockLevelPopup(customtkinter.CTkToplevel):
+class AdjustStockLevelPopup(SmallPopup):
     """A popup window to adjust the stock level of a given item"""
     def __init__(self, item_name, item_id, item_type, presenter, tab_view):
         super().__init__()
@@ -13,14 +14,6 @@ class AdjustStockLevelPopup(customtkinter.CTkToplevel):
         self.item_type = item_type
         self.presenter = presenter
         self.tab_view = tab_view
-
-        # lock popup at front
-        self.attributes("-topmost", "true")
-        # make main window unclickable until popup is closed
-        self.lock_at_front()
-
-        # override the exit button
-        self.protocol("WM_DELETE_WINDOW", self.close_window)
 
         #keep widgets in centre during resizing
         self.grid_rowconfigure(0, weight=1)
@@ -42,11 +35,6 @@ class AdjustStockLevelPopup(customtkinter.CTkToplevel):
         self.grab_release() # release focus
         self.withdraw()
         self.destroy()
-
-    # make main window unclickable until popup is closed
-    def lock_at_front(self):
-        self.wait_visibility() # https://raspberrypi.stackexchange.com/a/105522
-        self.grab_set()
 
     def apply_change_and_close_window(self):
         stock_level_change = self.spinbox.get()
@@ -72,7 +60,7 @@ class AdjustStockLevelPopup(customtkinter.CTkToplevel):
 
         self.close_window()
 
-class ReduceComponentStockLevelPopup(customtkinter.CTkToplevel):
+class ReduceComponentStockLevelPopup(SmallPopup):
     """This window asks the user if they also want to reduce the stock levels of the components that the item is made with"""
     def __init__(self, item_id, item_type, stock_level_change, presenter, tab_view):
         super().__init__()
@@ -84,14 +72,6 @@ class ReduceComponentStockLevelPopup(customtkinter.CTkToplevel):
         self.stock_level_change = stock_level_change
         self.presenter = presenter
         self.tab_view = tab_view
-
-        # lock popup at front
-        self.attributes("-topmost", "true")
-        # make main window unclickable until popup is closed
-        self.lock_at_front()
-
-        # override the exit button
-        self.protocol("WM_DELETE_WINDOW", self.close_window)
 
         # widgets
         central_frame = customtkinter.CTkFrame(self) # frame to keep all widgets in centre without stretching them
@@ -110,11 +90,6 @@ class ReduceComponentStockLevelPopup(customtkinter.CTkToplevel):
         no_button = customtkinter.CTkButton(central_frame, text="No", command=self.on_no_button_click)
         no_button.grid(row=1, column=1)
 
-    def close_window(self):
-        self.grab_release() # release focus
-        self.withdraw()
-        self.destroy()
-
     # make main window unclickable until popup is closed
     def lock_at_front(self):
         self.wait_visibility() # https://raspberrypi.stackexchange.com/a/105522
@@ -125,10 +100,10 @@ class ReduceComponentStockLevelPopup(customtkinter.CTkToplevel):
             self.presenter.update_product_stock_level(self.item_id, self.stock_level_change)
         elif self.item_type == "Component":
             self.presenter.update_component_stock_level(self.item_id, self.stock_level_change)
-        self.close_window()
+        self.release_focus_and_hide()
         self.tab_view.reload_all_frames() # reloads UI to show new values
 
     def on_yes_button_click(self):
         self.presenter.update_product_stock_level_and_its_components_stock_levels(self.item_id, self.stock_level_change)
-        self.close_window()
+        self.release_focus_and_hide()
         self.tab_view.reload_all_frames() # reloads UI to show new values

@@ -1,6 +1,7 @@
 import customtkinter
+from UI.small_popup import SmallPopup
 
-class MultiInputDialog(customtkinter.CTkToplevel):
+class MultiInputDialog(SmallPopup):
     """An input pop-up window which gets and returns multiple inputs from the user (text) as a dictionary.
     get_user_input() should be called after creating a MultiInputDialog so that the input is returned to that function
     """
@@ -12,10 +13,6 @@ class MultiInputDialog(customtkinter.CTkToplevel):
         self.entry_widgets = []
         self.subject_name = subject_name
 
-        # lock popup at front
-        self.attributes("-topmost", "true")
-        # make main window unclickable until popup is closed
-        self.lock_at_front()
         self.protocol("WM_DELETE_WINDOW", self.on_window_closed)
 
         self.display_widgets(input_text_list)
@@ -38,11 +35,6 @@ class MultiInputDialog(customtkinter.CTkToplevel):
         """Stores the values in the entry fields, then closes the window"""
         self.input_dict = self.get_entry_inputs()
         self.destroy_window()
-
-    # make main window unclickable until popup is closed
-    def lock_at_front(self):
-        self.wait_visibility() # https://raspberrypi.stackexchange.com/a/105522
-        self.grab_set()
 
     def get_user_input(self):
         """The function to call to wait until the user has entered and submitted input.

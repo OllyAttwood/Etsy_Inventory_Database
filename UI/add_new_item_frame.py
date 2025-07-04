@@ -4,6 +4,7 @@ from UI.multi_input_dialog import MultiInputDialog
 from tkinter import NORMAL, DISABLED
 from UI.messagebox import MessageBox
 import sqlite3
+from UI.small_popup import SmallPopup
 
 class AddNewItemFrame(customtkinter.CTkFrame):
     def __init__(self, master, presenter, tab_view):
@@ -189,35 +190,16 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 
 
 
-class ManageComponentWindow(customtkinter.CTkToplevel):
+class ManageComponentWindow(SmallPopup):
     def __init__(self, presenter):
         super().__init__()
         self.title("Manage Components")
         self.presenter = presenter
         self.spinboxes = []
 
-        # lock popup at front
-        self.attributes("-topmost", "true")
-        # make main window unclickable until popup is closed
-        self.lock_at_front()
-
-        # override the exit button as exiting produces an error, so we just
-        # hide the window and restore it if necessary
-        self.protocol("WM_DELETE_WINDOW", self.release_focus_and_hide)
-
         # display component info
         self.component_names = self.presenter.get_component_names()
         self.display_components([[com_name, 0] for com_name in self.component_names])
-
-    # hides window
-    def release_focus_and_hide(self):
-        self.grab_release()
-        self.withdraw()
-
-    # make main window unclickable until popup is closed
-    def lock_at_front(self):
-        self.wait_visibility() # https://raspberrypi.stackexchange.com/a/105522
-        self.grab_set()
 
     def reappear(self):
         self.deiconify()
@@ -253,8 +235,7 @@ class ManageComponentWindow(customtkinter.CTkToplevel):
 """
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-add to ViewItemsFrame a button to view the product's components?
-    make sure it only works when products are being selected, not components
+add delete item button?
 
 change background colour of central frames
 
@@ -271,7 +252,7 @@ do I need to make make some of the fields (such as type, sub_type, theme) combob
 tidy up UI
 	make sure all frames are centralised where appropriate, add padding between widgets etc
     add popup confirmation boxes when adding items, updating stock levels etc
-    grey out the 'adjust stock' and 'view product's components' buttons until a product has been selected
+    grey out the 'adjust stock' and 'view product's components' buttons until an item/product has been selected
     sort out which buttons need ellipses in their text
     standardise button text capitalisation
 
