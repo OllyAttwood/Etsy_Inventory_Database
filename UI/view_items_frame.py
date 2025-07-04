@@ -3,6 +3,7 @@ from tkinter import StringVar
 from UI.custom_table import CustomTable
 from UI.filter_bar_frame import FilterBarFrame
 from UI.adjust_stock_level_popup import AdjustStockLevelPopup
+from UI.messagebox import MessageBox
 
 class ViewItemsFrame(customtkinter.CTkFrame):
     def __init__(self, master, presenter, tab_view):
@@ -57,10 +58,15 @@ class ViewItemsFrame(customtkinter.CTkFrame):
         AdjustStockLevelPopup(selected_item_name, selected_item_id, selected_item_type, self.presenter, self.tab_view)
 
     def on_view_components_button_click(self):
-        selected_product_name, selected_product_id = self.table.get_selected_row_item_name_and_id()
-        component_ids_and_quantities = self.presenter.get_components_of_product(selected_product_id)
+        selected_item_type = self.filter_bar.get_current_filter_values()["Item Type"]
 
-        ViewProductsComponentsPopup(selected_product_name, component_ids_and_quantities, self.presenter)
+        if selected_item_type == "Product":
+            selected_product_name, selected_product_id = self.table.get_selected_row_item_name_and_id()
+            component_ids_and_quantities = self.presenter.get_components_of_product(selected_product_id)
+
+            ViewProductsComponentsPopup(selected_product_name, component_ids_and_quantities, self.presenter)
+        else:
+            MessageBox("Incorrect Item Type", "You must select a product (not a component) to be able to view its components!")
 
 
 class ViewProductsComponentsPopup(customtkinter.CTkToplevel):

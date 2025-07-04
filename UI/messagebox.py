@@ -20,7 +20,7 @@ class MessageBox(customtkinter.CTkToplevel):
         self.grid_columnconfigure(0, weight=1)
 
         #widgets
-        message_label = customtkinter.CTkLabel(self, text=message)
+        message_label = customtkinter.CTkLabel(self, text=message, wraplength=250)
         message_label.grid(row=0, column=0)
 
         ok_button = customtkinter.CTkButton(self, text="OK", command=self.close_window)
