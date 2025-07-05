@@ -301,7 +301,7 @@ class DatabaseManager:
         query = """SELECT component_id, num_components_used
                    FROM MadeUsing
                    WHERE product_id = ?"""
-        res = self.cursor.execute(query, (str(product_id)))
+        res = self.cursor.execute(query, (str(product_id),))
         components_list = []
         for row in res.fetchall():
             components_list.append(row)

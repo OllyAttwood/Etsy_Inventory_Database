@@ -246,9 +246,9 @@ class ManageComponentWindow(SmallPopup):
 """
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-check that database is protected against SQL injections
-
 add scrolling to custom tables in case there are too many items to fit on screen
+
+check that database is protected against SQL injections
 
 don't show blank tooltips?
 
@@ -260,8 +260,9 @@ tidy up UI
 	make sure all frames are centralised where appropriate, add padding between widgets etc
     add popup confirmation boxes when adding items, updating stock levels etc
     grey out the 'adjust stock' and 'view product's components' buttons until an item/product has been selected
-    standardise button text capitalisation
     change background colour of central frames
+
+add comments to functions/classes
 
 add README
 """
