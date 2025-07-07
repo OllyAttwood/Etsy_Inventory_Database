@@ -97,12 +97,14 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         add_item_button.grid(row=row_num, column=1, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING*2)
 
     def component_button_click(self):
+        """Opens the component selection window - creates a new one if it doesn't already exist"""
         if not self.manage_component_window:
             self.manage_component_window = ManageComponentWindow(self.presenter)
         else:
             self.manage_component_window.reappear()
 
     def load_menu_options_values(self):
+        """Gets the existing values for the comboboxes/optionmenus"""
         self.design_options = self.presenter.get_product_designs()
         self.colour_options = self.presenter.get_product_colours()
         self.type_options = self.presenter.get_product_type_names()
@@ -131,6 +133,7 @@ class AddNewItemFrame(customtkinter.CTkFrame):
             option_menu_to_update.set(new_option)
 
     def add_new_option_to_optionmenu(self, new_option, optionmenu):
+        """Updates the optionmenu with a new option at the end of the list"""
         current_options = list(optionmenu._values)  # _values is the internal list of options
         current_options.append(new_option)
         optionmenu.configure(values=current_options)
@@ -187,11 +190,15 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         self.tab_view.reload_all_frames()
 
     def create_name_error_popup(self):
+        """Creates and shows an error message for when a product/component already exists with the same name"""
         MessageBox("Name Error", "That name is already in use!")
 
 
 
 class ManageComponentWindow(SmallPopup):
+    """The pop-up window to display all the available components, with spinboxes to select quantities.
+    Shows an error message if there are no saved components.
+    """
     def __init__(self, presenter):
         super().__init__()
         self.title("Manage Components")
@@ -206,10 +213,12 @@ class ManageComponentWindow(SmallPopup):
             self.display_no_components_message()
 
     def reappear(self):
+        """Makes the window re-appear, with the same quantities as previously selected"""
         self.deiconify()
         self.lock_at_front()
 
     def display_components(self, component_data):
+        """Sets up all the UI widgets"""
         #loop through component_data, adding widgets
         for row_num, component_row in enumerate(component_data):
             label = customtkinter.CTkLabel(self, text=component_row[0])
@@ -237,6 +246,7 @@ class ManageComponentWindow(SmallPopup):
         return component_list
 
     def display_no_components_message(self):
+        """Show an error message for when there are no saved components to display"""
         self.geometry("400x200")
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
@@ -247,18 +257,17 @@ class ManageComponentWindow(SmallPopup):
 """
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-add scrolling to custom tables in case there are too many items to fit on screen
-
 check that database is protected against SQL injections
+    - whitelist for table names and columns?
 
-don't show blank tooltips?
+alphabetise the dropdown menu options / manage components list etc? maybe not worth it
 
 update all code to use leading underscore for all private function names
 
 do I need to make make some of the fields (such as type, sub_type, theme) comboboxes in the MultInputDialogs so that the user can choose existing options as well as adding new ones?
 
 tidy up UI
-    add popup confirmation boxes when adding items, updating stock levels etc
+    <PROBABLY NOT NEEDED> add popup confirmation boxes when adding items, updating stock levels etc
     grey out the 'adjust stock' and 'view product's components' buttons until an item/product has been selected
     change background colour of central frames?
 
