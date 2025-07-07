@@ -1,5 +1,6 @@
 import customtkinter
 from tkinter import StringVar, DISABLED, NORMAL
+from UI import config
 
 class FilterBarFrame(customtkinter.CTkFrame):
     def __init__(self, master, design_options, theme_options, type_options, sub_type_options, colour_options):
@@ -9,10 +10,6 @@ class FilterBarFrame(customtkinter.CTkFrame):
         #add the empty option to the dropdown menus as the default
         self.add_empty_string_option([design_options, theme_options, type_options, sub_type_options, colour_options])
 
-        # padding vars
-        self.lbl_padx = 10
-        self.widget_padx= (0,10)
-        self.pady = 10 # pady for both labels and other widgets
         # widget position counter
         self.current_widget_num = 0
         self.input_widgets = []
@@ -65,11 +62,11 @@ class FilterBarFrame(customtkinter.CTkFrame):
         self.current_filter_values = self.get_current_filter_values()
 
     def add_label(self, lbl_widget):
-        lbl_widget.grid(row=0, column=self.current_widget_num, padx=self.lbl_padx, pady=self.pady)
+        lbl_widget.grid(row=0, column=self.current_widget_num, padx=(config.WIDGET_X_PADDING, config.WIDGET_X_PADDING/3), pady=config.WIDGET_Y_PADDING)
         self.current_widget_num += 1
 
     def add_input_widget(self, widget):
-        widget.grid(row=0, column=self.current_widget_num, padx=self.widget_padx, pady=self.pady)
+        widget.grid(row=0, column=self.current_widget_num, padx=(0, config.WIDGET_X_PADDING), pady=config.WIDGET_Y_PADDING)
         self.current_widget_num += 1
         self.add_command_to_widget(widget) # update data table when filter is changed
         self.input_widgets.append(widget)
