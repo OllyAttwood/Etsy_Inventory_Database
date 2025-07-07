@@ -258,10 +258,9 @@ update all code to use leading underscore for all private function names
 do I need to make make some of the fields (such as type, sub_type, theme) comboboxes in the MultInputDialogs so that the user can choose existing options as well as adding new ones?
 
 tidy up UI
-	make sure all frames are centralised where appropriate, add padding between widgets etc
     add popup confirmation boxes when adding items, updating stock levels etc
     grey out the 'adjust stock' and 'view product's components' buttons until an item/product has been selected
-    change background colour of central frames
+    change background colour of central frames?
 
 add comments to functions/classes
 
