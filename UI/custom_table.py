@@ -55,8 +55,9 @@ class CustomTable(customtkinter.CTkScrollableFrame):
 
         # bindings for scrolling, as mouse wheel scrolling doesn't work in linux
         # see https://github.com/TomSchimansky/CustomTkinter/issues/1356
-        self.bind("<Button-4>", lambda e: self.scroll_table(self.SCROLL_UP))
-        self.bind("<Button-5>", lambda e: self.scroll_table(self.SCROLL_DOWN))
+        # children widgets also need binding so that mousewheel scrolling works when cursor is over the table widget itself (not just the frame)
+        self.bind_widget_and_children(self, "<Button-4>", lambda e: self.scroll_table(self.SCROLL_UP))
+        self.bind_widget_and_children(self, "<Button-5>", lambda e: self.scroll_table(self.SCROLL_DOWN))
 
     def check_is_data_correct_shape(self):
         if len(self.data) == 0:
@@ -161,3 +162,11 @@ class CustomTable(customtkinter.CTkScrollableFrame):
             scroll_speed *= -1
 
         self._parent_canvas.yview("scroll", scroll_speed, "units")
+
+    def bind_widget_and_children(self, widget, event, func):
+        """Recursive function to bind a function to a widget, and all its children (e.g. a frame and all its widgets)"""
+        widget.bind(event, func)
+
+        # bind all the widget's children recursively
+        for child in widget.winfo_children():
+            self.bind_widget_and_children(child, event, func)
