@@ -112,7 +112,7 @@ class ConfirmItemDeletePopup(SmallPopup):
 
         self.text_label = customtkinter.CTkLabel(self, text=f"""Are you sure you want to delete the following {item_type.lower()}:
                                                              \n{item_name}""",
-                                                       wraplength=300)
+                                                       wraplength=300, pady=config.WIDGET_Y_PADDING)
         self.text_label.grid(row=0, column=0)
 
         # buttons
