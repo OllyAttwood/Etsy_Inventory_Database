@@ -1,9 +1,13 @@
 import customtkinter
 from tkinter import StringVar
 import tkinter.font as tkfont
+from UI import config
 
 # class to create a table widget
 class CustomTable(customtkinter.CTkScrollableFrame):
+    SCROLL_UP = 0
+    SCROLL_DOWN = 1
+
     def __init__(self, master, data, columns, font_size=15, header_colour="black",
                  data_colour="grey", cell_hover_colour="gray60",
                  selected_row_colour = "SteelBlue1"):
@@ -48,6 +52,11 @@ class CustomTable(customtkinter.CTkScrollableFrame):
                     cell.bind("<Motion>", self.on_mouse_motion)
                     #click binding
                     cell.bind("<Button-1>", self.click_row)
+
+        # bindings for scrolling, as mouse wheel scrolling doesn't work in linux
+        # see https://github.com/TomSchimansky/CustomTkinter/issues/1356
+        self.bind("<Button-4>", lambda e: self.scroll_table(self.SCROLL_UP))
+        self.bind("<Button-5>", lambda e: self.scroll_table(self.SCROLL_DOWN))
 
     def check_is_data_correct_shape(self):
         if len(self.data) == 0:
@@ -145,3 +154,10 @@ class CustomTable(customtkinter.CTkScrollableFrame):
         item_id = row_data[0]
 
         return (item_name, item_id)
+
+    def scroll_table(self, scroll_direction):
+        scroll_speed = config.TABLE_SCROLL_SPEED
+        if scroll_direction == self.SCROLL_UP:
+            scroll_speed *= -1
+
+        self._parent_canvas.yview("scroll", scroll_speed, "units")
