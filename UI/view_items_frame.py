@@ -22,7 +22,9 @@ class ViewItemsFrame(customtkinter.CTkFrame):
 
         self.create_buttons()
 
+        # expand table frame to fill window
         self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
 
     def update_table(self, filters):
         self.table.grid_forget()
@@ -41,7 +43,7 @@ class ViewItemsFrame(customtkinter.CTkFrame):
 
     def create_table(self, data_rows, column_names):
         self.table = CustomTable(self, data_rows, column_names)
-        self.table.grid(row=1, column=0)
+        self.table.grid(row=1, column=0, sticky="nsew")
 
     def create_buttons(self):
         buttons_frame = customtkinter.CTkFrame(self)

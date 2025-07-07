@@ -3,7 +3,7 @@ from tkinter import StringVar
 import tkinter.font as tkfont
 
 # class to create a table widget
-class CustomTable(customtkinter.CTkFrame):
+class CustomTable(customtkinter.CTkScrollableFrame):
     def __init__(self, master, data, columns, font_size=15, header_colour="black",
                  data_colour="grey", cell_hover_colour="gray60",
                  selected_row_colour = "SteelBlue1"):
@@ -21,6 +21,10 @@ class CustomTable(customtkinter.CTkFrame):
         self.selected_row = None
         self.tooltip = None
 
+        centre_frame = customtkinter.CTkFrame(self) # needed to centre the table horizontally
+        centre_frame.grid(row=0, column=0)
+        self.grid_columnconfigure(0, weight=1) # centres the table horizontally
+
         # verify data is correct
         self.check_is_data_correct_shape()
 
@@ -28,7 +32,7 @@ class CustomTable(customtkinter.CTkFrame):
         for row_num, row in enumerate(self.combined_data):
             for col_num, cell_text in enumerate(row):
                 cell_width = self.column_widths[col_num]
-                cell = customtkinter.CTkEntry(self, textvariable=StringVar(self, cell_text),
+                cell = customtkinter.CTkEntry(centre_frame, textvariable=StringVar(self, cell_text),
                                               font=self.font, state="disabled", fg_color=data_colour,
                                               width=cell_width)
                 cell.grid(row=row_num, column=col_num)
