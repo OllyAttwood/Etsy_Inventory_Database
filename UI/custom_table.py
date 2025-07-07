@@ -8,9 +8,9 @@ class CustomTable(customtkinter.CTkScrollableFrame):
     SCROLL_UP = 0
     SCROLL_DOWN = 1
 
-    def __init__(self, master, data, columns, font_size=15, header_colour="black",
-                 data_colour="grey", cell_hover_colour="gray60",
-                 selected_row_colour = "SteelBlue1"):
+    def __init__(self, master, data, columns, font_size=15, header_colour=config.TABLE_HEADER_COLOUR,
+                 data_colour=config.TABLE_REGULAR_ROW_COLOUR, cell_hover_colour=config.TABLE_HOVER_COLOUR,
+                 selected_row_colour = config.TABLE_SELECTED_ROW_COLOUR):
         super().__init__(master)
 
         self.master = master
