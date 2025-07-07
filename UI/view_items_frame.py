@@ -85,14 +85,17 @@ class ViewItemsFrame(customtkinter.CTkFrame):
 class ViewProductsComponentsPopup(SmallPopup):
     def __init__(self, product_name, component_ids_and_quantities, presenter):
         super().__init__()
+        self.geometry("400x200")
         self.title(f"{product_name} Components")
         self.presenter = presenter
+
+        self.grid_columnconfigure(0, weight=1)
 
         component_ids = [component_data[0] for component_data in component_ids_and_quantities]
         quantities = [component_data[1] for component_data in component_ids_and_quantities]
         component_names = [self.presenter.get_component_name_from_id(component_id)[0] for component_id in component_ids]
         table = CustomTable(self, list(zip(component_names, quantities)), ["Component Name", "Quantity"])
-        table.grid(row=0, column=0)
+        table.grid(row=0, column=0, sticky="nsew")
 
 class ConfirmItemDeletePopup(SmallPopup):
     def __init__(self, item_name, item_id, item_type, presenter, tab_view):
