@@ -1,6 +1,7 @@
 import customtkinter
 from UI.spinbox import Spinbox
 from UI.small_popup import SmallPopup
+from UI import config
 
 class AdjustStockLevelPopup(SmallPopup):
     """A popup window to adjust the stock level of a given item"""
@@ -29,7 +30,7 @@ class AdjustStockLevelPopup(SmallPopup):
         self.spinbox.grid(row=1, column=0)
 
         ok_button = customtkinter.CTkButton(self, text="OK", command=self.apply_change_and_close_window)
-        ok_button.grid(row=2, column=0)
+        ok_button.grid(row=2, column=0, pady=config.WIDGET_Y_PADDING)
 
     def close_window(self):
         self.grab_release() # release focus

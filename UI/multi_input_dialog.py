@@ -1,5 +1,6 @@
 import customtkinter
 from UI.small_popup import SmallPopup
+from UI import config
 
 class MultiInputDialog(SmallPopup):
     """An input pop-up window which gets and returns multiple inputs from the user (text) as a dictionary.
@@ -21,15 +22,15 @@ class MultiInputDialog(SmallPopup):
         # loops through and creates a label/entry pair of widgets for each required input
         for row, input_text in enumerate(input_text_list):
             label = customtkinter.CTkLabel(self, text=input_text)
-            label.grid(row=row, column=0)
+            label.grid(row=row, column=0, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
 
             entry = customtkinter.CTkEntry(self)
             self.entry_widgets.append(entry)
-            entry.grid(row=row, column=1)
+            entry.grid(row=row, column=1, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
 
         # creates the add button
         add_button = customtkinter.CTkButton(self, text=f"Add {self.subject_name}", command=self.on_add_button_click)
-        add_button.grid(row=len(input_text_list), column=1)
+        add_button.grid(row=len(input_text_list), column=1, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
 
     def on_add_button_click(self):
         """Stores the values in the entry fields, then closes the window"""

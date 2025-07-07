@@ -5,6 +5,7 @@ from tkinter import NORMAL, DISABLED
 from UI.messagebox import MessageBox
 import sqlite3
 from UI.small_popup import SmallPopup
+from UI import config
 
 class AddNewItemFrame(customtkinter.CTkFrame):
     def __init__(self, master, presenter, tab_view):
@@ -87,13 +88,13 @@ class AddNewItemFrame(customtkinter.CTkFrame):
                 if col_num == 0:
                     widget = customtkinter.CTkLabel(self.centre_frame, text=widget)
 
-                widget.grid(row=row_num, column=col_num)
+                widget.grid(row=row_num, column=col_num, padx=config.WIDGET_X_PADDING/2, pady=config.WIDGET_Y_PADDING/2)
 
         # add new item button
         add_item_button = customtkinter.CTkButton(self.centre_frame, text="Add Item",
                                                   command=self.on_add_item_button_click)
         row_num += 1 #cheeky reuse of loop variable
-        add_item_button.grid(row=row_num, column=1)
+        add_item_button.grid(row=row_num, column=1, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING*2)
 
     def component_button_click(self):
         if not self.manage_component_window:
@@ -212,14 +213,14 @@ class ManageComponentWindow(SmallPopup):
         #loop through component_data, adding widgets
         for row_num, component_row in enumerate(component_data):
             label = customtkinter.CTkLabel(self, text=component_row[0])
-            label.grid(row=row_num, column=0)
+            label.grid(row=row_num, column=0, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING/2)
             stock_spinbox = Spinbox(self, initial_value=component_row[1])
-            stock_spinbox.grid(row=row_num, column=1)
+            stock_spinbox.grid(row=row_num, column=1, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING/2)
             self.spinboxes.append(stock_spinbox)
 
         close_button = customtkinter.CTkButton(self, text="Close", command=self.release_focus_and_hide)
         row_num += 1 # using the loop variable - cheeky
-        close_button.grid(row=row_num, column=0, columnspan=2)
+        close_button.grid(row=row_num, column=0, columnspan=2, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
 
     def get_selected_components(self):
         """Returns a list of tuples of the component names of which more than 0 quantity has been selected, and their quantities

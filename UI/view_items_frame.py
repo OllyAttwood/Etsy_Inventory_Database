@@ -5,6 +5,7 @@ from UI.filter_bar_frame import FilterBarFrame
 from UI.adjust_stock_level_popup import AdjustStockLevelPopup
 from UI.messagebox import MessageBox
 from UI.small_popup import SmallPopup
+from UI import config
 
 class ViewItemsFrame(customtkinter.CTkFrame):
     def __init__(self, master, presenter, tab_view):
@@ -47,13 +48,13 @@ class ViewItemsFrame(customtkinter.CTkFrame):
         buttons_frame.grid(row=2, column=0)
 
         self.adjust_stock_level_button = customtkinter.CTkButton(buttons_frame, text="Adjust Stock Level...", command=self.on_adjust_stock_level_button_click)
-        self.adjust_stock_level_button.grid(row=0, column=0)
+        self.adjust_stock_level_button.grid(row=0, column=0, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
 
         self.view_components_button = customtkinter.CTkButton(buttons_frame, text="View Product's Components", command=self.on_view_components_button_click)
-        self.view_components_button.grid(row=0, column=1)
+        self.view_components_button.grid(row=0, column=1, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
 
         self.delete_item_button = customtkinter.CTkButton(buttons_frame, text="Delete Item", command=self.on_delete_button)
-        self.delete_item_button.grid(row=0, column=2)
+        self.delete_item_button.grid(row=0, column=2, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
 
     def on_adjust_stock_level_button_click(self):
         selected_item_name, selected_item_id = self.table.get_selected_row_item_name_and_id()
@@ -114,10 +115,10 @@ class ConfirmItemDeletePopup(SmallPopup):
         button_frame.grid(row=1, column=0)
 
         yes_button = customtkinter.CTkButton(button_frame, text="Yes", command=self.on_yes_button_click)
-        yes_button.grid(row=0, column=0)
+        yes_button.grid(row=0, column=0, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
 
         no_button = customtkinter.CTkButton(button_frame, text="No", command=self.on_no_button_click)
-        no_button.grid(row=0, column=1)
+        no_button.grid(row=0, column=1, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
 
     def on_yes_button_click(self):
         if self.item_type == "Product":
