@@ -3,8 +3,8 @@ from tkinter import StringVar
 import tkinter.font as tkfont
 from UI import config
 
-# class to create a table widget
 class CustomTable(customtkinter.CTkScrollableFrame):
+    """Class to create a table widget"""
     SCROLL_UP = 0
     SCROLL_DOWN = 1
 
@@ -62,6 +62,7 @@ class CustomTable(customtkinter.CTkScrollableFrame):
         self.bind_widget_and_children(self, "<Button-5>", lambda e: self.scroll_table(self.SCROLL_DOWN))
 
     def check_is_data_correct_shape(self):
+        """Checks the data and the column headers are compatible shapes and consistent"""
         if len(self.data) == 0:
             return
 
@@ -75,12 +76,14 @@ class CustomTable(customtkinter.CTkScrollableFrame):
             raise Exception("Number of column names is different to data")
 
     def change_row_colour(self, row_num, grid_info, colour):
+        """Sets the colour for all the cells in a row"""
         cells_in_row = grid_info["in"].grid_slaves(row=row_num)
 
         for cell in cells_in_row:
             cell.configure(fg_color=colour)
 
     def click_row(self, event):
+        """Handles what happens when a row is clicked - colour changes and calling the callback funtion"""
         # must use event.widget.master below instead of just event.widget
         # see https://stackoverflow.com/questions/75361805/customtkinter-why-does-this-event-widget-lose-the-proper-grid-information
         grid_info = event.widget.master.grid_info()
@@ -97,6 +100,7 @@ class CustomTable(customtkinter.CTkScrollableFrame):
             self.on_row_select_callback()
 
     def update_table_appearance(self, event, colour):
+        """Determines if a different row has been selected, and changes the colours if necessary"""
         # must use event.widget.master below instead of just event.widget
         # see https://stackoverflow.com/questions/75361805/customtkinter-why-does-this-event-widget-lose-the-proper-grid-information
         grid_info = event.widget.master.grid_info()
@@ -106,9 +110,14 @@ class CustomTable(customtkinter.CTkScrollableFrame):
             self.change_row_colour(row_num, grid_info, colour)
 
     def on_mouse_enter_cell(self, event):
+        """The function that is called when the cursor is hovering over a table cell, to
+        update the table's colours
+        """
         self.update_table_appearance(event, self.cell_hover_colour)
 
     def on_mouse_leave_cell(self, event):
+        """The function that is called when the cursor leaves a table cell, to update the
+        table's colours and remove the tooltip"""
         self.update_table_appearance(event, self.data_colour)
 
         # remove tooltip
@@ -117,6 +126,9 @@ class CustomTable(customtkinter.CTkScrollableFrame):
             self.tooltip = None
 
     def on_mouse_motion(self, event):
+        """Determines the position to display the tooltip, when the cursor is hovering
+        over a table cell
+        """
         # calculate tooltip position
         absolute_x = event.widget.winfo_rootx() + event.x # the position of it in the whole window
         absolute_y = event.widget.winfo_rooty() + event.y
@@ -140,6 +152,9 @@ class CustomTable(customtkinter.CTkScrollableFrame):
         self.tooltip.place(x=x+x_offset, y=y+y_offset) # slightly adjust x and y so tooltip is not covered by cursor or cut off at bottom
 
     def calculate_column_widths(self, full_data, font_size, min_width=100, max_width=350):
+        """Calculates how wide to make each column, based on the longest data text in the column.
+        The values are bound by the min_width and max_width parameters.
+        """
         font = tkfont.Font(size=font_size)
         column_widths = [min_width] * len(full_data[0])
 
@@ -162,6 +177,7 @@ class CustomTable(customtkinter.CTkScrollableFrame):
         return (item_name, item_id)
 
     def scroll_table(self, scroll_direction):
+        """Forces the table to scroll in the given direction"""
         scroll_speed = config.TABLE_SCROLL_SPEED
         if scroll_direction == self.SCROLL_UP:
             scroll_speed *= -1
