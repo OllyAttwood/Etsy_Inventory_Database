@@ -10,8 +10,8 @@ class FilterBarFrame(customtkinter.CTkFrame):
         # the function to call whenever the user toggles between products and components
         self.product_component_switch_toggle_callback = product_component_switch_toggle_callback
 
-        #add the empty option to the dropdown menus as the default
-        self.add_empty_string_option([design_options, theme_options, type_options, sub_type_options, colour_options])
+        #add the empty option to the dropdown menus as the default, and order the list alphabetically
+        self.add_empty_string_option_and_alphabetise([design_options, theme_options, type_options, sub_type_options, colour_options])
 
         # widget position counter
         self.current_widget_num = 0
@@ -113,10 +113,14 @@ class FilterBarFrame(customtkinter.CTkFrame):
             "Colour": self.colour_dropdown.get()
         }
 
-    def add_empty_string_option(self, list_of_options_lists):
-        """Inserts an empty string at the beginning of each of the lists, to use as the default (unfiltered) value for a dropdown mennu"""
+    def add_empty_string_option_and_alphabetise(self, list_of_options_lists):
+        """Inserts an empty string at the beginning of each of the lists, to use as the default (unfiltered) value for a dropdown menu.
+        Also orders the list alphabetically.
+        """
         for options in list_of_options_lists:
-            options.insert(0, "")
+            options.sort(key=str.lower) # alphabetise list
+
+            options.insert(0, "") # add empty string at start
 
     def change_product_widgets_state(self, new_state):
         """Sets whether the widgets that are used for filtering just products (not components) should be greyed out or not"""
