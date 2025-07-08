@@ -98,7 +98,7 @@ class ReduceComponentStockLevelPopup(SmallPopup):
         no_button.grid(row=1, column=1)
 
     def lock_at_front(self):
-    """Make main window unclickable until pop-up is closed"""
+        """Make main window unclickable until pop-up is closed"""
         self.wait_visibility() # https://raspberrypi.stackexchange.com/a/105522
         self.grab_set()
 
