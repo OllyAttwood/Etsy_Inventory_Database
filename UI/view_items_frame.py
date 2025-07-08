@@ -9,6 +9,7 @@ from UI import config
 from tkinter import NORMAL, DISABLED
 
 class ViewItemsFrame(customtkinter.CTkFrame):
+    """Displays all the products/components according to the filters"""
     def __init__(self, master, presenter, tab_view):
         super().__init__(master)
         self.master = master
@@ -28,11 +29,13 @@ class ViewItemsFrame(customtkinter.CTkFrame):
         self.grid_rowconfigure(1, weight=1)
 
     def update_table(self, filters):
+        """Removes the current table and adds a new one based on the current filters"""
         self.table.grid_forget()
         full_data = self.presenter.get_filtered_items(filters)
         self.create_table(full_data["data"], full_data["column_names"])
 
     def init_filter_bar(self):
+        """Sets up the filter bar"""
         design_options = self.presenter.get_product_designs()
         theme_options = self.presenter.get_product_themes()
         type_options = self.presenter.get_product_types()
@@ -44,10 +47,12 @@ class ViewItemsFrame(customtkinter.CTkFrame):
         self.filter_bar.grid(row=0, column=0, pady=10)
 
     def create_table(self, data_rows, column_names):
+        """Adds a new table with the given data and column names"""
         self.table = CustomTable(self, data_rows, column_names, self.update_button_states)
         self.table.grid(row=1, column=0, sticky="nsew")
 
     def create_buttons(self):
+        """Sets up the buttons - initially greys them out until an item's row is selected"""
         buttons_frame = customtkinter.CTkFrame(self)
         buttons_frame.grid(row=2, column=0)
 
@@ -64,12 +69,14 @@ class ViewItemsFrame(customtkinter.CTkFrame):
         self.set_buttons_to_starting_states()
 
     def on_adjust_stock_level_button_click(self):
+        """Opens an AdjustStockLevelPopup after determining the selected item's details"""
         selected_item_name, selected_item_id = self.table.get_selected_row_item_name_and_id()
         selected_item_type = self.filter_bar.get_current_filter_values()["Item Type"]
 
         AdjustStockLevelPopup(selected_item_name, selected_item_id, selected_item_type, self.presenter, self.tab_view)
 
     def on_view_components_button_click(self):
+        """Opens a ViewProductsComponentsPopup after determining the selected product's details"""
         selected_item_type = self.filter_bar.get_current_filter_values()["Item Type"]
 
         if selected_item_type == "Product":
@@ -78,9 +85,12 @@ class ViewItemsFrame(customtkinter.CTkFrame):
 
             ViewProductsComponentsPopup(selected_product_name, component_ids_and_quantities, self.presenter)
         else:
+            # it shouldn't be possible for this bit of code to run anymore as the
+            # view_components button should be greyed out if a product is not selected
             MessageBox("Incorrect Item Type", "You must select a product (not a component) to be able to view its components!")
 
     def on_delete_button(self):
+        """Opens a ConfirmItemDeletePopup after determining the selected item's details"""
         selected_item_name, selected_item_id = self.table.get_selected_row_item_name_and_id()
         selected_item_type = self.filter_bar.get_current_filter_values()["Item Type"]
 
@@ -114,6 +124,7 @@ class ViewItemsFrame(customtkinter.CTkFrame):
 
 
 class ViewProductsComponentsPopup(SmallPopup):
+    """A pop-up which shows the components which are used to make the product"""
     def __init__(self, product_name, component_ids_and_quantities, presenter):
         super().__init__()
         self.geometry("400x200")
@@ -131,6 +142,9 @@ class ViewProductsComponentsPopup(SmallPopup):
         table.grid(row=0, column=0, sticky="nsew")
 
 class ConfirmItemDeletePopup(SmallPopup):
+    """A pop-up to confirm the user wants to delete the item - also refreshes the UI
+    after deleting the item
+    """
     def __init__(self, item_name, item_id, item_type, presenter, tab_view):
         super().__init__()
         self.geometry("350x200")
@@ -159,6 +173,7 @@ class ConfirmItemDeletePopup(SmallPopup):
         no_button.grid(row=0, column=1, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
 
     def on_yes_button_click(self):
+        """Deletes the item from the database"""
         if self.item_type == "Product":
             self.presenter.delete_product(self.item_id)
             self.tab_view.reload_all_frames()
@@ -169,4 +184,5 @@ class ConfirmItemDeletePopup(SmallPopup):
             self.release_focus_and_hide()
 
     def on_no_button_click(self):
+        """Closes the pop-up"""
         self.release_focus_and_hide()
