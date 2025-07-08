@@ -212,7 +212,7 @@ class ManageComponentWindow(SmallPopup):
         # display component info
         self.component_names = self.presenter.get_component_names()
         self.component_names.sort(key=str.lower) # alphabetise list
-        
+
         if len(self.component_names) > 0: # check whether there are any components to show
             self.display_components([[com_name, 0] for com_name in self.component_names])
         else:

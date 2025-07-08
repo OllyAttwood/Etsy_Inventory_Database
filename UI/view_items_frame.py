@@ -125,7 +125,9 @@ class ViewProductsComponentsPopup(SmallPopup):
         component_ids = [component_data[0] for component_data in component_ids_and_quantities]
         quantities = [component_data[1] for component_data in component_ids_and_quantities]
         component_names = [self.presenter.get_component_name_from_id(component_id)[0] for component_id in component_ids]
-        table = CustomTable(self, list(zip(component_names, quantities)), ["Component Name", "Quantity"])
+        table_data = list(zip(component_names, quantities))
+        table_data.sort(key=lambda row: str.lower(row[0])) # alphabetically sorts the rows by the component names
+        table = CustomTable(self, table_data, ["Component Name", "Quantity"])
         table.grid(row=0, column=0, sticky="nsew")
 
 class ConfirmItemDeletePopup(SmallPopup):
