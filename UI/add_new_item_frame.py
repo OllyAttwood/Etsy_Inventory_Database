@@ -266,8 +266,6 @@ class ManageComponentWindow(SmallPopup):
 check that database is protected against SQL injections
     - whitelist for table names and columns?
 
-alphabetise the dropdown menu options / manage components list etc? maybe not worth it
-
 update all code to use leading underscore for all private function names
 
 do I need to make make some of the fields (such as type, sub_type, theme) comboboxes in the MultInputDialogs so that the user can choose existing options as well as adding new ones?

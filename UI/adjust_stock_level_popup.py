@@ -33,11 +33,17 @@ class AdjustStockLevelPopup(SmallPopup):
         ok_button.grid(row=2, column=0, pady=config.WIDGET_Y_PADDING)
 
     def close_window(self):
+        """Closes the window and releases the focus (as the pop-up initially takes the focus so no other window can be interacted with)"""
         self.grab_release() # release focus
         self.withdraw()
         self.destroy()
 
     def apply_change_and_close_window(self):
+        """Applies the stock level change specified by the user (if a product stock is
+        being decreased, a pop-up asks if the stock level of the product's components
+        should also be reduced i.e. if the product has been sold so the component are
+        no longer available)
+        """
         stock_level_change = self.spinbox.get()
 
         if stock_level_change > 0:
@@ -91,12 +97,13 @@ class ReduceComponentStockLevelPopup(SmallPopup):
         no_button = customtkinter.CTkButton(central_frame, text="No", command=self.on_no_button_click)
         no_button.grid(row=1, column=1)
 
-    # make main window unclickable until popup is closed
     def lock_at_front(self):
+    """Make main window unclickable until pop-up is closed"""
         self.wait_visibility() # https://raspberrypi.stackexchange.com/a/105522
         self.grab_set()
 
     def on_no_button_click(self):
+        """Update just the product's stock level, then close the pop-up and reload the UI"""
         if self.item_type == "Product":
             self.presenter.update_product_stock_level(self.item_id, self.stock_level_change)
         elif self.item_type == "Component":
@@ -105,6 +112,9 @@ class ReduceComponentStockLevelPopup(SmallPopup):
         self.tab_view.reload_all_frames() # reloads UI to show new values
 
     def on_yes_button_click(self):
+        """Update the product's stock level, as well as its components' stock levels, then
+        close the pop-up and reload the UI
+        """
         self.presenter.update_product_stock_level_and_its_components_stock_levels(self.item_id, self.stock_level_change)
         self.release_focus_and_hide()
         self.tab_view.reload_all_frames() # reloads UI to show new values
