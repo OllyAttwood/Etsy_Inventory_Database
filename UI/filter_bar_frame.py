@@ -5,6 +5,7 @@ from UI import config
 class FilterBarFrame(customtkinter.CTkFrame):
     def __init__(self, master, design_options, theme_options, type_options, sub_type_options,
                  colour_options, product_component_switch_toggle_callback):
+        """The filter bar that is used to filter the items that are being displayed"""
         super().__init__(master)
         self.master = master
         # the function to call whenever the user toggles between products and components
@@ -65,10 +66,12 @@ class FilterBarFrame(customtkinter.CTkFrame):
         self.current_filter_values = self.get_current_filter_values()
 
     def add_label(self, lbl_widget):
+        """Adds a label to the layout grid"""
         lbl_widget.grid(row=0, column=self.current_widget_num, padx=(config.WIDGET_X_PADDING, config.WIDGET_X_PADDING/3), pady=config.WIDGET_Y_PADDING)
         self.current_widget_num += 1
 
     def add_input_widget(self, widget):
+        """Adds an input widget to the layout grid, with the command to update the results whenever a change is made"""
         widget.grid(row=0, column=self.current_widget_num, padx=(0, config.WIDGET_X_PADDING), pady=config.WIDGET_Y_PADDING)
         self.current_widget_num += 1
         self.add_command_to_widget(widget) # update data table when filter is changed
@@ -94,8 +97,8 @@ class FilterBarFrame(customtkinter.CTkFrame):
             if event == "Product" or event == "Component":
                 self.product_component_switch_toggle_callback()
 
-    # update data table when filter is changed
     def add_command_to_widget(self, widget):
+        """Adds the command to the widget depending on what type of widget it is"""
         # if the widget is a CTkEntry then the command needs to be added differently to other widgets
         if isinstance(widget, customtkinter.CTkEntry):
             widget.bind("<KeyRelease>", command=self.on_filter_widget_update)
@@ -103,6 +106,7 @@ class FilterBarFrame(customtkinter.CTkFrame):
             widget.configure(command=self.on_filter_widget_update)
 
     def get_current_filter_values(self):
+        """Returns the values of all the filter widgets as a dictionary"""
         return {
             "Item Type": self.product_component_switch.get(),
             "Name": self.name_entry.get(),
