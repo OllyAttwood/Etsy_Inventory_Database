@@ -14,12 +14,12 @@ class SmallPopup(customtkinter.CTkToplevel):
         # hide the window and restore it if necessary
         self.protocol("WM_DELETE_WINDOW", self.release_focus_and_hide)
 
-    # hides window
     def release_focus_and_hide(self):
+        """Hides the window"""
         self.grab_release()
         self.withdraw()
 
-    # make main window unclickable until popup is closed
     def lock_at_front(self):
+        """Makes main window unclickable until popup is closed"""
         self.wait_visibility() # https://raspberrypi.stackexchange.com/a/105522
         self.grab_set()
