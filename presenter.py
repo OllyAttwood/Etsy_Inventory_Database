@@ -1,6 +1,7 @@
 from database_manager import DatabaseManager
 
 class Presenter:
+    """The presenter class"""
     def __init__(self):
         self.db_manager = DatabaseManager()
 
@@ -105,6 +106,7 @@ class Presenter:
         return self.db_manager.view_components_of_product(product_id)
 
     def get_component_name_from_id(self, component_id):
+        """Gets the name of the component which has the given ID"""
         return self.db_manager. view_component_name_from_id(component_id)
 
     def delete_product(self, product_id):
