@@ -15,6 +15,7 @@ class DatabaseManager:
         self.connection.close()
 
     def create_tables(self):
+        """Sets up the tables if they don't already exist"""
         self.cursor.execute("PRAGMA foreign_keys = ON") #enforces foreign key constraints
 
         #we use INTEGER rather than INT for primary key declaration as this makes it
@@ -68,10 +69,11 @@ class DatabaseManager:
 
         self.connection.commit()
 
-    #insert a single row of data to a table
-    #user must not be able to type in table_name directly as SQL injection placeholder
-    #doesn't work with table names - table_name must be picked from drop-down list
     def insert_data(self, table_name, data_row):
+        """Inserts a single row of data to a table.
+        User must not be able to type in table_name directly as SQL injection placeholder
+        doesn't work with table names - table_name must be picked from drop-down list
+        """
         #as data_row has variable number of elements depending on which table is
         #being inserted into, the number of question marks in the insertion
         #string must also vary
@@ -90,10 +92,10 @@ class DatabaseManager:
 
         self.connection.commit()
 
-    #creates each step of the WHERE clause
-    #like should only be True if we are using LIKE in the WHERE clause rather
-    #than an equality check
     def build_where_clause(self, db_col_name, query_vals, query_value, like=False):
+        """Creates each step of the WHERE clause - 'like' should only be True if we
+        are using LIKE in the WHERE clause rather than an equality check
+        """
         clause = db_col_name
 
         #if we should us LIKE or = in the query
@@ -110,12 +112,13 @@ class DatabaseManager:
         query_vals.append(query_value)
         return clause
 
-    #queries the database for products/components
-    #this method shouldn't be called directly - use view_filtered_products() or
-    #view_filtered_components() instead
-    def view_filtered_items(self, params_with_db_cols, query_without_where_clause, name_search=None,
+    def _view_filtered_items(self, params_with_db_cols, query_without_where_clause, name_search=None,
                             design=None, design_theme=None, type=None, subtype=None, colour=None,
                             stock_level=None):
+        """Queries the database for products/components.
+        This method shouldn't be called directly - use view_filtered_products() or
+        view_filtered_components() instead
+        """
         product_query = query_without_where_clause
         where_clauses = []
         query_vals = []
@@ -146,6 +149,7 @@ class DatabaseManager:
 
     def view_filtered_products(self, name_search=None, design=None, design_theme=None,
                                type=None, subtype=None, colour=None, stock_level=None):
+        """Searches the database for products based on the provided filters"""
         product_query = """SELECT Product.product_id, Product.name AS 'Product Name', Product.colour,
                                   Product.stock, Product.low_stock_warning, Design.name AS 'Design Name',
                                   Design.theme, ProductType.type, ProductType.sub_type
@@ -160,17 +164,22 @@ class DatabaseManager:
                                (subtype, "ProductType.sub_type"), (colour, "Product.colour"),
                                (stock_level, "Product.stock"))
 
-        return self.view_filtered_items(params_with_db_cols, product_query, name_search, design,
+        return self._view_filtered_items(params_with_db_cols, product_query, name_search, design,
                                  design_theme, type, subtype, stock_level)
 
     def view_filtered_components(self, name_search=None, stock_level=None):
+        """Searches the database for components based on the provided filters"""
         product_query = """SELECT *
                            FROM Component"""
         params_with_db_cols = ((name_search, "Component.name"), (stock_level, "Component.stock"))
 
-        return self.view_filtered_items(params_with_db_cols, product_query, name_search, stock_level)
+        return self._view_filtered_items(params_with_db_cols, product_query, name_search, stock_level)
 
     def view_low_stock_items(self, products=True, components=True):
+        """Gets the items which have a stock level equal or less than their warning level.
+        The parameters 'products' and 'components' allow only one or both tables to
+        be searched.
+        """
         def create_query(table_name):
             return f"""SELECT name, stock, low_stock_warning
                        FROM {table_name}
@@ -202,6 +211,7 @@ class DatabaseManager:
         }
 
     def get_column_names_most_recent_query(self):
+        """Retrieves the column names from the most recently performed database query"""
         return [col[0] for col in self.cursor.description]
 
     def view_single_column_from_single_table(self, column_name, table_name, no_duplicates=True):
@@ -288,9 +298,15 @@ class DatabaseManager:
         self.connection.commit()
 
     def update_product_stock_level(self, product_id, increase_decrease_amount):
+        """Updates the stock level of a product - note that the new stock level is
+        NOT increase_decrease_amount, this is how much the previous stock level is
+        changed by"""
         self._update_item_stock_level(product_id, "Product", increase_decrease_amount)
 
     def update_component_stock_level(self, component_id, increase_decrease_amount):
+        """Updates the stock level of an item - note that the new stock level is
+        NOT increase_decrease_amount, this is how much the previous stock level is
+        changed by"""
         self._update_item_stock_level(component_id, "Component", increase_decrease_amount)
 
 
@@ -309,6 +325,7 @@ class DatabaseManager:
         return components_list
 
     def view_component_name_from_id(self, component_id):
+        """Gets the name of the component which has the given ID"""
         return self.view_single_column_from_single_table_with_where_clause("name", "Component", "component_id", component_id)
 
     def delete_product(self, product_id):
