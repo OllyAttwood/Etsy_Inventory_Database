@@ -6,6 +6,7 @@ from UI.messagebox import MessageBox
 import sqlite3
 from UI.small_popup import SmallPopup
 from UI import config
+from UI.utilities import add_empty_string_option_and_alphabetise
 
 class AddNewItemFrame(customtkinter.CTkFrame):
     def __init__(self, master, presenter, tab_view):
@@ -109,16 +110,7 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         self.colour_options = self.presenter.get_product_colours()
         self.type_options = self.presenter.get_product_type_names()
 
-        self.add_empty_string_option_and_alphabetise([self.design_options, self.colour_options, self.type_options])
-
-    def add_empty_string_option_and_alphabetise(self, list_of_options_lists):
-        """Inserts an empty string at the beginning of each of the lists, to use as the default (unfiltered) value for a dropdown menu.
-        Also orders the list alphabetically.
-        """
-        for options in list_of_options_lists:
-            options.sort(key=str.lower) # alphabetise list
-
-            options.insert(0, "") # add empty string at starts
+        add_empty_string_option_and_alphabetise([self.design_options, self.colour_options, self.type_options])
 
     def on_add_button_click(self, option_menu_to_update, input_field_names, subject_name, save_func):
         """Adds a new option to an optionmenu from the user input, and saves it to database"""

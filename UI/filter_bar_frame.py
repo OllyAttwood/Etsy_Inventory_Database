@@ -1,6 +1,7 @@
 import customtkinter
 from tkinter import StringVar, DISABLED, NORMAL
 from UI import config
+from UI.utilities import  add_empty_string_option_and_alphabetise
 
 class FilterBarFrame(customtkinter.CTkFrame):
     def __init__(self, master, design_options, theme_options, type_options, sub_type_options,
@@ -12,7 +13,7 @@ class FilterBarFrame(customtkinter.CTkFrame):
         self.product_component_switch_toggle_callback = product_component_switch_toggle_callback
 
         #add the empty option to the dropdown menus as the default, and order the list alphabetically
-        self.add_empty_string_option_and_alphabetise([design_options, theme_options, type_options, sub_type_options, colour_options])
+        add_empty_string_option_and_alphabetise([design_options, theme_options, type_options, sub_type_options, colour_options])
 
         # widget position counter
         self.current_widget_num = 0
@@ -116,15 +117,6 @@ class FilterBarFrame(customtkinter.CTkFrame):
             "Sub-type": self.sub_type_dropdown.get(),
             "Colour": self.colour_dropdown.get()
         }
-
-    def add_empty_string_option_and_alphabetise(self, list_of_options_lists):
-        """Inserts an empty string at the beginning of each of the lists, to use as the default (unfiltered) value for a dropdown menu.
-        Also orders the list alphabetically.
-        """
-        for options in list_of_options_lists:
-            options.sort(key=str.lower) # alphabetise list
-
-            options.insert(0, "") # add empty string at start
 
     def change_product_widgets_state(self, new_state):
         """Sets whether the widgets that are used for filtering just products (not components) should be greyed out or not"""
