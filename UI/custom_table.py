@@ -8,8 +8,9 @@ class CustomTable(customtkinter.CTkScrollableFrame):
     SCROLL_UP = 0
     SCROLL_DOWN = 1
 
-    def __init__(self, master, data, columns, font_size=15, header_colour=config.TABLE_HEADER_COLOUR,
-                 data_colour=config.TABLE_REGULAR_ROW_COLOUR, cell_hover_colour=config.TABLE_HOVER_COLOUR,
+    def __init__(self, master, data, columns, on_row_select_callback=None, font_size=15,
+                 header_colour=config.TABLE_HEADER_COLOUR, data_colour=config.TABLE_REGULAR_ROW_COLOUR,
+                 cell_hover_colour=config.TABLE_HOVER_COLOUR,
                  selected_row_colour = config.TABLE_SELECTED_ROW_COLOUR):
         super().__init__(master)
 
@@ -18,6 +19,7 @@ class CustomTable(customtkinter.CTkScrollableFrame):
         self.columns = columns
         self.combined_data = [columns] + data
         self.column_widths = self.calculate_column_widths(self.combined_data, font_size)
+        self.on_row_select_callback = on_row_select_callback # this callback function is called whenever a row is selected
         self.font = (None, font_size)
         self.cell_hover_colour = cell_hover_colour
         self.data_colour = data_colour
@@ -89,7 +91,10 @@ class CustomTable(customtkinter.CTkScrollableFrame):
 
         self.selected_row = row_num
         self.change_row_colour(row_num, grid_info, self.selected_row_colour)
-        print(row_num)
+
+        # call callback function
+        if self.on_row_select_callback:
+            self.on_row_select_callback()
 
     def update_table_appearance(self, event, colour):
         # must use event.widget.master below instead of just event.widget

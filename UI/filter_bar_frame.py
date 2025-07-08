@@ -3,9 +3,12 @@ from tkinter import StringVar, DISABLED, NORMAL
 from UI import config
 
 class FilterBarFrame(customtkinter.CTkFrame):
-    def __init__(self, master, design_options, theme_options, type_options, sub_type_options, colour_options):
+    def __init__(self, master, design_options, theme_options, type_options, sub_type_options,
+                 colour_options, product_component_switch_toggle_callback):
         super().__init__(master)
         self.master = master
+        # the function to call whenever the user toggles between products and components
+        self.product_component_switch_toggle_callback = product_component_switch_toggle_callback
 
         #add the empty option to the dropdown menus as the default
         self.add_empty_string_option([design_options, theme_options, type_options, sub_type_options, colour_options])
@@ -86,6 +89,10 @@ class FilterBarFrame(customtkinter.CTkFrame):
                 self.change_product_widgets_state(DISABLED)
             elif event == "Product":
                 self.change_product_widgets_state(NORMAL)
+
+            # callback function disable ViewItemsFrame buttons after product/component switch is toggled
+            if event == "Product" or event == "Component":
+                self.product_component_switch_toggle_callback()
 
     # update data table when filter is changed
     def add_command_to_widget(self, widget):

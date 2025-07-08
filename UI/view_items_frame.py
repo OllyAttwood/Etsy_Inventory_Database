@@ -6,6 +6,7 @@ from UI.adjust_stock_level_popup import AdjustStockLevelPopup
 from UI.messagebox import MessageBox
 from UI.small_popup import SmallPopup
 from UI import config
+from tkinter import NORMAL, DISABLED
 
 class ViewItemsFrame(customtkinter.CTkFrame):
     def __init__(self, master, presenter, tab_view):
@@ -38,11 +39,12 @@ class ViewItemsFrame(customtkinter.CTkFrame):
         sub_type_options = self.presenter.get_product_sub_types()
         colour_options =  self.presenter.get_product_colours()
 
-        self.filter_bar = FilterBarFrame(self, design_options, theme_options, type_options, sub_type_options, colour_options)
+        self.filter_bar = FilterBarFrame(self, design_options, theme_options, type_options,
+                                         sub_type_options, colour_options, self.set_buttons_to_starting_states)
         self.filter_bar.grid(row=0, column=0, pady=10)
 
     def create_table(self, data_rows, column_names):
-        self.table = CustomTable(self, data_rows, column_names)
+        self.table = CustomTable(self, data_rows, column_names, self.update_button_states)
         self.table.grid(row=1, column=0, sticky="nsew")
 
     def create_buttons(self):
@@ -57,6 +59,9 @@ class ViewItemsFrame(customtkinter.CTkFrame):
 
         self.delete_item_button = customtkinter.CTkButton(buttons_frame, text="Delete Item", command=self.on_delete_button)
         self.delete_item_button.grid(row=0, column=2, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
+
+        # set up button inital states (all disabled until a table row is selected)
+        self.set_buttons_to_starting_states()
 
     def on_adjust_stock_level_button_click(self):
         selected_item_name, selected_item_id = self.table.get_selected_row_item_name_and_id()
@@ -80,6 +85,32 @@ class ViewItemsFrame(customtkinter.CTkFrame):
         selected_item_type = self.filter_bar.get_current_filter_values()["Item Type"]
 
         ConfirmItemDeletePopup(selected_item_name, selected_item_id, selected_item_type, self.presenter, self.tab_view)
+
+    def update_button_states(self):
+        """This method sets the button's states depending on which ones should be available.
+        It should be called whenever a table row is selected or the product/component
+        switch is toggled.
+        The buttons should become available after a row is selected,  other than the
+        view_components_button which should only be available when a product is selected.
+        """
+        buttons_for_products_and_components = [self.adjust_stock_level_button, self.delete_item_button]
+
+        for button in buttons_for_products_and_components:
+            button.configure(state=NORMAL)
+
+        # determine if the view_components button should be available as it is only
+        # applicable to products, not components themselves
+        if self.filter_bar.get_current_filter_values()["Item Type"] == "Product":
+            self.view_components_button.configure(state=NORMAL)
+        else:
+            self.view_components_button.configure(state=DISABLED)
+
+    def set_buttons_to_starting_states(self):
+        """Disables all buttons initially, until a table row is selected"""
+        all_buttons = [self.adjust_stock_level_button, self.view_components_button, self.delete_item_button]
+
+        for button in all_buttons:
+            button.configure(state=DISABLED)
 
 
 class ViewProductsComponentsPopup(SmallPopup):
