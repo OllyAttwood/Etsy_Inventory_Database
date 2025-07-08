@@ -3,6 +3,7 @@ from UI.custom_table import CustomTable
 from UI import config
 
 class LowStockFrame(customtkinter.CTkFrame):
+    """A frame which displays the items which have a stock level less than or equal to their stock warning value"""
     def __init__(self, master, presenter):
         super().__init__(master)
         self.presenter = presenter
@@ -25,4 +26,5 @@ class LowStockFrame(customtkinter.CTkFrame):
         self.grid_columnconfigure(0, weight=1) #puts everything in the middle
 
     def create_label(self, text, font_size=25):
+        """Creates labels with the same appearance"""
         return customtkinter.CTkLabel(self, text=text, font=(None, font_size))
