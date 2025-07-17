@@ -258,6 +258,11 @@ class ManageComponentWindow(SmallPopup):
 check that database is protected against SQL injections
     - whitelist for table names and columns?
 
+fix error when adding a new product without all fields filled in
+    also check other edge cases like that
+
+unit tests
+
 update all code to use leading underscore for all private function names
 
 do I need to make make some of the fields (such as type, sub_type, theme) comboboxes in the MultInputDialogs so that the user can choose existing options as well as adding new ones?

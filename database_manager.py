@@ -74,6 +74,8 @@ class DatabaseManager:
         User must not be able to type in table_name directly as SQL injection placeholder
         doesn't work with table names - table_name must be picked from drop-down list
         """
+        self.validate_table_name(table_name) # confirms table name is protected against SQL injection
+
         #as data_row has variable number of elements depending on which table is
         #being inserted into, the number of question marks in the insertion
         #string must also vary
@@ -218,6 +220,9 @@ class DatabaseManager:
         """Performs a simple SELECT call with given column and table.
         *** WARNING *** - placeholders (i.e. '?') cannot be used for column or table names, therefore this function is VULNERABLE to SQL injection if exposed to the user
         """
+        self.validate_table_name(table_name) # confirms table name is protected against SQL injection
+        self.validate_column_names([column_name])
+
         distinct = "DISTINCT " if no_duplicates else ""
         query = f"SELECT {distinct}{column_name} FROM {table_name} WHERE {column_name} IS NOT NULL AND {column_name} != ''" #exclude None values and empty strings
         res = self.cursor.execute(query)
@@ -252,8 +257,11 @@ class DatabaseManager:
         """Performs a simple SELECT query with a WHERE clause
         WARNING *** - placeholders (i.e. '?') cannot be used for column or table names, therefore this function is VULNERABLE to SQL injection if exposed to the user
         """
-        query = f"SELECT {column_to_obtain} FROM {table_name} WHERE {column_to_match}='{value_to_match}'"
-        res = self.cursor.execute(query)
+        self.validate_table_name(table_name) # confirms table name is protected against SQL injection
+        self.validate_column_names([column_to_obtain, column_to_match])
+
+        query = f"SELECT {column_to_obtain} FROM {table_name} WHERE {column_to_match}= ?"
+        res = self.cursor.execute(query, (value_to_match,))
         query_list = []
         for row in res.fetchall():
             query_list.append(row[0]) #[0] needed otherwise each row is a tuple rather than just the value e.g. ('Heart',)
@@ -290,7 +298,10 @@ class DatabaseManager:
         This method shouldn't be called directly, rather either update_product_stock_level() or
         update_component_stock_level() should be called
         """
+        self.validate_table_name(table_name) # confirms table name is protected against SQL injection
         id_column_name = table_name.lower() + "_id" # produces either "product_id" or "component_id"
+        self.validate_column_names([id_column_name])
+
         update_sql = f"""UPDATE {table_name}
                          SET stock = stock + ?
                          WHERE {id_column_name} = ?"""
@@ -339,3 +350,40 @@ class DatabaseManager:
                   WHERE component_id = ?"""
         self.cursor.execute(sql, (str(component_id)))
         self.connection.commit()
+
+    def validate_table_name(self, table_name_to_validate):
+        """Validates a table name by checking against a whitelist of actual table names. This is
+        necessary as sqlite3 only offers functionality to check column values, not table names.
+        """
+        table_names = self._get_all_table_names()
+
+        if table_name_to_validate not in table_names:
+            raise sqlite3.DataError(f"Table name {table_name_to_validate} not valid!")
+
+    def validate_column_names(self, column_names_to_validate):
+        """Validates each column name in the list by checking against a whitelist of actual column names. This is
+        necessary as sqlite3 only offers functionality to check column values, not column names.
+        """
+        table_names = self._get_all_table_names()
+        all_column_names = []
+
+        for table_name in table_names:
+            res = self.cursor.execute(f"PRAGMA table_info({table_name})")
+            for column_info in res.fetchall():
+                all_column_names.append(column_info[1])
+
+        #checks if all the column_names_to_validate are in all_column_names
+        bad_column_names = [col for col in column_names_to_validate if col not in all_column_names]
+        if len(bad_column_names) > 0:
+            raise sqlite3.DataError(f"Column name(s) not valid: {bad_column_names}")
+
+    def _get_all_table_names(self):
+        """Returns the names of all the tables in the database"""
+        table_names = []
+        sql_str = "SELECT name FROM sqlite_master WHERE type='table'"
+        res = self.cursor.execute(sql_str)
+
+        for row in res.fetchall():
+            table_names.append(row[0])
+
+        return table_names
