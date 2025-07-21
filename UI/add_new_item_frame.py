@@ -255,11 +255,11 @@ class ManageComponentWindow(SmallPopup):
 """
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-check that database is protected against SQL injections
-    - whitelist for table names and columns?
-
 fix error when adding a new product without all fields filled in
     also check other edge cases like that
+    ADD INPUT VALIDATION (CHECK ALL INPUTS ARE NOT EMPTY IF NECESSARY)
+
+turn manage components window into scrollable frame too
 
 unit tests
 
