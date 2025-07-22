@@ -2,6 +2,7 @@ import customtkinter
 from UI.spinbox import Spinbox
 from UI.small_popup import SmallPopup
 from UI import config
+from UI.messagebox import MessageBox
 
 class AdjustStockLevelPopup(SmallPopup):
     """A popup window to adjust the stock level of a given item"""
@@ -44,6 +45,11 @@ class AdjustStockLevelPopup(SmallPopup):
         should also be reduced i.e. if the product has been sold so the component are
         no longer available)
         """
+        # validate inputs first
+        if not self.validate_inputs():
+            MessageBox("Input Error", "Only integers can be entered!")
+            return
+
         stock_level_change = self.spinbox.get()
 
         if stock_level_change > 0:
@@ -66,6 +72,12 @@ class AdjustStockLevelPopup(SmallPopup):
         # if stock_level_change == 0 then do nothing other tan close the window
 
         self.close_window()
+
+    def validate_inputs(self):
+        """Checks if the inputs are valid, returns False if invalid, otherwise True"""
+        spinbox_value = self.spinbox.get()
+
+        return spinbox_value is not None
 
 class ReduceComponentStockLevelPopup(SmallPopup):
     """This window asks the user if they also want to reduce the stock levels of the components that the item is made with"""
