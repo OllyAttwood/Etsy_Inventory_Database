@@ -1,6 +1,7 @@
 import customtkinter
 from UI.small_popup import SmallPopup
 from UI import config
+from UI.messagebox import MessageBox
 
 class MultiInputDialog(SmallPopup):
     """An input pop-up window which gets and returns multiple inputs from the user (text) as a dictionary.
@@ -48,6 +49,12 @@ class MultiInputDialog(SmallPopup):
     def on_add_button_click(self):
         """Stores the values in the input widgets, then closes the window"""
         self.input_dict = self.get_widget_inputs()
+
+        # input validation
+        if not self.validate_inputs():
+            MessageBox("Input Error", "At least one of the input fields is empty!")
+            return
+
         self.destroy_window()
 
     def get_user_input(self):
@@ -75,3 +82,9 @@ class MultiInputDialog(SmallPopup):
         """Function for when user closes the window rather than submitting their input"""
         self.input_dict = None
         self.destroy_window()
+
+    def validate_inputs(self):
+        """Ensures all the input fields have a value entered"""
+        dict_values = list(self.input_dict.values())
+
+        return "" not in dict_values
