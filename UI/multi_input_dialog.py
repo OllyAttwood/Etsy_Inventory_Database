@@ -46,8 +46,8 @@ class MultiInputDialog(SmallPopup):
         add_button.grid(row=len(input_field_names), column=1, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
 
     def on_add_button_click(self):
-        """Stores the values in the entry fields, then closes the window"""
-        self.input_dict = self.get_entry_inputs()
+        """Stores the values in the input widgets, then closes the window"""
+        self.input_dict = self.get_widget_inputs()
         self.destroy_window()
 
     def get_user_input(self):
@@ -57,12 +57,12 @@ class MultiInputDialog(SmallPopup):
 
         return self.input_dict
 
-    def get_entry_inputs(self):
+    def get_widget_inputs(self):
         """Gets the current values the user has entered, as a dictionary"""
         input_dict = {}
 
-        for input_name, entry in zip(self.input_field_names, self.input_widgets):
-            input_dict[input_name] = entry.get()
+        for input_name, input_widget in zip(self.input_field_names, self.input_widgets):
+            input_dict[input_name] = input_widget.get()
 
         return input_dict
 
