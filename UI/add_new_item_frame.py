@@ -170,7 +170,7 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 
             # input validation
             if not self.validate_inputs([name, design, colour, product_type], [stock, low_stock_warning], components):
-                MessageBox("Input Error", "At least one of the input fields is either empty or an incorrect format!")
+                MessageBox("Input Error", "At least one of the input fields is either empty or in an incorrect format!")
                 return
 
             try:
@@ -254,17 +254,30 @@ class ManageComponentWindow(SmallPopup):
 
     def display_components(self, component_data):
         """Sets up all the UI widgets"""
+        self.geometry("400x400")
+        scrollable_frame = customtkinter.CTkScrollableFrame(self)
+        scrollable_frame.grid(row=0, column=0, sticky="nsew")
+
+        scrollable_frame.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+
         #loop through component_data, adding widgets
         for row_num, component_row in enumerate(component_data):
-            label = customtkinter.CTkLabel(self, text=component_row[0])
+            # label
+            label = customtkinter.CTkLabel(scrollable_frame, text=component_row[0])
             label.grid(row=row_num, column=0, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING/2)
-            stock_spinbox = Spinbox(self, initial_value=component_row[1])
-            stock_spinbox.grid(row=row_num, column=1, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING/2)
+
+            # spinbox
+            spinbox_frame = customtkinter.CTkFrame(scrollable_frame)
+            spinbox_frame.grid(row=row_num, column=1)
+            stock_spinbox = Spinbox(spinbox_frame, initial_value=component_row[1])
+            stock_spinbox.grid(row=0, column=0, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING/2)
             self.spinboxes.append(stock_spinbox)
 
         close_button = customtkinter.CTkButton(self, text="Close", command=self.release_focus_and_hide)
         row_num += 1 # using the loop variable - cheeky
-        close_button.grid(row=row_num, column=0, columnspan=2, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
+        close_button.grid(row=1, column=0, columnspan=2, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
 
     def get_selected_components(self):
         """Returns a list of tuples of the component names of which more than 0 quantity has been selected, and their quantities
@@ -295,9 +308,8 @@ class ManageComponentWindow(SmallPopup):
 fix error when adding a new product without all fields filled in
     also check other edge cases like tha
     ADD INPUT VALIDATION (CHECK ALL INPUTS ARE NOT EMPTY IF NECESSARY)
+        validate add design/type popups (after changing to include dropdowns if necessary)
         catch database errors when user inserts (duplicate name error already done in AddNewItemFrame?)
-
-turn manage components window into scrollable frame too
 
 unit tests
 
