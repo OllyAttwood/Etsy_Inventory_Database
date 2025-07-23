@@ -44,10 +44,8 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         # design
         design_lbl_str = "Design:"
         self.design_dropdown = customtkinter.CTkOptionMenu(self.centre_frame, values=self.design_options)
-        design_button_command = lambda: self.on_add_button_click(self.design_dropdown, self.design_input_field_names,
-                                                                 "Design", self.presenter.save_new_design)
         new_design_button = customtkinter.CTkButton(self.centre_frame, text="Add New Design... ",
-                                                    command=design_button_command)
+                                                    command=self.on_design_button_click)
         self.widget_grid.append([design_lbl_str, self.design_dropdown, new_design_button])
 
         # colour
@@ -58,10 +56,8 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         # type
         type_lbl_str = "Type:"
         self.type_dropdown = customtkinter.CTkOptionMenu(self.centre_frame, values=self.type_options)
-        type_button_command = lambda: self.on_add_button_click(self.type_dropdown, self.product_type_input_field_names,
-                                                               "Product Type", self.presenter.save_new_product_type)
         new_type_button = customtkinter.CTkButton(self.centre_frame, text="Add New Type... ",
-                                                  command=type_button_command)
+                                                  command=self.on_type_button_click)
         self.widget_grid.append([type_lbl_str, self.type_dropdown, new_type_button])
 
         # stock
@@ -112,9 +108,9 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 
         add_empty_string_option_and_alphabetise([self.design_options, self.colour_options, self.type_options])
 
-    def on_add_button_click(self, option_menu_to_update, input_field_names, subject_name, save_func):
+    def on_add_button_click(self, option_menu_to_update, input_field_names, dropdown_menu_options_list, subject_name, save_func):
         """Adds a new option to an optionmenu from the user input, and saves it to database"""
-        input_dialog = MultiInputDialog(input_field_names, subject_name)
+        input_dialog = MultiInputDialog(input_field_names, dropdown_menu_options_list, subject_name)
         input_dict = input_dialog.get_user_input()
 
         if input_dict: # if input_dict == None then user closed the dialog
@@ -225,6 +221,22 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 
         # if all the inputs are valid
         return True
+
+    def on_design_button_click(self):
+        """Opens the dialog to add a new design"""
+        themes = self.presenter.get_product_themes()
+        add_empty_string_option_and_alphabetise([themes])
+        self.on_add_button_click(self.design_dropdown, self.design_input_field_names, [None, themes],
+                                 "Design", self.presenter.save_new_design)
+
+    def on_type_button_click(self):
+        """Opens the dialog to add a new design"""
+        types = self.presenter.get_product_types()
+        sub_types = self.presenter.get_product_sub_types()
+        add_empty_string_option_and_alphabetise([types, sub_types])
+        self.on_add_button_click(self.type_dropdown, self.product_type_input_field_names,
+                                 [None, types, sub_types], "Product Type",
+                                 self.presenter.save_new_product_type)
 
 
 

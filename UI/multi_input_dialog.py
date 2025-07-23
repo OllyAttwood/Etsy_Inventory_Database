@@ -4,33 +4,46 @@ from UI import config
 
 class MultiInputDialog(SmallPopup):
     """An input pop-up window which gets and returns multiple inputs from the user (text) as a dictionary.
+    The input widgets can be either entries or dropdown menus (ComboBox)
     get_user_input() should be called after creating a MultiInputDialog so that the input is returned to that function
     """
-    def __init__(self, input_text_list, subject_name): #subject_name is the type of thing that is being added e.g. Design, Product Type etc
+    def __init__(self, input_field_names, dropdown_menu_options_list, subject_name):
+        """input_field_names is a list of the text that each label for each input will display.
+        dropdown_menu_options_list is a list of the options for each dropdown menu to
+            display. If None is provided for a given position, then an entry box will be
+            displayed rather than a dropdown menu.
+        subject_name is the type of thing that is being added e.g. Design, Product Type etc.
+        """
         super().__init__()
         self.title(f"Add a {subject_name}")
 
-        self.input_text_list = input_text_list
-        self.entry_widgets = []
+        self.input_field_names = input_field_names
+        self.dropdown_menu_options_list = dropdown_menu_options_list
+        self.input_widgets = []
         self.subject_name = subject_name
 
         self.protocol("WM_DELETE_WINDOW", self.on_window_closed)
 
-        self.display_widgets(input_text_list)
+        self.display_widgets(input_field_names, dropdown_menu_options_list)
 
-    def display_widgets(self, input_text_list):
-        # loops through and creates a label/entry pair of widgets for each required input
-        for row, input_text in enumerate(input_text_list):
+    def display_widgets(self, input_field_names, dropdown_menu_options_list):
+        # loops through and creates a label/entry (or label/dropdown) pair of widgets for each required input
+        for row, input_row_info in enumerate(zip(input_field_names, dropdown_menu_options_list)):
+            input_text, dropdown_menu_options = input_row_info
+
             label = customtkinter.CTkLabel(self, text=input_text)
             label.grid(row=row, column=0, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
 
-            entry = customtkinter.CTkEntry(self)
-            self.entry_widgets.append(entry)
-            entry.grid(row=row, column=1, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
+            if dropdown_menu_options is None:
+                input_widget = customtkinter.CTkEntry(self)
+            else:
+                input_widget = customtkinter.CTkComboBox(self, values=dropdown_menu_options)
+            self.input_widgets.append(input_widget)
+            input_widget.grid(row=row, column=1, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
 
         # creates the add button
         add_button = customtkinter.CTkButton(self, text=f"Add {self.subject_name}", command=self.on_add_button_click)
-        add_button.grid(row=len(input_text_list), column=1, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
+        add_button.grid(row=len(input_field_names), column=1, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
 
     def on_add_button_click(self):
         """Stores the values in the entry fields, then closes the window"""
@@ -48,7 +61,7 @@ class MultiInputDialog(SmallPopup):
         """Gets the current values the user has entered, as a dictionary"""
         input_dict = {}
 
-        for input_name, entry in zip(self.input_text_list, self.entry_widgets):
+        for input_name, entry in zip(self.input_field_names, self.input_widgets):
             input_dict[input_name] = entry.get()
 
         return input_dict
