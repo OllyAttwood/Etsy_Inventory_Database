@@ -162,8 +162,16 @@ class AddNewItemFrame(customtkinter.CTkFrame):
             low_stock_warning = self.low_stock_spinbox.get()
             try:
                 components = self.manage_component_window.get_selected_components()
-            except AttributeError: #ManageComponentWindow was never opened by the user
+            except AttributeError: # ManageComponentWindow was never opened by the user
                 components = []
+            except TypeError: # something other than a number entered into a ManageComponentWindow spinbox
+                MessageBox("Input Error", "At least one of the component quantity input fields is not an integer!")
+                return
+
+            # input validation
+            if not self.validate_inputs([name, design, colour, product_type], [stock, low_stock_warning], components):
+                MessageBox("Input Error", "At least one of the input fields is either empty or an incorrect format!")
+                return
 
             try:
                 self.presenter.save_new_product(name, design, colour, product_type, stock, low_stock_warning, components)
@@ -175,6 +183,11 @@ class AddNewItemFrame(customtkinter.CTkFrame):
             name = self.name_entry.get()
             stock = self.stock_spinbox.get()
             low_stock_warning = self.low_stock_spinbox.get()
+
+            # input validation
+            if not self.validate_inputs([name], [stock, low_stock_warning], []):
+                MessageBox("Input Error", "At least one of the input fields is either empty or an incorrect format!")
+                return
 
             try:
                 self.presenter.save_new_component(name, stock, low_stock_warning)
@@ -188,6 +201,30 @@ class AddNewItemFrame(customtkinter.CTkFrame):
     def create_name_error_popup(self):
         """Creates and shows an error message for when a product/component already exists with the same name"""
         MessageBox("Name Error", "That name is already in use!")
+
+    def validate_inputs(self, non_empty_strings, spinbox_strings, components_list):
+        """Validates the inputs before doing anything with them.
+        non_empty_strings is a list of the strings that should be checked for being non-empty.
+        spinbox_strings is a list of strings obtained from the spinboxes that should be checked
+            for being not None (this implies the string correctly represents an integer - see Spinbox.get()).
+        component_list is a list of tuples (component name and quantity) that should be checked for all
+            quantities being not None, as in spinbox_strings
+        """
+        # check non_empty_strings
+        if "" in non_empty_strings:
+            return False
+
+        # check spinbox_strings
+        if None in spinbox_strings:
+            return False
+
+        # check components_list
+        component_quantity_index = 1
+        if None in [name_and_quantity[component_quantity_index] for name_and_quantity in components_list]:
+            return False
+
+        # if all the inputs are valid
+        return True
 
 
 
@@ -256,8 +293,9 @@ class ManageComponentWindow(SmallPopup):
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 fix error when adding a new product without all fields filled in
-    also check other edge cases like that
+    also check other edge cases like tha
     ADD INPUT VALIDATION (CHECK ALL INPUTS ARE NOT EMPTY IF NECESSARY)
+        catch database errors when user inserts (duplicate name error already done in AddNewItemFrame?)
 
 turn manage components window into scrollable frame too
 
