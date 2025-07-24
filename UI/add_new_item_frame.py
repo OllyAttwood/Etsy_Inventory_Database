@@ -317,12 +317,6 @@ class ManageComponentWindow(SmallPopup):
 """
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-fix error when adding a new product without all fields filled in
-    also check other edge cases like tha
-    ADD INPUT VALIDATION (CHECK ALL INPUTS ARE NOT EMPTY IF NECESSARY)
-        validate add design/type popups (after changing to include dropdowns if necessary)
-        catch database errors when user inserts (duplicate name error already done in AddNewItemFrame?)
-
 unit tests
 
 update all code to use leading underscore for all private function names

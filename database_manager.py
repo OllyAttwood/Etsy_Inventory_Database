@@ -3,8 +3,8 @@ import sqlite3
 class DatabaseManager:
 
     #connect to database
-    def __init__(self):
-        self.database_file_name = "inventory.db"
+    def __init__(self, save_database_in_memory=False):
+        self.database_file_name = "inventory.db" if not save_database_in_memory else ":memory:"
         self.connection = sqlite3.connect(self.database_file_name)
         self.cursor = self.connection.cursor()
 
