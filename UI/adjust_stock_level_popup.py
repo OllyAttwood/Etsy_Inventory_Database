@@ -6,6 +6,7 @@ from UI.messagebox import MessageBox
 
 class AdjustStockLevelPopup(SmallPopup):
     """A popup window to adjust the stock level of a given item"""
+    
     def __init__(self, item_name, item_id, item_type, presenter, tab_view):
         super().__init__()
         self.title("Adjust Stock Level")

@@ -2,6 +2,8 @@ import customtkinter
 from UI.db_tab_view import DBTabView
 
 class App(customtkinter.CTk):
+    """Sets up the UI of the program"""
+    
     def __init__(self, presenter):
         super().__init__()
 

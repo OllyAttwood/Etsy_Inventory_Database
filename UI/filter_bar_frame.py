@@ -4,6 +4,8 @@ from UI import config
 from UI.utilities import  add_empty_string_option_and_alphabetise
 
 class FilterBarFrame(customtkinter.CTkFrame):
+    """A frame containing the widgets which the user can use to filter the items being displayed"""
+
     def __init__(self, master, design_options, theme_options, type_options, sub_type_options,
                  colour_options, product_component_switch_toggle_callback):
         """The filter bar that is used to filter the items that are being displayed"""

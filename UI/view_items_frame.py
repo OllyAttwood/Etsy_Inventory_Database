@@ -10,6 +10,7 @@ from tkinter import NORMAL, DISABLED
 
 class ViewItemsFrame(customtkinter.CTkFrame):
     """Displays all the products/components according to the filters"""
+    
     def __init__(self, master, presenter, tab_view):
         super().__init__(master)
         self.master = master

@@ -8,6 +8,7 @@ class MultiInputDialog(SmallPopup):
     The input widgets can be either entries or dropdown menus (ComboBox)
     get_user_input() should be called after creating a MultiInputDialog so that the input is returned to that function
     """
+    
     def __init__(self, input_field_names, dropdown_menu_options_list, subject_name):
         """input_field_names is a list of the text that each label for each input will display.
         dropdown_menu_options_list is a list of the options for each dropdown menu to

@@ -1,6 +1,7 @@
 import sqlite3
 
 class DatabaseManager:
+    """The database class for storing, modifying and accessing the inventory"""
 
     #connect to database
     def __init__(self, save_database_in_memory=False):
@@ -113,7 +114,7 @@ class DatabaseManager:
         clause += " AND "
 
         query_vals.append(query_value)
-        
+
         return clause
 
     def _view_filtered_items(self, params_with_db_cols, query_without_where_clause, name_search=None,

@@ -9,6 +9,8 @@ from UI import config
 from UI.utilities import add_empty_string_option_and_alphabetise
 
 class AddNewItemFrame(customtkinter.CTkFrame):
+    """A frame for adding new products/components"""
+
     def __init__(self, master, presenter, tab_view):
         super().__init__(master)
 
@@ -317,15 +319,9 @@ class ManageComponentWindow(SmallPopup):
 """
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-update all code to use leading underscore for all private function names
-
-add blank lines after any class docstrings and before all returns/asserts
-
 tidy up UI
     <PROBABLY NOT NEEDED> add popup confirmation boxes when adding items, updating stock levels etc
     change background colour of central frames?
-
-add comments to functions/classes
 
 add README
 

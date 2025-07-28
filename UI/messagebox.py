@@ -3,6 +3,7 @@ from UI.small_popup import SmallPopup
 
 class MessageBox(SmallPopup):
     """A very simple pop-up window which displays a message to the user"""
+    
     def __init__(self, title, message):
         super().__init__()
         self.title(title)

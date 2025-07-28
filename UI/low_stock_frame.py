@@ -4,6 +4,7 @@ from UI import config
 
 class LowStockFrame(customtkinter.CTkFrame):
     """A frame which displays the items which have a stock level less than or equal to their stock warning value"""
+    
     def __init__(self, master, presenter):
         super().__init__(master)
         self.presenter = presenter
