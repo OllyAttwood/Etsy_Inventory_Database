@@ -317,9 +317,9 @@ class ManageComponentWindow(SmallPopup):
 """
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-unit tests
-
 update all code to use leading underscore for all private function names
+
+add blank lines after any class docstrings and before all returns/asserts
 
 tidy up UI
     <PROBABLY NOT NEEDED> add popup confirmation boxes when adding items, updating stock levels etc
