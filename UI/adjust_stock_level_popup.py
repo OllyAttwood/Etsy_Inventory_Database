@@ -6,7 +6,7 @@ from UI.messagebox import MessageBox
 
 class AdjustStockLevelPopup(SmallPopup):
     """A popup window to adjust the stock level of a given item"""
-    
+
     def __init__(self, item_name, item_id, item_type, presenter, tab_view):
         super().__init__()
         self.title("Adjust Stock Level")
@@ -41,7 +41,8 @@ class AdjustStockLevelPopup(SmallPopup):
         self.destroy()
 
     def apply_change_and_close_window(self):
-        """Applies the stock level change specified by the user (if a product stock is
+        """
+        Applies the stock level change specified by the user (if a product stock is
         being decreased, a pop-up asks if the stock level of the product's components
         should also be reduced i.e. if the product has been sold so the component are
         no longer available)
@@ -125,7 +126,8 @@ class ReduceComponentStockLevelPopup(SmallPopup):
         self.tab_view.reload_all_frames() # reloads UI to show new values
 
     def on_yes_button_click(self):
-        """Update the product's stock level, as well as its components' stock levels, then
+        """
+        Update the product's stock level, as well as its components' stock levels, then
         close the pop-up and reload the UI
         """
         self.presenter.update_product_stock_level_and_its_components_stock_levels(self.item_id, self.stock_level_change)

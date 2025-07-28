@@ -72,7 +72,8 @@ class DatabaseManager:
         self.connection.commit()
 
     def insert_data(self, table_name, data_row):
-        """Inserts a single row of data to a table.
+        """
+        Inserts a single row of data to a table.
         User must not be able to type in table_name directly as SQL injection placeholder
         doesn't work with table names - table_name must be picked from drop-down list
         """
@@ -97,7 +98,8 @@ class DatabaseManager:
         self.connection.commit()
 
     def build_where_clause(self, db_col_name, query_vals, query_value, like=False):
-        """Creates each step of the WHERE clause - 'like' should only be True if we
+        """
+        Creates each step of the WHERE clause - 'like' should only be True if we
         are using LIKE in the WHERE clause rather than an equality check
         """
         clause = db_col_name
@@ -120,7 +122,8 @@ class DatabaseManager:
     def _view_filtered_items(self, params_with_db_cols, query_without_where_clause, name_search=None,
                             design=None, design_theme=None, type=None, subtype=None, colour=None,
                             stock_level=None):
-        """Queries the database for products/components.
+        """
+        Queries the database for products/components.
         This method shouldn't be called directly - use view_filtered_products() or
         view_filtered_components() instead
         """
@@ -181,7 +184,8 @@ class DatabaseManager:
         return self._view_filtered_items(params_with_db_cols, product_query, name_search, stock_level)
 
     def view_low_stock_items(self, products=True, components=True):
-        """Gets the items which have a stock level equal or less than their warning level.
+        """
+        Gets the items which have a stock level equal or less than their warning level.
         The parameters 'products' and 'components' allow only one or both tables to
         be searched.
         """
@@ -220,7 +224,8 @@ class DatabaseManager:
         return [col[0] for col in self.cursor.description]
 
     def view_single_column_from_single_table(self, column_name, table_name, no_duplicates=True):
-        """Performs a simple SELECT call with given column and table.
+        """
+        Performs a simple SELECT call with given column and table.
         *** WARNING *** - placeholders (i.e. '?') cannot be used for column or table names, therefore this function is VULNERABLE to SQL injection if exposed to the user
         """
         self.validate_table_name(table_name) # confirms table name is protected against SQL injection
@@ -257,7 +262,8 @@ class DatabaseManager:
         return self.view_single_column_from_single_table("name", "Component")
 
     def view_single_column_from_single_table_with_where_clause(self, column_to_obtain, table_name, column_to_match, value_to_match):
-        """Performs a simple SELECT query with a WHERE clause
+        """
+        Performs a simple SELECT query with a WHERE clause
         WARNING *** - placeholders (i.e. '?') cannot be used for column or table names, therefore this function is VULNERABLE to SQL injection if exposed to the user
         """
         self.validate_table_name(table_name) # confirms table name is protected against SQL injection
@@ -295,7 +301,8 @@ class DatabaseManager:
             self.insert_data("MadeUsing", [product_id, component_id, quantity])
 
     def _update_item_stock_level(self, item_id, table_name, increase_decrease_amount):
-        """Increases or decreases the stock level of the given item by the sepcified amount,
+        """
+        Increases or decreases the stock level of the given item by the sepcified amount,
         e.g. if the current stock level is 5 and increase_decrease_amount is -1, then the new
         stock level will be 4.
         This method shouldn't be called directly, rather either update_product_stock_level() or
@@ -312,22 +319,28 @@ class DatabaseManager:
         self.connection.commit()
 
     def update_product_stock_level(self, product_id, increase_decrease_amount):
-        """Updates the stock level of a product - note that the new stock level is
+        """
+        Updates the stock level of a product - note that the new stock level is
         NOT increase_decrease_amount, this is how much the previous stock level is
-        changed by"""
+        changed by
+        """
         self._update_item_stock_level(product_id, "Product", increase_decrease_amount)
 
     def update_component_stock_level(self, component_id, increase_decrease_amount):
-        """Updates the stock level of an item - note that the new stock level is
+        """
+        Updates the stock level of an item - note that the new stock level is
         NOT increase_decrease_amount, this is how much the previous stock level is
-        changed by"""
+        changed by
+        """
         self._update_item_stock_level(component_id, "Component", increase_decrease_amount)
 
 
     def view_components_of_product(self, product_id):
-        """Returns a list of the components that are used to create a product, as well as the quantity of each.
+        """
+        Returns a list of the components that are used to create a product, as well as the quantity of each.
         Each component and quantity is stored as a tuple, e.g. the entire list will look like [(2, 1), (0, 2), (7, 1)]
-        The first element of a tuple is the component ID and the second element is the quantity used in the product"""
+        The first element of a tuple is the component ID and the second element is the quantity used in the product
+        """
         query = """SELECT component_id, num_components_used
                    FROM MadeUsing
                    WHERE product_id = ?"""
@@ -355,7 +368,8 @@ class DatabaseManager:
         self.connection.commit()
 
     def validate_table_name(self, table_name_to_validate):
-        """Validates a table name by checking against a whitelist of actual table names. This is
+        """
+        Validates a table name by checking against a whitelist of actual table names. This is
         necessary as sqlite3 only offers functionality to check column values, not table names.
         """
         table_names = self._get_all_table_names()
@@ -364,7 +378,8 @@ class DatabaseManager:
             raise sqlite3.DataError(f"Table name {table_name_to_validate} not valid!")
 
     def validate_column_names(self, column_names_to_validate):
-        """Validates each column name in the list by checking against a whitelist of actual column names. This is
+        """
+        Validates each column name in the list by checking against a whitelist of actual column names. This is
         necessary as sqlite3 only offers functionality to check column values, not column names.
         """
         table_names = self._get_all_table_names()

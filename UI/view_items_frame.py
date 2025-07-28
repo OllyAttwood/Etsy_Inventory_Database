@@ -10,7 +10,7 @@ from tkinter import NORMAL, DISABLED
 
 class ViewItemsFrame(customtkinter.CTkFrame):
     """Displays all the products/components according to the filters"""
-    
+
     def __init__(self, master, presenter, tab_view):
         super().__init__(master)
         self.master = master
@@ -98,7 +98,8 @@ class ViewItemsFrame(customtkinter.CTkFrame):
         ConfirmItemDeletePopup(selected_item_name, selected_item_id, selected_item_type, self.presenter, self.tab_view)
 
     def update_button_states(self):
-        """This method sets the button's states depending on which ones should be available.
+        """
+        This method sets the button's states depending on which ones should be available.
         It should be called whenever a table row is selected or the product/component
         switch is toggled.
         The buttons should become available after a row is selected,  other than the
@@ -143,7 +144,8 @@ class ViewProductsComponentsPopup(SmallPopup):
         table.grid(row=0, column=0, sticky="nsew")
 
 class ConfirmItemDeletePopup(SmallPopup):
-    """A pop-up to confirm the user wants to delete the item - also refreshes the UI
+    """
+    A pop-up to confirm the user wants to delete the item - also refreshes the UI
     after deleting the item
     """
     def __init__(self, item_name, item_id, item_type, presenter, tab_view):

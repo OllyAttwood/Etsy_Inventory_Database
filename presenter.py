@@ -2,7 +2,7 @@ from database_manager import DatabaseManager
 
 class Presenter:
     """The presenter class"""
-    
+
     def __init__(self):
         self.db_manager = DatabaseManager()
 
@@ -77,14 +77,16 @@ class Presenter:
         self.db_manager.insert_new_product(name, design, colour, product_type, stock, low_stock_warning, components)
 
     def update_product_stock_level(self, product_id, increase_decrease_amount):
-        """Increases or decreases the stock level of the given product by the sepcified amount,
+        """
+        Increases or decreases the stock level of the given product by the sepcified amount,
         e.g. if the current stock level is 5 and increase_decrease_amount is -1, then the new
         stock level will be 4.
         """
         self.db_manager.update_product_stock_level(product_id, increase_decrease_amount)
 
     def update_component_stock_level(self, component_id, increase_decrease_amount):
-        """Increases or decreases the stock level of the given component by the sepcified amount,
+        """
+        Increases or decreases the stock level of the given component by the sepcified amount,
         e.g. if the current stock level is 5 and increase_decrease_amount is -1, then the new
         stock level will be 4.
         """
@@ -101,9 +103,11 @@ class Presenter:
         self.update_product_stock_level(product_id, product_stock_level_change) # update product stock
 
     def get_components_of_product(self, product_id):
-        """Returns a list of the components that are used to create a product, as well as the quantity of each.
+        """
+        Returns a list of the components that are used to create a product, as well as the quantity of each.
         Each component and quantity is stored as a tuple, e.g. the entire list will look like [(2, 1), (0, 2), (7, 1)]
-        The first element of a tuple is the component ID and the second element is the quantity used in the product"""
+        The first element of a tuple is the component ID and the second element is the quantity used in the product
+        """
         return self.db_manager.view_components_of_product(product_id)
 
     def get_component_name_from_id(self, component_id):

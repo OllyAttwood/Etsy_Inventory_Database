@@ -50,8 +50,10 @@ class DBTabView(customtkinter.CTkTabview):
         self.display_frame_in_grid(replacement_frame)
 
     def _reload_view_items_frame(self, display_components):
-        """Refreshes the ViewItemsFrame - display_components controls whether the
-        components are initially displayed rather than the default products"""
+        """
+        Refreshes the ViewItemsFrame - display_components controls whether the
+        components are initially displayed rather than the default products
+        """
         replacement_frame = self.create_view_items_frame()
         self._reload_tab_contents(self.VIEW_ITEMS_FRAME_INDEX, replacement_frame)
 
@@ -69,9 +71,11 @@ class DBTabView(customtkinter.CTkTabview):
         self._reload_tab_contents(self.LOW_STOCK_FRAME_INDEX, replacement_frame)
 
     def reload_all_frames(self, display_components_in_view_items_frame=False):
-        """Refreshes the UI with updated values. display_components_in_view_items_frame controls
+        """
+        Refreshes the UI with updated values. display_components_in_view_items_frame controls
         whether the components should be initially displayed in the ViewItemsFrame (e.g. immediately
-        after updating the stock level of a component)"""
+        after updating the stock level of a component)
+        """
         self._reload_view_items_frame(display_components_in_view_items_frame)
         self._reload_add_new_item_frame()
         self._reload_low_stock_frame()

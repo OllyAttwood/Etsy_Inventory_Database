@@ -4,13 +4,15 @@ from UI import config
 from UI.messagebox import MessageBox
 
 class MultiInputDialog(SmallPopup):
-    """An input pop-up window which gets and returns multiple inputs from the user (text) as a dictionary.
+    """
+    An input pop-up window which gets and returns multiple inputs from the user (text) as a dictionary.
     The input widgets can be either entries or dropdown menus (ComboBox)
     get_user_input() should be called after creating a MultiInputDialog so that the input is returned to that function
     """
-    
+
     def __init__(self, input_field_names, dropdown_menu_options_list, subject_name):
-        """input_field_names is a list of the text that each label for each input will display.
+        """
+        input_field_names is a list of the text that each label for each input will display.
         dropdown_menu_options_list is a list of the options for each dropdown menu to
             display. If None is provided for a given position, then an entry box will be
             displayed rather than a dropdown menu.
@@ -59,8 +61,10 @@ class MultiInputDialog(SmallPopup):
         self.destroy_window()
 
     def get_user_input(self):
-        """The function to call to wait until the user has entered and submitted input.
-        Returns None if the window is closed by the user, otherwise returns a dictionary of the user inputs"""
+        """
+        The function to call to wait until the user has entered and submitted input.
+        Returns None if the window is closed by the user, otherwise returns a dictionary of the user inputs
+        """
         self.master.wait_window(self) #waits until the input popup is closed
 
         return self.input_dict

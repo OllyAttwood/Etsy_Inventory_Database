@@ -201,7 +201,8 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         MessageBox("Name Error", "That name is already in use!")
 
     def validate_inputs(self, non_empty_strings, spinbox_strings, components_list):
-        """Validates the inputs before doing anything with them.
+        """
+        Validates the inputs before doing anything with them.
         non_empty_strings is a list of the strings that should be checked for being non-empty.
         spinbox_strings is a list of strings obtained from the spinboxes that should be checked
             for being not None (this implies the string correctly represents an integer - see Spinbox.get()).
@@ -243,7 +244,8 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 
 
 class ManageComponentWindow(SmallPopup):
-    """The pop-up window to display all the available components, with spinboxes to select quantities.
+    """
+    The pop-up window to display all the available components, with spinboxes to select quantities.
     Shows an error message if there are no saved components.
     """
     def __init__(self, presenter):
@@ -294,7 +296,8 @@ class ManageComponentWindow(SmallPopup):
         close_button.grid(row=1, column=0, columnspan=2, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
 
     def get_selected_components(self):
-        """Returns a list of tuples of the component names of which more than 0 quantity has been selected, and their quantities
+        """
+        Returns a list of tuples of the component names of which more than 0 quantity has been selected, and their quantities
         e.g. [('Jump ring - large', 4), ('Earring hook', 2), ('Earring back', 2)]
         """
         component_list = []

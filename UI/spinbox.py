@@ -2,10 +2,11 @@ import customtkinter
 from typing import Callable, Union
 
 class Spinbox(customtkinter.CTkFrame):
-    """A small widget to increase/decrease a quantity.
+    """
+    A small widget to increase/decrease a quantity.
     This class is modified from https://customtkinter.tomschimansky.com/tutorial/spinbox
     """
-    
+
     def __init__(self, *args,
                  width: int = 100,
                  height: int = 32,

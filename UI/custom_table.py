@@ -110,14 +110,17 @@ class CustomTable(customtkinter.CTkScrollableFrame):
             self.change_row_colour(row_num, grid_info, colour)
 
     def on_mouse_enter_cell(self, event):
-        """The function that is called when the cursor is hovering over a table cell, to
+        """
+        The function that is called when the cursor is hovering over a table cell, to
         update the table's colours
         """
         self.update_table_appearance(event, self.cell_hover_colour)
 
     def on_mouse_leave_cell(self, event):
-        """The function that is called when the cursor leaves a table cell, to update the
-        table's colours and remove the tooltip"""
+        """
+        The function that is called when the cursor leaves a table cell, to update the
+        table's colours and remove the tooltip
+        """
         self.update_table_appearance(event, self.data_colour)
 
         # remove tooltip
@@ -126,7 +129,8 @@ class CustomTable(customtkinter.CTkScrollableFrame):
             self.tooltip = None
 
     def on_mouse_motion(self, event):
-        """Determines the position to display the tooltip, when the cursor is hovering
+        """
+        Determines the position to display the tooltip, when the cursor is hovering
         over a table cell
         """
         # calculate tooltip position
@@ -138,7 +142,8 @@ class CustomTable(customtkinter.CTkScrollableFrame):
         self.show_tooltip(event.widget.get(), relative_x, relative_y)
 
     def show_tooltip(self, text, x, y):
-        """Shows the tooltip for a CustomTable. The x and y values are for the master frame the CustomTable
+        """
+        Shows the tooltip for a CustomTable. The x and y values are for the master frame the CustomTable
         is contained within, as the tooltip will be placed on the frame rather than the CustomTable so that
         the tooltip is still displayed when its outside of the bounds of the CustomTable.
         """
@@ -152,7 +157,8 @@ class CustomTable(customtkinter.CTkScrollableFrame):
         self.tooltip.place(x=x+x_offset, y=y+y_offset) # slightly adjust x and y so tooltip is not covered by cursor or cut off at bottom
 
     def calculate_column_widths(self, full_data, font_size, min_width=100, max_width=350):
-        """Calculates how wide to make each column, based on the longest data text in the column.
+        """
+        Calculates how wide to make each column, based on the longest data text in the column.
         The values are bound by the min_width and max_width parameters.
         """
         font = tkfont.Font(size=font_size)

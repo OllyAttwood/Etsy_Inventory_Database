@@ -1,4 +1,5 @@
-"""Tests for the database_manager.py functions.
+"""
+Tests for the database_manager.py functions.
 
 If the command "pytest" doesn't work (as it didn't for me), use
 "python -m pytest" instead.
@@ -222,7 +223,8 @@ def test_get_all_table_names(db):
 # ------------------------------------------     HELPER FUNCTIONS     ------------------------------------------
 
 def _setup_product_prerequisites(database):
-    """Helper function to prepare the database for inserting products by inserting the prerequisite entries in the other tables.
+    """
+    Helper function to prepare the database for inserting products by inserting the prerequisite entries in the other tables.
     Returns a dictionary with the inserted values so that the test functions can check for correct database functionality.
     """
     design_name = "DesignName"
@@ -267,7 +269,8 @@ def _setup_product_prerequisites(database):
     }
 
 def _insert_new_product(product_name, database, product_prequisite_dict):
-    """Inserts a new product row into the database with the given name and other fields obtained
+    """
+    Inserts a new product row into the database with the given name and other fields obtained
     from product_prequisite_dict - therefore all products inserted using this funtion are identical
     other than their names and IDs.
     """
