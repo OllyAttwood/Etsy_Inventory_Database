@@ -38,6 +38,8 @@ class CustomTable(customtkinter.CTkScrollableFrame):
         for row_num, row in enumerate(self.combined_data):
             for col_num, cell_text in enumerate(row):
                 cell_width = self.column_widths[col_num]
+                # a CTkEntry widget is used despite not needing text input functionality because
+                # it is easier to achieve a the appearance of a table cell with a CTkEntry widget
                 cell = customtkinter.CTkEntry(centre_frame, textvariable=StringVar(self, cell_text),
                                               font=self.font, state="disabled", fg_color=data_colour,
                                               width=cell_width)
