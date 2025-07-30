@@ -318,15 +318,3 @@ class ManageComponentWindow(SmallPopup):
 
         label = customtkinter.CTkLabel(self, text="No components have been added to the database yet!")
         label.grid(row=0, column=0)
-
-"""
--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-tidy up UI
-    <PROBABLY NOT NEEDED> add popup confirmation boxes when adding items, updating stock levels etc
-    change background colour of central frames?
-
-add README
-
-remove this todo list
-"""
