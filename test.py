@@ -1,4 +1,5 @@
 #script to create a dummy version of the database for development
+# ---   THIS SCRIPT HAS NOT BEEN KEPT UP TO DATE SO PROBABLY DOESN'T WORK WITH UPDATED CODE   ---
 from database_manager import DatabaseManager
 
 #inserts fake data into the tables for use during development and testing features
