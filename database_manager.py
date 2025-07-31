@@ -120,7 +120,7 @@ class DatabaseManager:
         return clause
 
     def _view_filtered_items(self, params_with_db_cols, query_without_where_clause, name_search=None,
-                            design=None, design_theme=None, type=None, subtype=None, colour=None,
+                            design=None, design_theme=None, product_type=None, subtype=None, colour=None,
                             stock_level=None):
         """
         Queries the database for products/components.
@@ -156,7 +156,7 @@ class DatabaseManager:
         }
 
     def view_filtered_products(self, name_search=None, design=None, design_theme=None,
-                               type=None, subtype=None, colour=None, stock_level=None):
+                               product_type=None, subtype=None, colour=None, stock_level=None):
         """Searches the database for products based on the provided filters"""
         product_query = """SELECT Product.product_id, Product.name AS 'Product Name', Product.colour,
                                   Product.stock, Product.low_stock_warning, Design.name AS 'Design Name',
@@ -168,12 +168,12 @@ class DatabaseManager:
                            ON Product.product_type_id=ProductType.product_type_id"""
 
         params_with_db_cols = ((name_search, "Product.name"), (design, "Design.name"),
-                               (design_theme, "Design.theme"), (type, "ProductType.type"),
+                               (design_theme, "Design.theme"), (product_type, "ProductType.type"),
                                (subtype, "ProductType.sub_type"), (colour, "Product.colour"),
                                (stock_level, "Product.stock"))
 
         return self._view_filtered_items(params_with_db_cols, product_query, name_search, design,
-                                 design_theme, type, subtype, stock_level)
+                                 design_theme, product_type, subtype, stock_level)
 
     def view_filtered_components(self, name_search=None, stock_level=None):
         """Searches the database for components based on the provided filters"""
@@ -280,8 +280,8 @@ class DatabaseManager:
     def insert_new_design(self, name, theme):
         self.insert_data("Design", [name, theme])
 
-    def insert_new_product_type(self, name, type, sub_type):
-        self.insert_data("ProductType", [name, type, sub_type])
+    def insert_new_product_type(self, name, product_type, sub_type):
+        self.insert_data("ProductType", [name, product_type, sub_type])
 
     def insert_new_component(self, name, stock, low_stock_warning):
         self.insert_data("Component", [name, stock, low_stock_warning])
@@ -356,6 +356,7 @@ class DatabaseManager:
         return self.view_single_column_from_single_table_with_where_clause("name", "Component", "component_id", component_id)
 
     def delete_product(self, product_id):
+        print("??????????????", product_id)
         sql = f"""DELETE FROM Product
                   WHERE product_id = ?"""
         self.cursor.execute(sql, (str(product_id)))
