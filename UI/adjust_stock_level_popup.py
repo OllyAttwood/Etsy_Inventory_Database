@@ -71,7 +71,7 @@ class AdjustStockLevelPopup(SmallPopup):
                 self.presenter.update_component_stock_level(self.item_id, stock_level_change)
                 self.tab_view.reload_all_frames(display_components_in_view_items_frame=True) # reloads UI to show new values
 
-        # if stock_level_change == 0 then do nothing other tan close the window
+        # if stock_level_change == 0 then do nothing other than close the window
 
         self.close_window()
 
