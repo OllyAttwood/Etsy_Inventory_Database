@@ -143,11 +143,7 @@ class DatabaseManager:
             product_query += " WHERE " + "".join(where_clauses)
             product_query = product_query[:-4] #remove final " AND"
 
-        res = self.cursor.execute(product_query, query_vals)
-        return_list = []
-        for row in res.fetchall():
-            return_list.append(row)
-
+        return_list = self.execute_query_and_list_results(product_query, query_vals)
         column_names = self.get_column_names_most_recent_query()
 
         return {
@@ -207,11 +203,7 @@ class DatabaseManager:
 
                 full_query += query
 
-        res = self.cursor.execute(full_query)
-        return_list = []
-        for row in res.fetchall():
-            return_list.append(row)
-
+        return_list = self.execute_query_and_list_results(full_query)
         column_names = self.get_column_names_most_recent_query()
 
         return {
@@ -233,10 +225,7 @@ class DatabaseManager:
 
         distinct = "DISTINCT " if no_duplicates else ""
         query = f"SELECT {distinct}{column_name} FROM {table_name} WHERE {column_name} IS NOT NULL AND {column_name} != ''" #exclude None values and empty strings
-        res = self.cursor.execute(query)
-        return_list = []
-        for row in res.fetchall():
-            return_list.append(row[0]) #[0] needed otherwise each row is a tuple rather than just the value e.g. ('Heart',)
+        return_list = self.execute_query_and_list_results(query, single_column_index=0) # 0 needed otherwise each row is a tuple rather than just the value e.g. ('Heart',)
 
         return return_list
 
@@ -270,12 +259,9 @@ class DatabaseManager:
         self.validate_column_names([column_to_obtain, column_to_match])
 
         query = f"SELECT {column_to_obtain} FROM {table_name} WHERE {column_to_match}= ?"
-        res = self.cursor.execute(query, (value_to_match,))
-        query_list = []
-        for row in res.fetchall():
-            query_list.append(row[0]) #[0] needed otherwise each row is a tuple rather than just the value e.g. ('Heart',)
+        results_list = self.execute_query_and_list_results(query, (value_to_match,), single_column_index=0)
 
-        return query_list
+        return results_list
 
     def insert_new_design(self, name, theme):
         self.insert_data("Design", [name, theme])
@@ -344,10 +330,7 @@ class DatabaseManager:
         query = """SELECT component_id, num_components_used
                    FROM MadeUsing
                    WHERE product_id = ?"""
-        res = self.cursor.execute(query, (str(product_id),))
-        components_list = []
-        for row in res.fetchall():
-            components_list.append(row)
+        components_list = self.execute_query_and_list_results(query, (str(product_id),))
 
         return components_list
 
@@ -386,9 +369,8 @@ class DatabaseManager:
         all_column_names = []
 
         for table_name in table_names:
-            res = self.cursor.execute(f"PRAGMA table_info({table_name})")
-            for column_info in res.fetchall():
-                all_column_names.append(column_info[1])
+            cols_in_table = self.execute_query_and_list_results(f"PRAGMA table_info({table_name})", single_column_index=1)
+            all_column_names.extend(cols_in_table)
 
         #checks if all the column_names_to_validate are in all_column_names
         bad_column_names = [col for col in column_names_to_validate if col not in all_column_names]
@@ -397,11 +379,25 @@ class DatabaseManager:
 
     def _get_all_table_names(self):
         """Returns the names of all the tables in the database"""
-        table_names = []
         sql_str = "SELECT name FROM sqlite_master WHERE type='table'"
-        res = self.cursor.execute(sql_str)
-
-        for row in res.fetchall():
-            table_names.append(row[0])
+        table_names = self.execute_query_and_list_results(sql_str, single_column_index=0)
 
         return table_names
+
+    def execute_query_and_list_results(self, query, parameters=(), single_column_index=False):
+        """
+        Executes a query and returns the results as a list. If a single_column_index is
+        provided, only the values from that column will be added to the list.
+        """
+        return_list = []
+        results = self.cursor.execute(query, parameters)
+
+        for row in results.fetchall():
+            row_to_add = row
+
+            if single_column_index is not False:
+                row_to_add = row_to_add[single_column_index]
+
+            return_list.append(row_to_add)
+
+        return return_list
