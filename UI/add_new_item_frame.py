@@ -6,7 +6,7 @@ from UI.messagebox import MessageBox
 import sqlite3
 from UI.small_popup import SmallPopup
 from UI import config
-from UI.utilities import add_empty_string_option_and_alphabetise
+from UI.utilities import prepare_dropdown_options_lists
 
 class AddNewItemFrame(customtkinter.CTkFrame):
     """A frame for adding new products/components"""
@@ -125,7 +125,7 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         self.colour_options = self.presenter.get_product_colours()
         self.type_options = self.presenter.get_product_type_names()
 
-        add_empty_string_option_and_alphabetise([self.design_options, self.colour_options, self.type_options])
+        prepare_dropdown_options_lists([self.design_options, self.colour_options, self.type_options])
 
     def on_add_button_click(self, option_menu_to_update, input_field_names, dropdown_menu_options_list, subject_name, save_func):
         """Adds a new option to an optionmenu from the user input, and saves it to database"""
@@ -245,7 +245,7 @@ class AddNewItemFrame(customtkinter.CTkFrame):
     def on_design_button_click(self):
         """Opens the dialog to add a new design"""
         themes = self.presenter.get_product_themes()
-        add_empty_string_option_and_alphabetise([themes])
+        prepare_dropdown_options_lists([themes])
         self.on_add_button_click(self.design_dropdown, self.design_input_field_names, [None, themes],
                                  "Design", self.presenter.save_new_design)
 
@@ -253,7 +253,7 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         """Opens the dialog to add a new design"""
         types = self.presenter.get_product_types()
         sub_types = self.presenter.get_product_sub_types()
-        add_empty_string_option_and_alphabetise([types, sub_types])
+        prepare_dropdown_options_lists([types, sub_types])
         self.on_add_button_click(self.type_dropdown, self.product_type_input_field_names,
                                  [None, types, sub_types], "Product Type",
                                  self.presenter.save_new_product_type)

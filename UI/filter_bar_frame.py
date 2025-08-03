@@ -1,7 +1,7 @@
 import customtkinter
 from tkinter import StringVar, DISABLED, NORMAL
 from UI import config
-from UI.utilities import  add_empty_string_option_and_alphabetise
+from UI.utilities import prepare_dropdown_options_lists
 
 class FilterBarFrame(customtkinter.CTkFrame):
     """A frame containing the widgets which the user can use to filter the items being displayed"""
@@ -15,7 +15,7 @@ class FilterBarFrame(customtkinter.CTkFrame):
         self.product_component_switch_toggle_callback = product_component_switch_toggle_callback
 
         #add the empty option to the dropdown menus as the default, and order the list alphabetically
-        add_empty_string_option_and_alphabetise([design_options, theme_options, type_options, sub_type_options, colour_options])
+        prepare_dropdown_options_lists([design_options, theme_options, type_options, sub_type_options, colour_options])
 
         # widget position counter
         self.current_widget_num = 0
