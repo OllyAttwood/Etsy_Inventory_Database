@@ -36,18 +36,21 @@ class MultiInputDialog(SmallPopup):
             input_text, dropdown_menu_options = input_row_info
 
             label = customtkinter.CTkLabel(self, text=input_text)
-            label.grid(row=row, column=0, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
+            self.grid_widget_with_padding(label, row=row, column=0)
 
             if dropdown_menu_options is None:
                 input_widget = customtkinter.CTkEntry(self)
             else:
                 input_widget = customtkinter.CTkComboBox(self, values=dropdown_menu_options)
             self.input_widgets.append(input_widget)
-            input_widget.grid(row=row, column=1, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
+            self.grid_widget_with_padding(input_widget, row=row, column=1)
 
         # creates the add button
         add_button = customtkinter.CTkButton(self, text=f"Add {self.subject_name}", command=self.on_add_button_click)
-        add_button.grid(row=len(input_field_names), column=1, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
+        self.grid_widget_with_padding(add_button, row=len(input_field_names), column=1)
+
+    def grid_widget_with_padding(self, widget, row, column):
+        widget.grid(row=row, column=column, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
 
     def on_add_button_click(self):
         """Stores the values in the input widgets, then closes the window"""
