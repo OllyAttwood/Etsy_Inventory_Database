@@ -34,51 +34,47 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         self.product_component_switch = customtkinter.CTkSegmentedButton(self.centre_frame, values=product_component_vals,
                                                                          command=self.change_product_widgets_state)
         self.product_component_switch.set(product_component_vals[0])
-        self.widget_grid.append([product_component_lbl_str, self.product_component_switch])
-        self.component_compatible_widgets.append(self.product_component_switch)
+        self.add_labeled_widget_row(product_component_lbl_str, [self.product_component_switch], True)
 
         # name
         name_lbl_str = "Name:"
         self.name_entry = customtkinter.CTkEntry(self.centre_frame)
-        self.widget_grid.append([name_lbl_str, self.name_entry])
-        self.component_compatible_widgets.append(self.name_entry)
+        self.add_labeled_widget_row(name_lbl_str, [self.name_entry], True)
 
         # design
         design_lbl_str = "Design:"
         self.design_dropdown = customtkinter.CTkOptionMenu(self.centre_frame, values=self.design_options)
         new_design_button = customtkinter.CTkButton(self.centre_frame, text="Add New Design... ",
                                                     command=self.on_design_button_click)
-        self.widget_grid.append([design_lbl_str, self.design_dropdown, new_design_button])
+        self.add_labeled_widget_row(design_lbl_str, [self.design_dropdown, new_design_button])
 
         # colour
         colour_lbl_str = "Colour:"
         self.colour_dropdown = customtkinter.CTkComboBox(self.centre_frame, values=self.colour_options)
-        self.widget_grid.append([colour_lbl_str, self.colour_dropdown])
+        self.add_labeled_widget_row(colour_lbl_str, [self.colour_dropdown])
 
         # type
         type_lbl_str = "Type:"
         self.type_dropdown = customtkinter.CTkOptionMenu(self.centre_frame, values=self.type_options)
         new_type_button = customtkinter.CTkButton(self.centre_frame, text="Add New Type... ",
                                                   command=self.on_type_button_click)
-        self.widget_grid.append([type_lbl_str, self.type_dropdown, new_type_button])
+        self.add_labeled_widget_row(type_lbl_str, [self.type_dropdown, new_type_button])
 
         # stock
         stock_lbl_str = "Stock:"
         self.stock_spinbox = Spinbox(self.centre_frame)
-        self.widget_grid.append([stock_lbl_str, self.stock_spinbox])
-        self.component_compatible_widgets.append(self.stock_spinbox)
+        self.add_labeled_widget_row(stock_lbl_str, [self.stock_spinbox], True)
 
         # low stock
         low_stock_lbl_str = "Low Stock Warning:"
         self.low_stock_spinbox = Spinbox(self.centre_frame)
-        self.widget_grid.append([low_stock_lbl_str, self.low_stock_spinbox])
-        self.component_compatible_widgets.append(self.low_stock_spinbox)
+        self.add_labeled_widget_row(low_stock_lbl_str, [self.low_stock_spinbox], True)
 
         # components
         components_lbl_str = "Components:"
         components_button = customtkinter.CTkButton(self.centre_frame, text="Manage Components...",
                                                     command=self.component_button_click)
-        self.widget_grid.append([components_lbl_str, components_button])
+        self.add_labeled_widget_row(components_lbl_str, [components_button])
 
         #loop through widget_grid, adding widgets
         for row_num, row_widgets in enumerate(self.widget_grid):
@@ -94,6 +90,19 @@ class AddNewItemFrame(customtkinter.CTkFrame):
                                                   command=self.on_add_item_button_click)
         row_num += 1 #cheeky reuse of loop variable
         add_item_button.grid(row=row_num, column=1, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING*2)
+
+    def add_labeled_widget_row(self, label_text, widgets_list, is_compatible_with_components=False):
+        """
+        Sets up a row of widgets with a label at the start of the row, created from the
+        label_text provided. Also handles which widgets should be disabled when a
+        component is selected.
+        """
+        widgets_list.insert(0, label_text) # label_text string will later on be converted into a label widget
+        self.widget_grid.append(widgets_list)
+
+        if is_compatible_with_components:
+            new_component_compatible_widgets = [widget for widget in widgets_list if type(widget) is not str]
+            self.component_compatible_widgets.extend(new_component_compatible_widgets)
 
     def component_button_click(self):
         """Opens the component selection window - creates a new one if it doesn't already exist"""
