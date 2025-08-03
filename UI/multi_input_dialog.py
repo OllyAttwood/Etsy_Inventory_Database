@@ -49,6 +49,8 @@ class MultiInputDialog(SmallPopup):
         add_button = customtkinter.CTkButton(self, text=f"Add {self.subject_name}", command=self.on_add_button_click)
         self.grid_widget_with_padding(add_button, row=len(input_field_names), column=1)
 
+        self.input_widgets[0].focus_set()
+
     def grid_widget_with_padding(self, widget, row, column):
         widget.grid(row=row, column=column, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
 
