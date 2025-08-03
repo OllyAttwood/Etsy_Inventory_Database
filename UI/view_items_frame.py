@@ -191,6 +191,8 @@ class ConfirmItemDeletePopup(SmallPopup):
             self.tab_view.reload_all_frames(display_components_in_view_items_frame=True)
             self.release_focus_and_hide()
 
+        MessageBox(f"{self.item_type} Deleted", f"Successfully deleted the {self.item_type.lower()}!")
+
     def on_no_button_click(self):
         """Closes the pop-up"""
         self.release_focus_and_hide()

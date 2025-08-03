@@ -213,6 +213,8 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         #reloads UI elements that need updating after new item has been added
         self.tab_view.reload_all_frames()
 
+        MessageBox(f"{item_type} Added", f"Successfully added the new {item_type.lower()}!")
+
     def create_name_error_popup(self):
         """Creates and shows an error message for when a product/component already exists with the same name"""
         MessageBox("Name Error", "That name is already in use!")
