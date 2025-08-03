@@ -71,8 +71,7 @@ class ViewItemsFrame(customtkinter.CTkFrame):
 
     def on_adjust_stock_level_button_click(self):
         """Opens an AdjustStockLevelPopup after determining the selected item's details"""
-        selected_item_name, selected_item_id = self.table.get_selected_row_item_name_and_id()
-        selected_item_type = self.filter_bar.get_current_filter_values()["Item Type"]
+        selected_item_name, selected_item_id, selected_item_type = self.get_selected_item_info()
 
         AdjustStockLevelPopup(selected_item_name, selected_item_id, selected_item_type, self.presenter, self.tab_view)
 
@@ -92,10 +91,16 @@ class ViewItemsFrame(customtkinter.CTkFrame):
 
     def on_delete_button(self):
         """Opens a ConfirmItemDeletePopup after determining the selected item's details"""
-        selected_item_name, selected_item_id = self.table.get_selected_row_item_name_and_id()
-        selected_item_type = self.filter_bar.get_current_filter_values()["Item Type"]
+        selected_item_name, selected_item_id, selected_item_type = self.get_selected_item_info()
 
         ConfirmItemDeletePopup(selected_item_name, selected_item_id, selected_item_type, self.presenter, self.tab_view)
+
+    def get_selected_item_info(self):
+        """Gets the selected item's name, ID, and item type"""
+        name, item_id = self.table.get_selected_row_item_name_and_id()
+        item_type = self.filter_bar.get_current_filter_values()["Item Type"]
+
+        return name, item_id, item_type
 
     def update_button_states(self):
         """
