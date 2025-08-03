@@ -42,7 +42,7 @@ class Spinbox(customtkinter.CTkFrame):
     def button_callback(self, add_or_subtract):
         """Increases or decreases the value in the Spinbox"""
         if self.command is not None:
-            self.command(),
+            self.command()
         try:
             value = int(self.entry.get())
 
