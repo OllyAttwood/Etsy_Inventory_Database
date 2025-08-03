@@ -3,6 +3,17 @@ from database_manager import DatabaseManager
 class Presenter:
     """The presenter class"""
 
+    ITEM_TYPE = "Item Type"
+    PRODUCT = "Product"
+    COMPONENT = "Component"
+    NAME = "Name"
+    DESIGN = "Design"
+    THEME = "Theme"
+    TYPE = "Type"
+    SUB_TYPE = "Sub-type"
+    COLOUR = "Colour"
+    COLUMN_NAMES = "column_names"
+
     def __init__(self):
         self.db_manager = DatabaseManager()
 
@@ -10,14 +21,14 @@ class Presenter:
         """Get the products according to the provided filters, and tidy up the column names"""
         if filters_dict is None: #no filters applied initially
             filtered_items = self.db_manager.view_filtered_products()
-        elif filters_dict["Item Type"] == "Product":
-            filtered_items = self.db_manager.view_filtered_products(filters_dict["Name"], filters_dict["Design"],
-                                                                    filters_dict["Theme"], filters_dict["Type"],
-                                                                    filters_dict["Sub-type"], filters_dict["Colour"])
-        elif filters_dict["Item Type"] == "Component":
-            filtered_items = self.db_manager.view_filtered_components(filters_dict["Name"])
+        elif filters_dict[Presenter.ITEM_TYPE] == Presenter.PRODUCT:
+            filtered_items = self.db_manager.view_filtered_products(filters_dict[Presenter.NAME], filters_dict[Presenter.DESIGN],
+                                                                    filters_dict[Presenter.THEME], filters_dict[Presenter.TYPE],
+                                                                    filters_dict[Presenter.SUB_TYPE], filters_dict[Presenter.COLOUR])
+        elif filters_dict[Presenter.ITEM_TYPE] == Presenter.COMPONENT:
+            filtered_items = self.db_manager.view_filtered_components(filters_dict[Presenter.NAME])
 
-        filtered_items["column_names"] = self.process_column_names(filtered_items["column_names"])
+        filtered_items[Presenter.COLUMN_NAMES] = self.process_column_names(filtered_items[Presenter.COLUMN_NAMES])
 
         return filtered_items
 
@@ -56,7 +67,7 @@ class Presenter:
 
     def get_low_stock_items(self, products=True, components=True):
         low_stock_items = self.db_manager.view_low_stock_items(products, components)
-        low_stock_items["column_names"] = self.process_column_names(low_stock_items["column_names"])
+        low_stock_items[Presenter.COLUMN_NAMES] = self.process_column_names(low_stock_items[Presenter.COLUMN_NAMES])
 
         return low_stock_items
 
