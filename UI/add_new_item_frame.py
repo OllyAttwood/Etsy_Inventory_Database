@@ -79,11 +79,19 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         #loop through widget_grid, adding widgets
         for row_num, row_widgets in enumerate(self.widget_grid):
             for col_num, widget in enumerate(row_widgets):
+                widget_stickiness = ""
                 #create label widget from label strings
                 if col_num == 0:
-                    widget = customtkinter.CTkLabel(self.centre_frame, text=widget)
+                    widget = customtkinter.CTkLabel(self.centre_frame, text=widget, anchor="e", justify="right")
+                    widget_stickiness = "e"
 
-                widget.grid(row=row_num, column=col_num, padx=config.WIDGET_X_PADDING/2, pady=config.WIDGET_Y_PADDING/2)
+                widget.grid(
+                    row=row_num,
+                    column=col_num,
+                    padx=config.WIDGET_X_PADDING/2,
+                    pady=config.WIDGET_Y_PADDING/2,
+                    sticky=widget_stickiness
+                )
 
         # add new item button
         add_item_button = customtkinter.CTkButton(self.centre_frame, text="Add Item",
