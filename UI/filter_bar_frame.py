@@ -22,48 +22,41 @@ class FilterBarFrame(customtkinter.CTkFrame):
         self.input_widgets = []
 
         # item type
-        product_component_lbl = customtkinter.CTkLabel(self, text="Item Type:")
-        self.add_label(product_component_lbl)
+        product_component_lbl_text = "Item Type:"
         product_component_vals = ["Product", "Component"]
         self.product_component_switch = customtkinter.CTkSegmentedButton(self, values=product_component_vals)
         self.product_component_switch.set(product_component_vals[0])
-        self.add_input_widget(self.product_component_switch)
+        self.add_labelled_input_widget(product_component_lbl_text, self.product_component_switch)
 
         # name
-        name_lbl = customtkinter.CTkLabel(self, text="Name:")
-        self.add_label(name_lbl)
+        name_lbl_text = "Name:"
         self.name_entry = customtkinter.CTkEntry(self)
-        self.add_input_widget(self.name_entry)
+        self.add_labelled_input_widget(name_lbl_text, self.name_entry)
 
         # design
-        design_lbl = customtkinter.CTkLabel(self, text="Design:")
-        self.add_label(design_lbl)
+        design_lbl_text = "Design:"
         self.design_dropdown = customtkinter.CTkOptionMenu(self, values=design_options)
-        self.add_input_widget(self.design_dropdown)
+        self.add_labelled_input_widget(design_lbl_text, self.design_dropdown)
 
         # design theme
-        design_theme_lbl = customtkinter.CTkLabel(self, text="Theme:")
-        self.add_label(design_theme_lbl)
+        design_theme_lbl_text = "Theme:"
         self.design_theme_dropdown = customtkinter.CTkOptionMenu(self, values=theme_options)
-        self.add_input_widget(self.design_theme_dropdown)
+        self.add_labelled_input_widget(design_theme_lbl_text, self.design_theme_dropdown)
 
         # type
-        type_lbl = customtkinter.CTkLabel(self, text="Type:")
-        self.add_label(type_lbl)
+        type_lbl_text = "Type:"
         self.type_dropdown = customtkinter.CTkOptionMenu(self, values=type_options)
-        self.add_input_widget(self.type_dropdown)
+        self.add_labelled_input_widget(type_lbl_text, self.type_dropdown)
 
         # sub-type
-        sub_type_lbl = customtkinter.CTkLabel(self, text="Sub-type:")
-        self.add_label(sub_type_lbl)
+        sub_type_lbl_text = "Sub-type:"
         self.sub_type_dropdown = customtkinter.CTkOptionMenu(self, values=sub_type_options)
-        self.add_input_widget(self.sub_type_dropdown)
+        self.add_labelled_input_widget(sub_type_lbl_text, self.sub_type_dropdown)
 
         # colour
-        colour_lbl = customtkinter.CTkLabel(self, text="Colour:")
-        self.add_label(colour_lbl)
+        colour_lbl_text = "Colour:"
         self.colour_dropdown = customtkinter.CTkOptionMenu(self, values=colour_options)
-        self.add_input_widget(self.colour_dropdown)
+        self.add_labelled_input_widget(colour_lbl_text, self.colour_dropdown)
 
         #initialise the filter state dictionary - to be used to check if the filters have actually been changed
         self.current_filter_values = self.get_current_filter_values()
@@ -79,6 +72,12 @@ class FilterBarFrame(customtkinter.CTkFrame):
         self.current_widget_num += 1
         self.add_command_to_widget(widget) # update data table when filter is changed
         self.input_widgets.append(widget)
+
+    def add_labelled_input_widget(self, label_text, input_widget):
+        """Adds an input widget to the FilterBar with a label to the left of it"""
+        label = customtkinter.CTkLabel(self, text=label_text)
+        self.add_label(label)
+        self.add_input_widget(input_widget)
 
     def on_filter_widget_update(self, event):
         """Function to be run when any of the filter widgets have been updated, regardless of whether their values have actually been changed"""
