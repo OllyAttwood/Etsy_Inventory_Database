@@ -7,6 +7,8 @@ class CustomTable(customtkinter.CTkScrollableFrame):
     """Class to create a table widget"""
     SCROLL_UP = 0
     SCROLL_DOWN = 1
+    TOOLTIP_X_OFFSET = 10
+    TOOLTIP_Y_OFFSET = -25
 
     def __init__(self, master, data, columns, on_row_select_callback=None, font_size=15,
                  header_colour=config.TABLE_HEADER_COLOUR, data_colour=config.TABLE_REGULAR_ROW_COLOUR,
@@ -149,14 +151,11 @@ class CustomTable(customtkinter.CTkScrollableFrame):
         is contained within, as the tooltip will be placed on the frame rather than the CustomTable so that
         the tooltip is still displayed when its outside of the bounds of the CustomTable.
         """
-        x_offset = 10
-        y_offset = -25
-
         # create tooltip if deleted / not created yet
         if self.tooltip == None:
             self.tooltip = customtkinter.CTkLabel(self.master, text=text, padx=20)
 
-        self.tooltip.place(x=x+x_offset, y=y+y_offset) # slightly adjust x and y so tooltip is not covered by cursor or cut off at bottom
+        self.tooltip.place(x=x+self.TOOLTIP_X_OFFSET, y=y+self.TOOLTIP_Y_OFFSET) # slightly adjust x and y so tooltip is not covered by cursor or cut off at bottom
 
     def calculate_column_widths(self, full_data, font_size, min_width=100, max_width=350):
         """
