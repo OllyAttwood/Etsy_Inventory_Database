@@ -16,10 +16,12 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 
         self.manage_component_window = None
         self.widget_grid = []
-        self.component_compatible_widgets = [] # widgets which should not be greyed out when adding a component
+        # widgets which should not be greyed out when adding a component
+        self.component_compatible_widgets = []
         self.presenter = presenter
         self.tab_view = tab_view
-        self.centre_frame = customtkinter.CTkFrame(self) # needed to make widgets display in centre of screen
+        # needed to make widgets display in centre of screen
+        self.centre_frame = customtkinter.CTkFrame(self)
         self.centre_frame.grid(row=0, column=0)
         self.grid_columnconfigure(0, weight=1) # centralises the centre_frame
         # values for the optionmenus / comboboxes
@@ -31,10 +33,15 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         # item type
         product_component_lbl_str = "Item Type:"
         product_component_vals = ["Product", "Component"]
-        self.product_component_switch = customtkinter.CTkSegmentedButton(self.centre_frame, values=product_component_vals,
-                                                                         command=self.change_product_widgets_state)
+        self.product_component_switch = customtkinter.CTkSegmentedButton(
+            self.centre_frame,
+            values=product_component_vals,
+            command=self.change_product_widgets_state
+        )
         self.product_component_switch.set(product_component_vals[0])
-        self.add_labeled_widget_row(product_component_lbl_str, [self.product_component_switch], True)
+        self.add_labeled_widget_row(
+            product_component_lbl_str, [self.product_component_switch], True
+        )
 
         # name
         name_lbl_str = "Name:"
@@ -43,21 +50,34 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 
         # design
         design_lbl_str = "Design:"
-        self.design_dropdown = customtkinter.CTkOptionMenu(self.centre_frame, values=self.design_options)
-        new_design_button = customtkinter.CTkButton(self.centre_frame, text="Add New Design... ",
-                                                    command=self.on_design_button_click)
-        self.add_labeled_widget_row(design_lbl_str, [self.design_dropdown, new_design_button])
+        self.design_dropdown = customtkinter.CTkOptionMenu(
+            self.centre_frame, values=self.design_options
+        )
+        new_design_button = customtkinter.CTkButton(
+            self.centre_frame, text="Add New Design... ",
+            command=self.on_design_button_click
+        )
+        self.add_labeled_widget_row(
+            design_lbl_str, [self.design_dropdown, new_design_button]
+        )
 
         # colour
         colour_lbl_str = "Colour:"
-        self.colour_dropdown = customtkinter.CTkComboBox(self.centre_frame, values=self.colour_options)
+        self.colour_dropdown = customtkinter.CTkComboBox(
+            self.centre_frame, values=self.colour_options
+        )
         self.add_labeled_widget_row(colour_lbl_str, [self.colour_dropdown])
 
         # type
         type_lbl_str = "Type:"
-        self.type_dropdown = customtkinter.CTkOptionMenu(self.centre_frame, values=self.type_options)
-        new_type_button = customtkinter.CTkButton(self.centre_frame, text="Add New Type... ",
-                                                  command=self.on_type_button_click)
+        self.type_dropdown = customtkinter.CTkOptionMenu(
+            self.centre_frame, values=self.type_options
+        )
+        new_type_button = customtkinter.CTkButton(
+            self.centre_frame,
+            text="Add New Type... ",
+            command=self.on_type_button_click
+        )
         self.add_labeled_widget_row(type_lbl_str, [self.type_dropdown, new_type_button])
 
         # stock
@@ -72,8 +92,11 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 
         # components
         components_lbl_str = "Components:"
-        components_button = customtkinter.CTkButton(self.centre_frame, text="Manage Components...",
-                                                    command=self.component_button_click)
+        components_button = customtkinter.CTkButton(
+            self.centre_frame,
+            text="Manage Components...",
+            command=self.component_button_click
+        )
         self.add_labeled_widget_row(components_lbl_str, [components_button])
 
         #loop through widget_grid, adding widgets
@@ -82,7 +105,9 @@ class AddNewItemFrame(customtkinter.CTkFrame):
                 widget_stickiness = ""
                 #create label widget from label strings
                 if col_num == 0:
-                    widget = customtkinter.CTkLabel(self.centre_frame, text=widget, anchor="e", justify="right")
+                    widget = customtkinter.CTkLabel(
+                        self.centre_frame, text=widget, anchor="e", justify="right"
+                    )
                     widget_stickiness = "e"
 
                 widget.grid(
@@ -97,23 +122,38 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         add_item_button = customtkinter.CTkButton(self.centre_frame, text="Add Item",
                                                   command=self.on_add_item_button_click)
         row_num += 1 #cheeky reuse of loop variable
-        add_item_button.grid(row=row_num, column=1, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING*2)
+        add_item_button.grid(
+            row=row_num, column=1,
+            padx=config.WIDGET_X_PADDING,
+            pady=config.WIDGET_Y_PADDING*2
+        )
 
-    def add_labeled_widget_row(self, label_text, widgets_list, is_compatible_with_components=False):
+    def add_labeled_widget_row(
+        self,
+        label_text,
+        widgets_list,
+        is_compatible_with_components=False
+    ):
         """
         Sets up a row of widgets with a label at the start of the row, created from the
         label_text provided. Also handles which widgets should be disabled when a
         component is selected.
         """
-        widgets_list.insert(0, label_text) # label_text string will later on be converted into a label widget
+        # label_text string will later on be converted into a label widget
+        widgets_list.insert(0, label_text)
         self.widget_grid.append(widgets_list)
 
         if is_compatible_with_components:
-            new_component_compatible_widgets = [widget for widget in widgets_list if type(widget) is not str]
+            new_component_compatible_widgets = [
+                widget for widget in widgets_list if type(widget) is not str
+            ]
             self.component_compatible_widgets.extend(new_component_compatible_widgets)
 
     def component_button_click(self):
-        """Opens the component selection window - creates a new one if it doesn't already exist"""
+        """
+        Opens the component selection window - creates a new one if it doesn't
+        already exist
+        """
         if not self.manage_component_window:
             self.manage_component_window = ManageComponentWindow(self.presenter)
         else:
@@ -125,18 +165,33 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         self.colour_options = self.presenter.get_product_colours()
         self.type_options = self.presenter.get_product_type_names()
 
-        prepare_dropdown_options_lists([self.design_options, self.colour_options, self.type_options])
+        prepare_dropdown_options_lists(
+            [self.design_options, self.colour_options, self.type_options]
+        )
 
-    def on_add_button_click(self, option_menu_to_update, input_field_names, dropdown_menu_options_list, subject_name, save_func):
-        """Adds a new option to an optionmenu from the user input, and saves it to database"""
-        input_dialog = MultiInputDialog(input_field_names, dropdown_menu_options_list, subject_name)
+    def on_add_button_click(
+        self,
+        option_menu_to_update,
+        input_field_names,
+        dropdown_menu_options_list,
+        subject_name,
+        save_func
+    ):
+        """
+        Adds a new option to an optionmenu from the user input, and saves it to database
+        """
+        input_dialog = MultiInputDialog(
+            input_field_names, dropdown_menu_options_list, subject_name
+        )
         input_dict = input_dialog.get_user_input()
 
         if input_dict: # if input_dict == None then user closed the dialog
             user_inputs = [input_dict[key] for key in input_field_names]
             try:
-                save_func(*user_inputs) # unpacks the list into individual variables so the function can accept it
-            except sqlite3.IntegrityError: # catch error where duplicate 'name' has been entered by the user
+                # unpacks the list into individual variables so the function can accept it
+                save_func(*user_inputs)
+            # catch error where duplicate 'name' has been entered by the user
+            except sqlite3.IntegrityError:
                 self.create_name_error_popup()
                 return
             new_option = input_dict["Name"]
@@ -150,7 +205,10 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         optionmenu.configure(values=current_options)
 
     def change_product_widgets_state(self, selected_item_type):
-        """Disable any non-applicable widgets when 'Components' is selected, otherwise enable them all"""
+        """
+        Disable any non-applicable widgets when 'Components' is selected, otherwise
+        enable them all
+        """
         new_state = None
 
         if selected_item_type == "Product":
@@ -161,7 +219,10 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         for row in self.widget_grid:
             for widget in row:
                 # if not a component widget and also is an actual widget (not a string)
-                if widget not in self.component_compatible_widgets and not isinstance(widget, str):
+                if (
+                    widget not in self.component_compatible_widgets
+                    and not isinstance(widget, str)
+                ):
                     widget.configure(state=new_state)
 
     def on_add_item_button_click(self):
@@ -179,18 +240,32 @@ class AddNewItemFrame(customtkinter.CTkFrame):
                 components = self.manage_component_window.get_selected_components()
             except AttributeError: # ManageComponentWindow was never opened by the user
                 components = []
-            except TypeError: # something other than a number entered into a ManageComponentWindow spinbox
-                MessageBox("Input Error", "At least one of the component quantity input fields is not an integer!")
+            # something other than a number entered into a ManageComponentWindow spinbox
+            except TypeError:
+                MessageBox(
+                    "Input Error",
+                    "At least one of the component quantity input fields is not an integer!"
+                )
                 return
 
             # input validation
-            if not self.validate_inputs([name, design, colour, product_type], [stock, low_stock_warning], components):
-                MessageBox("Input Error", "At least one of the input fields is either empty or in an incorrect format!")
+            if not self.validate_inputs(
+                [name, design, colour, product_type],
+                [stock, low_stock_warning],
+                components
+            ):
+                MessageBox(
+                    "Input Error",
+                    "At least one of the input fields is either empty or in an incorrect format!"
+                )
                 return
 
             try:
-                self.presenter.save_new_product(name, design, colour, product_type, stock, low_stock_warning, components)
-            except sqlite3.IntegrityError: # catch error where duplicate 'name' has been entered by the user
+                self.presenter.save_new_product(
+                    name, design, colour, product_type, stock, low_stock_warning, components
+                )
+            # catch error where duplicate 'name' has been entered by the user
+            except sqlite3.IntegrityError:
                 self.create_name_error_popup()
                 return
 
@@ -201,12 +276,16 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 
             # input validation
             if not self.validate_inputs([name], [stock, low_stock_warning], []):
-                MessageBox("Input Error", "At least one of the input fields is either empty or an incorrect format!")
+                MessageBox(
+                    "Input Error",
+                    "At least one of the input fields is either empty or an incorrect format!"
+                )
                 return
 
             try:
                 self.presenter.save_new_component(name, stock, low_stock_warning)
-            except sqlite3.IntegrityError: # catch error where duplicate 'name' has been entered by the user
+            # catch error where duplicate 'name' has been entered by the user
+            except sqlite3.IntegrityError:
                 self.create_name_error_popup()
                 return
 
@@ -216,17 +295,22 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         MessageBox(f"{item_type} Added", f"Successfully added the new {item_type.lower()}!")
 
     def create_name_error_popup(self):
-        """Creates and shows an error message for when a product/component already exists with the same name"""
+        """
+        Creates and shows an error message for when a product/component already exists
+        with the same name
+        """
         MessageBox("Name Error", "That name is already in use!")
 
     def validate_inputs(self, non_empty_strings, spinbox_strings, components_list):
         """
         Validates the inputs before doing anything with them.
-        non_empty_strings is a list of the strings that should be checked for being non-empty.
-        spinbox_strings is a list of strings obtained from the spinboxes that should be checked
-            for being not None (this implies the string correctly represents an integer - see Spinbox.get()).
-        component_list is a list of tuples (component name and quantity) that should be checked for all
-            quantities being not None, as in spinbox_strings
+        non_empty_strings is a list of the strings that should be checked for being
+            non-empty.
+        spinbox_strings is a list of strings obtained from the spinboxes that should be
+            checked for being not None (this implies the string correctly represents an
+            integer - see Spinbox.get()).
+        component_list is a list of tuples (component name and quantity) that should be
+            checked for all quantities being not None, as in spinbox_strings
         """
         # check non_empty_strings
         if "" in non_empty_strings:
@@ -238,7 +322,11 @@ class AddNewItemFrame(customtkinter.CTkFrame):
 
         # check components_list
         component_quantity_index = 1
-        if None in [name_and_quantity[component_quantity_index] for name_and_quantity in components_list]:
+        if None in [
+            name_and_quantity[component_quantity_index]
+            for name_and_quantity
+            in components_list
+        ]:
             return False
 
         # if all the inputs are valid
@@ -248,24 +336,33 @@ class AddNewItemFrame(customtkinter.CTkFrame):
         """Opens the dialog to add a new design"""
         themes = self.presenter.get_product_themes()
         prepare_dropdown_options_lists([themes])
-        self.on_add_button_click(self.design_dropdown, self.design_input_field_names, [None, themes],
-                                 "Design", self.presenter.save_new_design)
+        self.on_add_button_click(
+            self.design_dropdown,
+            self.design_input_field_names,
+            [None, themes],
+            "Design",
+            self.presenter.save_new_design
+        )
 
     def on_type_button_click(self):
         """Opens the dialog to add a new design"""
         types = self.presenter.get_product_types()
         sub_types = self.presenter.get_product_sub_types()
         prepare_dropdown_options_lists([types, sub_types])
-        self.on_add_button_click(self.type_dropdown, self.product_type_input_field_names,
-                                 [None, types, sub_types], "Product Type",
-                                 self.presenter.save_new_product_type)
+        self.on_add_button_click(
+            self.type_dropdown,
+            self.product_type_input_field_names,
+            [None, types, sub_types],
+            "Product Type",
+            self.presenter.save_new_product_type
+        )
 
 
 
 class ManageComponentWindow(SmallPopup):
     """
-    The pop-up window to display all the available components, with spinboxes to select quantities.
-    Shows an error message if there are no saved components.
+    The pop-up window to display all the available components, with spinboxes to select
+    quantities. Shows an error message if there are no saved components.
     """
     def __init__(self, presenter):
         super().__init__()
@@ -301,23 +398,42 @@ class ManageComponentWindow(SmallPopup):
         for row_num, component_row in enumerate(component_data):
             # label
             label = customtkinter.CTkLabel(scrollable_frame, text=component_row[0])
-            label.grid(row=row_num, column=0, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING/2)
+            label.grid(
+                row=row_num,
+                column=0,
+                padx=config.WIDGET_X_PADDING,
+                pady=config.WIDGET_Y_PADDING/2
+            )
 
             # spinbox
             spinbox_frame = customtkinter.CTkFrame(scrollable_frame)
             spinbox_frame.grid(row=row_num, column=1)
             stock_spinbox = Spinbox(spinbox_frame, initial_value=component_row[1])
-            stock_spinbox.grid(row=0, column=0, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING/2)
+            stock_spinbox.grid(
+                row=0,
+                column=0,
+                padx=config.WIDGET_X_PADDING,
+                pady=config.WIDGET_Y_PADDING/2
+            )
             self.spinboxes.append(stock_spinbox)
 
-        close_button = customtkinter.CTkButton(self, text="Close", command=self.release_focus_and_hide)
+        close_button = customtkinter.CTkButton(
+            self, text="Close", command=self.release_focus_and_hide
+        )
         row_num += 1 # using the loop variable - cheeky
-        close_button.grid(row=1, column=0, columnspan=2, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING)
+        close_button.grid(
+            row=1,
+            column=0,
+            columnspan=2,
+            padx=config.WIDGET_X_PADDING,
+            pady=config.WIDGET_Y_PADDING
+        )
 
     def get_selected_components(self):
         """
-        Returns a list of tuples of the component names of which more than 0 quantity has been selected, and their quantities
-        e.g. [('Jump ring - large', 4), ('Earring hook', 2), ('Earring back', 2)]
+        Returns a list of tuples of the component names of which more than 0 quantity
+        has been selected, and their quantities e.g. [('Jump ring - large', 4),
+        ('Earring hook', 2), ('Earring back', 2)]
         """
         component_list = []
 
@@ -335,5 +451,7 @@ class ManageComponentWindow(SmallPopup):
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-        label = customtkinter.CTkLabel(self, text="No components have been added to the database yet!")
+        label = customtkinter.CTkLabel(
+            self, text="No components have been added to the database yet!"
+        )
         label.grid(row=0, column=0)

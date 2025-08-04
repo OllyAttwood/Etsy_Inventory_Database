@@ -5,8 +5,13 @@ class DatabaseManager:
 
     #connect to database
     def __init__(self, save_database_in_memory=False):
-        """save_database_in_memory=True creates the database in memory rather than disc - for testing purposes"""
-        self.database_file_name = "inventory.db" if not save_database_in_memory else ":memory:"
+        """
+        save_database_in_memory=True creates the database in memory rather than
+        disc - for testing purposes
+        """
+        self.database_file_name = (
+            "inventory.db" if not save_database_in_memory else ":memory:"
+        )
         self.connection = sqlite3.connect(self.database_file_name)
         self.cursor = self.connection.cursor()
 
@@ -77,7 +82,8 @@ class DatabaseManager:
         User must not be able to type in table_name directly as SQL injection placeholder
         doesn't work with table names - table_name must be picked from drop-down list
         """
-        self.validate_table_name(table_name) # confirms table name is protected against SQL injection
+        # confirms table name is protected against SQL injection
+        self.validate_table_name(table_name)
 
         #as data_row has variable number of elements depending on which table is
         #being inserted into, the number of question marks in the insertion
@@ -119,9 +125,18 @@ class DatabaseManager:
 
         return clause
 
-    def _view_filtered_items(self, params_with_db_cols, query_without_where_clause, name_search=None,
-                            design=None, design_theme=None, product_type=None, subtype=None, colour=None,
-                            stock_level=None):
+    def _view_filtered_items(
+        self,
+        params_with_db_cols,
+        query_without_where_clause,
+        name_search=None,
+        design=None,
+        design_theme=None,
+        product_type=None,
+        subtype=None,
+        colour=None,
+        stock_level=None
+    ):
         """
         Queries the database for products/components.
         This method shouldn't be called directly - use view_filtered_products() or
@@ -135,9 +150,13 @@ class DatabaseManager:
         for param, db_column in params_with_db_cols:
             if param:
                 if param is name_search:
-                    where_clauses.append(self.build_where_clause(db_column, query_vals, param, like=True))
+                    where_clauses.append(
+                        self.build_where_clause(db_column, query_vals, param, like=True)
+                    )
                 else:
-                    where_clauses.append(self.build_where_clause(db_column, query_vals, param))
+                    where_clauses.append(
+                        self.build_where_clause(db_column, query_vals, param)
+                    )
 
         if where_clauses:
             product_query += " WHERE " + "".join(where_clauses)
@@ -151,8 +170,16 @@ class DatabaseManager:
             "data": return_list
         }
 
-    def view_filtered_products(self, name_search=None, design=None, design_theme=None,
-                               product_type=None, subtype=None, colour=None, stock_level=None):
+    def view_filtered_products(
+        self,
+        name_search=None,
+        design=None,
+        design_theme=None,
+        product_type=None,
+        subtype=None,
+        colour=None,
+        stock_level=None
+    ):
         """Searches the database for products based on the provided filters"""
         product_query = """SELECT Product.product_id, Product.name AS 'Product Name', Product.colour,
                                   Product.stock, Product.low_stock_warning, Design.name AS 'Design Name',
@@ -163,21 +190,37 @@ class DatabaseManager:
                            JOIN ProductType
                            ON Product.product_type_id=ProductType.product_type_id"""
 
-        params_with_db_cols = ((name_search, "Product.name"), (design, "Design.name"),
-                               (design_theme, "Design.theme"), (product_type, "ProductType.type"),
-                               (subtype, "ProductType.sub_type"), (colour, "Product.colour"),
-                               (stock_level, "Product.stock"))
+        params_with_db_cols = (
+            (name_search, "Product.name"),
+            (design, "Design.name"),
+            (design_theme, "Design.theme"),
+            (product_type, "ProductType.type"),
+            (subtype, "ProductType.sub_type"),
+            (colour, "Product.colour"),
+            (stock_level, "Product.stock")
+        )
 
-        return self._view_filtered_items(params_with_db_cols, product_query, name_search, design,
-                                 design_theme, product_type, subtype, stock_level)
+        return self._view_filtered_items(
+            params_with_db_cols,
+            product_query,
+            name_search, design,
+            design_theme,
+            product_type,
+            subtype,
+            stock_level
+        )
 
     def view_filtered_components(self, name_search=None, stock_level=None):
         """Searches the database for components based on the provided filters"""
         product_query = """SELECT *
                            FROM Component"""
-        params_with_db_cols = ((name_search, "Component.name"), (stock_level, "Component.stock"))
+        params_with_db_cols = (
+            (name_search, "Component.name"), (stock_level, "Component.stock")
+        )
 
-        return self._view_filtered_items(params_with_db_cols, product_query, name_search, stock_level)
+        return self._view_filtered_items(
+            params_with_db_cols, product_query, name_search, stock_level
+        )
 
     def view_low_stock_items(self, products=True, components=True):
         """
@@ -215,17 +258,27 @@ class DatabaseManager:
         """Retrieves the column names from the most recently performed database query"""
         return [col[0] for col in self.cursor.description]
 
-    def view_single_column_from_single_table(self, column_name, table_name, no_duplicates=True):
+    def view_single_column_from_single_table(
+        self,
+        column_name,
+        table_name,
+        no_duplicates=True
+    ):
         """
         Performs a simple SELECT call with given column and table.
-        *** WARNING *** - placeholders (i.e. '?') cannot be used for column or table names, therefore this function is VULNERABLE to SQL injection if exposed to the user
+        *** WARNING *** - placeholders (i.e. '?') cannot be used for column or table
+        names, therefore this function is VULNERABLE to SQL injection if exposed to the
+        user
         """
-        self.validate_table_name(table_name) # confirms table name is protected against SQL injection
+        # confirms table name is protected against SQL injection
+        self.validate_table_name(table_name)
         self.validate_column_names([column_name])
 
         distinct = "DISTINCT " if no_duplicates else ""
-        query = f"SELECT {distinct}{column_name} FROM {table_name} WHERE {column_name} IS NOT NULL AND {column_name} != ''" #exclude None values and empty strings
-        return_list = self.execute_query_and_list_results(query, single_column_index=0) # 0 needed otherwise each row is a tuple rather than just the value e.g. ('Heart',)
+        # exclude None values and empty strings
+        query = f"SELECT {distinct}{column_name} FROM {table_name} WHERE {column_name} IS NOT NULL AND {column_name} != ''"
+        # 0 needed otherwise each row is a tuple rather than just the value e.g. ('Heart',)
+        return_list = self.execute_query_and_list_results(query, single_column_index=0)
 
         return return_list
 
@@ -250,16 +303,26 @@ class DatabaseManager:
     def view_component_names(self):
         return self.view_single_column_from_single_table("name", "Component")
 
-    def view_single_column_from_single_table_with_where_clause(self, column_to_obtain, table_name, column_to_match, value_to_match):
+    def view_single_column_from_single_table_with_where_clause(
+        self,
+        column_to_obtain,
+        table_name,
+        column_to_match,
+        value_to_match
+    ):
         """
         Performs a simple SELECT query with a WHERE clause
-        WARNING *** - placeholders (i.e. '?') cannot be used for column or table names, therefore this function is VULNERABLE to SQL injection if exposed to the user
+        WARNING *** - placeholders (i.e. '?') cannot be used for column or table names,
+        therefore this function is VULNERABLE to SQL injection if exposed to the user
         """
-        self.validate_table_name(table_name) # confirms table name is protected against SQL injection
+        # confirms table name is protected against SQL injection
+        self.validate_table_name(table_name)
         self.validate_column_names([column_to_obtain, column_to_match])
 
         query = f"SELECT {column_to_obtain} FROM {table_name} WHERE {column_to_match}= ?"
-        results_list = self.execute_query_and_list_results(query, (value_to_match,), single_column_index=0)
+        results_list = self.execute_query_and_list_results(
+            query, (value_to_match,), single_column_index=0
+        )
 
         return results_list
 
@@ -272,30 +335,55 @@ class DatabaseManager:
     def insert_new_component(self, name, stock, low_stock_warning):
         self.insert_data("Component", [name, stock, low_stock_warning])
 
-    def insert_new_product(self, name, design, colour, product_type, stock, low_stock_warning, components):
+    def insert_new_product(
+        self,
+        name,
+        design,
+        colour,
+        product_type,
+        stock,
+        low_stock_warning,
+        components
+    ):
         # obtain design and product type IDs
-        design_id = self.view_single_column_from_single_table_with_where_clause("design_id", "Design", "name", design)[0] # [0] because a list is returned by the function
-        product_type_id = self.view_single_column_from_single_table_with_where_clause("product_type_id", "ProductType", "name", product_type)[0]
+        design_id = self.view_single_column_from_single_table_with_where_clause(
+            "design_id",
+            "Design",
+            "name",
+            design
+        )[0] # [0] because a list is returned by the function
+        product_type_id = self.view_single_column_from_single_table_with_where_clause(
+            "product_type_id", "ProductType", "name", product_type
+        )[0]
 
         #add the record to Product
-        self.insert_data("Product", [name, colour, stock, low_stock_warning, design_id, product_type_id])
+        self.insert_data(
+            "Product",
+            [name, colour, stock, low_stock_warning, design_id, product_type_id]
+        )
 
         #add any records to MadeUsing
         for component_name, quantity in components:
-            product_id = self.view_single_column_from_single_table_with_where_clause("product_id", "Product", "name", name)[0]
-            component_id = self.view_single_column_from_single_table_with_where_clause("component_id", "Component", "name", component_name)[0]
+            product_id = self.view_single_column_from_single_table_with_where_clause(
+                "product_id", "Product", "name", name
+            )[0]
+            component_id = self.view_single_column_from_single_table_with_where_clause(
+                "component_id", "Component", "name", component_name
+            )[0]
             self.insert_data("MadeUsing", [product_id, component_id, quantity])
 
     def _update_item_stock_level(self, item_id, table_name, increase_decrease_amount):
         """
-        Increases or decreases the stock level of the given item by the sepcified amount,
-        e.g. if the current stock level is 5 and increase_decrease_amount is -1, then the new
-        stock level will be 4.
-        This method shouldn't be called directly, rather either update_product_stock_level() or
-        update_component_stock_level() should be called
+        Increases or decreases the stock level of the given item by the sepcified
+        amount, e.g. if the current stock level is 5 and increase_decrease_amount is -1,
+        then the new stock level will be 4.
+        This method shouldn't be called directly, rather either
+        update_product_stock_level() or update_component_stock_level() should be called.
         """
-        self.validate_table_name(table_name) # confirms table name is protected against SQL injection
-        id_column_name = table_name.lower() + "_id" # produces either "product_id" or "component_id"
+        # confirms table name is protected against SQL injection
+        self.validate_table_name(table_name)
+        # produces either "product_id" or "component_id"
+        id_column_name = table_name.lower() + "_id"
         self.validate_column_names([id_column_name])
 
         update_sql = f"""UPDATE {table_name}
@@ -318,14 +406,18 @@ class DatabaseManager:
         NOT increase_decrease_amount, this is how much the previous stock level is
         changed by
         """
-        self._update_item_stock_level(component_id, "Component", increase_decrease_amount)
+        self._update_item_stock_level(
+            component_id, "Component", increase_decrease_amount
+        )
 
 
     def view_components_of_product(self, product_id):
         """
-        Returns a list of the components that are used to create a product, as well as the quantity of each.
-        Each component and quantity is stored as a tuple, e.g. the entire list will look like [(2, 1), (0, 2), (7, 1)]
-        The first element of a tuple is the component ID and the second element is the quantity used in the product
+        Returns a list of the components that are used to create a product, as well as
+        the quantity of each. Each component and quantity is stored as a tuple, e.g. the
+        entire list will look like [(2, 1), (0, 2), (7, 1)]. The first element of a
+        tuple is the component ID and the second element is the quantity used in the
+        product
         """
         query = """SELECT component_id, num_components_used
                    FROM MadeUsing
@@ -336,7 +428,9 @@ class DatabaseManager:
 
     def view_component_name_from_id(self, component_id):
         """Gets the name of the component which has the given ID"""
-        return self.view_single_column_from_single_table_with_where_clause("name", "Component", "component_id", component_id)
+        return self.view_single_column_from_single_table_with_where_clause(
+            "name", "Component", "component_id", component_id
+        )
 
     def delete_product(self, product_id):
         sql = f"""DELETE FROM Product
@@ -352,8 +446,9 @@ class DatabaseManager:
 
     def validate_table_name(self, table_name_to_validate):
         """
-        Validates a table name by checking against a whitelist of actual table names. This is
-        necessary as sqlite3 only offers functionality to check column values, not table names.
+        Validates a table name by checking against a whitelist of actual table names.
+        This is necessary as sqlite3 only offers functionality to check column values,
+        not table names.
         """
         table_names = self._get_all_table_names()
 
@@ -362,18 +457,23 @@ class DatabaseManager:
 
     def validate_column_names(self, column_names_to_validate):
         """
-        Validates each column name in the list by checking against a whitelist of actual column names. This is
-        necessary as sqlite3 only offers functionality to check column values, not column names.
+        Validates each column name in the list by checking against a whitelist of actual
+        column names. This is necessary as sqlite3 only offers functionality to check
+        column values, not column names.
         """
         table_names = self._get_all_table_names()
         all_column_names = []
 
         for table_name in table_names:
-            cols_in_table = self.execute_query_and_list_results(f"PRAGMA table_info({table_name})", single_column_index=1)
+            cols_in_table = self.execute_query_and_list_results(
+                f"PRAGMA table_info({table_name})", single_column_index=1
+            )
             all_column_names.extend(cols_in_table)
 
         #checks if all the column_names_to_validate are in all_column_names
-        bad_column_names = [col for col in column_names_to_validate if col not in all_column_names]
+        bad_column_names = [
+            col for col in column_names_to_validate if col not in all_column_names
+        ]
         if len(bad_column_names) > 0:
             raise sqlite3.DataError(f"Column name(s) not valid: {bad_column_names}")
 
@@ -384,7 +484,12 @@ class DatabaseManager:
 
         return table_names
 
-    def execute_query_and_list_results(self, query, parameters=(), single_column_index=False):
+    def execute_query_and_list_results(
+        self,
+        query,
+        parameters=(),
+        single_column_index=False
+    ):
         """
         Executes a query and returns the results as a list. If a single_column_index is
         provided, only the values from that column will be added to the list.

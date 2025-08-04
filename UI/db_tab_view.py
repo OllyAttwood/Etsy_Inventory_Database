@@ -22,7 +22,9 @@ class DBTabView(customtkinter.CTkTabview):
         self.view_items_frame = self.create_view_items_frame()
         self.add_new_item_frame = self.create_add_new_item_frame()
         self.low_stock_frame = self.create_low_stock_frame()
-        self.tab_frames = (self.view_items_frame, self.add_new_item_frame, self.low_stock_frame)
+        self.tab_frames = (
+            self.view_items_frame, self.add_new_item_frame, self.low_stock_frame
+        )
 
         for i, frame in enumerate(self.tab_frames):
             self.display_frame_in_grid(frame)
@@ -31,13 +33,24 @@ class DBTabView(customtkinter.CTkTabview):
             self.tab(self.TAB_NAMES[i]).grid_columnconfigure(0, weight=1)
 
     def create_view_items_frame(self):
-        return ViewItemsFrame(master=self.tab(self.TAB_NAMES[self.VIEW_ITEMS_FRAME_INDEX]), presenter=self.presenter, tab_view=self)
+        return ViewItemsFrame(
+            master=self.tab(self.TAB_NAMES[self.VIEW_ITEMS_FRAME_INDEX]),
+            presenter=self.presenter,
+            tab_view=self
+        )
 
     def create_add_new_item_frame(self):
-        return AddNewItemFrame(master=self.tab(self.TAB_NAMES[self.ADD_NEW_ITEM_FRAME_INDEX]), presenter=self.presenter, tab_view=self)
+        return AddNewItemFrame(
+            master=self.tab(self.TAB_NAMES[self.ADD_NEW_ITEM_FRAME_INDEX]),
+            presenter=self.presenter,
+            tab_view=self
+        )
 
     def create_low_stock_frame(self):
-        return LowStockFrame(master=self.tab(self.TAB_NAMES[self.LOW_STOCK_FRAME_INDEX]), presenter=self.presenter)
+        return LowStockFrame(
+            master=self.tab(self.TAB_NAMES[self.LOW_STOCK_FRAME_INDEX]),
+            presenter=self.presenter
+        )
 
     def display_frame_in_grid(self, frame):
         """Displays the given frame"""
@@ -72,9 +85,9 @@ class DBTabView(customtkinter.CTkTabview):
 
     def reload_all_frames(self, display_components_in_view_items_frame=False):
         """
-        Refreshes the UI with updated values. display_components_in_view_items_frame controls
-        whether the components should be initially displayed in the ViewItemsFrame (e.g. immediately
-        after updating the stock level of a component)
+        Refreshes the UI with updated values. display_components_in_view_items_frame
+        controls whether the components should be initially displayed in the
+        ViewItemsFrame (e.g. immediately after updating the stock level of a component)
         """
         self._reload_view_items_frame(display_components_in_view_items_frame)
         self._reload_add_new_item_frame()

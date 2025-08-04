@@ -1,8 +1,11 @@
 import customtkinter
 
 class SmallPopup(customtkinter.CTkToplevel):
-    """A class for other classes to inherit, which want to be small pop-up windows, locked at the front of the program."""
-    
+    """
+    A class for other classes to inherit, which want to be small pop-up windows, locked
+    at the front of the program.
+    """
+
     def __init__(self):
         super().__init__()
 

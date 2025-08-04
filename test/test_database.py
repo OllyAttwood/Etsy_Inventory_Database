@@ -74,7 +74,9 @@ def test_insert_new_product(db):
 
     product_row = db.view_filtered_products()["data"][0]
     retrieved_component_ids_and_quantities = db.view_components_of_product(1)
-    retrieved_component_quantities = [id_and_quantity[1] for id_and_quantity in retrieved_component_ids_and_quantities]
+    retrieved_component_quantities = [
+        id_and_quantity[1] for id_and_quantity in retrieved_component_ids_and_quantities
+    ]
 
     assert product_name == product_row[1]
     assert product_prequisite_dict["colour"] == product_row[2]
@@ -122,7 +124,8 @@ def test_view_low_stock_items(db):
     product1_name = "Product1Name"
     product2_name = "Product2Name"
     product1_prequisite_dict = _setup_product_prerequisites(db)
-    product2_prequisite_dict = product1_prequisite_dict.copy() # needed so that stock level can be adjusted for only product2
+    # copy needed so that stock level can be adjusted for only product2
+    product2_prequisite_dict = product1_prequisite_dict.copy()
     product2_prequisite_dict["stock"] = 1
     _insert_new_product(product1_name, db, product1_prequisite_dict)
     _insert_new_product(product2_name, db, product2_prequisite_dict)
@@ -162,7 +165,9 @@ def test_update_component_stock_level(db):
     component_rows = db.view_filtered_components()["data"]
 
     assert component_rows[0][2] == product_prequisite_dict["component1_stock"]
-    assert component_rows[1][2] == (product_prequisite_dict["component2_stock"] + stock_change_amount)
+    assert component_rows[1][2] == (
+        product_prequisite_dict["component2_stock"] + stock_change_amount
+    )
 
 def test_delete_product(db):
     """Tests the delete_product() function"""
@@ -190,7 +195,10 @@ def test_delete_component(db):
     assert len(component_rows) == 1
     assert component_rows[0][1] == product_prequisite_dict["component1_name"]
 
-@pytest.mark.parametrize("valid_table_name", ["Design", "ProductType", "Product", "Component", "MadeUsing"])
+@pytest.mark.parametrize(
+    "valid_table_name",
+    ["Design", "ProductType", "Product", "Component", "MadeUsing"]
+)
 def test_validate_table_name_with_valid_name(db, valid_table_name):
     """Tests the validate_table_name() function by testing it with valid table names"""
     db.validate_table_name(valid_table_name)
@@ -224,8 +232,9 @@ def test_get_all_table_names(db):
 
 def _setup_product_prerequisites(database):
     """
-    Helper function to prepare the database for inserting products by inserting the prerequisite entries in the other tables.
-    Returns a dictionary with the inserted values so that the test functions can check for correct database functionality.
+    Helper function to prepare the database for inserting products by inserting the
+    prerequisite entries in the other tables. Returns a dictionary with the inserted
+    values so that the test functions can check for correct database functionality.
     """
     design_name = "DesignName"
     design_theme = "DesignTheme"
@@ -270,9 +279,9 @@ def _setup_product_prerequisites(database):
 
 def _insert_new_product(product_name, database, product_prequisite_dict):
     """
-    Inserts a new product row into the database with the given name and other fields obtained
-    from product_prequisite_dict - therefore all products inserted using this funtion are identical
-    other than their names and IDs.
+    Inserts a new product row into the database with the given name and other fields
+    obtained from product_prequisite_dict - therefore all products inserted using this
+    funtion are identical other than their names and IDs.
     """
     database.insert_new_product(
         product_name,
@@ -282,7 +291,13 @@ def _insert_new_product(product_name, database, product_prequisite_dict):
         product_prequisite_dict["stock"],
         product_prequisite_dict["low_stock"],
         [
-            (product_prequisite_dict["component1_name"], product_prequisite_dict["component1_quantity"]),
-            (product_prequisite_dict["component2_name"], product_prequisite_dict["component2_quantity"])
+            (
+                product_prequisite_dict["component1_name"],
+                product_prequisite_dict["component1_quantity"]
+            ),
+            (
+                product_prequisite_dict["component2_name"],
+                product_prequisite_dict["component2_quantity"]
+            )
         ]
     )

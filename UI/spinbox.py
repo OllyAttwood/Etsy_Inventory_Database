@@ -13,7 +13,8 @@ class Spinbox(customtkinter.CTkFrame):
                  step_size: int = 1,
                  command: Callable = None,
                  initial_value=0,
-                 **kwargs):
+                 **kwargs
+    ):
         super().__init__(*args, width=width, height=height, **kwargs)
 
         self.step_size = step_size
@@ -24,16 +25,32 @@ class Spinbox(customtkinter.CTkFrame):
         self.grid_columnconfigure(1, weight=1)  # entry expands
 
         subtract_text = "-"
-        self.subtract_button = customtkinter.CTkButton(self, text=subtract_text, width=height-6, height=height-6,
-                                                       command=lambda: self.button_callback(subtract_text))
+        self.subtract_button = customtkinter.CTkButton(
+            self,
+            text=subtract_text,
+            width=height-6,
+            height=height-6,
+            command=lambda: self.button_callback(subtract_text)
+        )
         self.subtract_button.grid(row=0, column=0, padx=(3, 0), pady=3)
 
-        self.entry = customtkinter.CTkEntry(self, width=width-(2*height), height=height-6, border_width=0, justify="center")
+        self.entry = customtkinter.CTkEntry(
+            self,
+            width=width-(2*height),
+            height=height-6,
+            border_width=0,
+            justify="center"
+        )
         self.entry.grid(row=0, column=1, columnspan=1, padx=3, pady=3, sticky="ew")
 
         add_text = "+"
-        self.add_button = customtkinter.CTkButton(self, text=add_text, width=height-6, height=height-6,
-                                                  command=lambda: self.button_callback(add_text))
+        self.add_button = customtkinter.CTkButton(
+            self,
+            text=add_text,
+            width=height-6,
+            height=height-6,
+            command=lambda: self.button_callback(add_text)
+        )
         self.add_button.grid(row=0, column=2, padx=(0, 3), pady=3)
 
         # default value

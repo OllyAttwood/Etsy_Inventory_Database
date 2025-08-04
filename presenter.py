@@ -18,22 +18,36 @@ class Presenter:
         self.db_manager = DatabaseManager()
 
     def get_filtered_items(self, filters_dict=None):
-        """Get the products according to the provided filters, and tidy up the column names"""
+        """
+        Get the products according to the provided filters, and tidy up the column names
+        """
         if filters_dict is None: #no filters applied initially
             filtered_items = self.db_manager.view_filtered_products()
         elif filters_dict[Presenter.ITEM_TYPE] == Presenter.PRODUCT:
-            filtered_items = self.db_manager.view_filtered_products(filters_dict[Presenter.NAME], filters_dict[Presenter.DESIGN],
-                                                                    filters_dict[Presenter.THEME], filters_dict[Presenter.TYPE],
-                                                                    filters_dict[Presenter.SUB_TYPE], filters_dict[Presenter.COLOUR])
+            filtered_items = self.db_manager.view_filtered_products(
+                filters_dict[Presenter.NAME],
+                filters_dict[Presenter.DESIGN],
+                filters_dict[Presenter.THEME],
+                filters_dict[Presenter.TYPE],
+                filters_dict[Presenter.SUB_TYPE],
+                filters_dict[Presenter.COLOUR]
+            )
         elif filters_dict[Presenter.ITEM_TYPE] == Presenter.COMPONENT:
-            filtered_items = self.db_manager.view_filtered_components(filters_dict[Presenter.NAME])
+            filtered_items = self.db_manager.view_filtered_components(
+                filters_dict[Presenter.NAME]
+            )
 
-        filtered_items[Presenter.COLUMN_NAMES] = self.process_column_names(filtered_items[Presenter.COLUMN_NAMES])
+        filtered_items[Presenter.COLUMN_NAMES] = self.process_column_names(
+            filtered_items[Presenter.COLUMN_NAMES]
+        )
 
         return filtered_items
 
     def process_column_names(self, column_names):
-        """Converts the raw database column names into more human-friendly ones e.g. 'product_id' -> 'Product ID' """
+        """
+        Converts the raw database column names into more human-friendly ones
+        e.g. 'product_id' -> 'Product ID'
+        """
         processed_column_names = []
 
         for column_name in column_names:
@@ -67,7 +81,9 @@ class Presenter:
 
     def get_low_stock_items(self, products=True, components=True):
         low_stock_items = self.db_manager.view_low_stock_items(products, components)
-        low_stock_items[Presenter.COLUMN_NAMES] = self.process_column_names(low_stock_items[Presenter.COLUMN_NAMES])
+        low_stock_items[Presenter.COLUMN_NAMES] = self.process_column_names(
+            low_stock_items[Presenter.COLUMN_NAMES]
+        )
 
         return low_stock_items
 
@@ -83,41 +99,64 @@ class Presenter:
         """Saves a new component into the database"""
         self.db_manager.insert_new_component(name, stock, low_stock_warning)
 
-    def save_new_product(self, name, design, colour, product_type, stock, low_stock_warning, components):
+    def save_new_product(
+        self,
+        name,
+        design,
+        colour,
+        product_type,
+        stock,
+        low_stock_warning,
+        components
+    ):
         """Saves a new product into the database"""
-        self.db_manager.insert_new_product(name, design, colour, product_type, stock, low_stock_warning, components)
+        self.db_manager.insert_new_product(
+            name, design, colour, product_type, stock, low_stock_warning, components
+        )
 
     def update_product_stock_level(self, product_id, increase_decrease_amount):
         """
-        Increases or decreases the stock level of the given product by the sepcified amount,
-        e.g. if the current stock level is 5 and increase_decrease_amount is -1, then the new
-        stock level will be 4.
+        Increases or decreases the stock level of the given product by the sepcified
+        amount, e.g. if the current stock level is 5 and increase_decrease_amount is -1,
+        then the new stock level will be 4.
         """
         self.db_manager.update_product_stock_level(product_id, increase_decrease_amount)
 
     def update_component_stock_level(self, component_id, increase_decrease_amount):
         """
-        Increases or decreases the stock level of the given component by the sepcified amount,
-        e.g. if the current stock level is 5 and increase_decrease_amount is -1, then the new
-        stock level will be 4.
+        Increases or decreases the stock level of the given component by the sepcified
+        amount, e.g. if the current stock level is 5 and increase_decrease_amount is -1,
+        then the new stock level will be 4.
         """
-        self.db_manager.update_component_stock_level(component_id, increase_decrease_amount)
+        self.db_manager.update_component_stock_level(
+            component_id, increase_decrease_amount
+        )
 
-    def update_product_stock_level_and_its_components_stock_levels(self, product_id, product_stock_level_change):
-        """Does the same thing as update_product_stock_level() but also updates the stock levels of the components used to make the product"""
+    def update_product_stock_level_and_its_components_stock_levels(
+        self,
+        product_id,
+        product_stock_level_change
+    ):
+        """
+        Does the same thing as update_product_stock_level() but also updates the stock
+        levels of the components used to make the product
+        """
         components_and_quantities = self.get_components_of_product(product_id)
         # reduce the stock level of each component that is used to make the product
         for component_id, component_quantity in components_and_quantities:
             component_update_amount = product_stock_level_change * component_quantity
             self.update_component_stock_level(component_id, component_update_amount)
 
-        self.update_product_stock_level(product_id, product_stock_level_change) # update product stock
+        # update product stock
+        self.update_product_stock_level(product_id, product_stock_level_change)
 
     def get_components_of_product(self, product_id):
         """
-        Returns a list of the components that are used to create a product, as well as the quantity of each.
-        Each component and quantity is stored as a tuple, e.g. the entire list will look like [(2, 1), (0, 2), (7, 1)]
-        The first element of a tuple is the component ID and the second element is the quantity used in the product
+        Returns a list of the components that are used to create a product, as well as
+        the quantity of each. Each component and quantity is stored as a tuple, e.g. the
+        entire list will look like [(2, 1), (0, 2), (7, 1)]. The first element of a
+        tuple is the component ID and the second element is the quantity used in the
+        product
         """
         return self.db_manager.view_components_of_product(product_id)
 
