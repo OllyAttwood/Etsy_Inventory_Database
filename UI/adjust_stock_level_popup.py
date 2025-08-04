@@ -71,6 +71,8 @@ class AdjustStockLevelPopup(SmallPopup):
                 self.presenter.update_component_stock_level(self.item_id, stock_level_change)
                 # reloads UI to show new values
                 self.tab_view.reload_all_frames(display_components_in_view_items_frame=True)
+
+            self.show_confirm_messagebox(self.item_type)
         elif stock_level_change < 0:
             if self.item_type == "Product":
                 # ask user if they want to automatically reduce the stock level of the
@@ -80,22 +82,17 @@ class AdjustStockLevelPopup(SmallPopup):
                     self.item_type,
                     stock_level_change,
                     self.presenter,
-                    self.tab_view
+                    self.tab_view,
+                    self.show_confirm_messagebox
                 )
             elif self.item_type == "Component":
                 # increase stock
                 self.presenter.update_component_stock_level(self.item_id, stock_level_change)
                 # reloads UI to show new values
                 self.tab_view.reload_all_frames(display_components_in_view_items_frame=True)
-
-        if stock_level_change != 0:
-            MessageBox(
-                "Stock Level Updated",
-                f"Successfully updated the {self.item_type.lower()}'s stock level!"
-            )
+                self.show_confirm_messagebox(self.item_type)
 
         # if stock_level_change == 0 then do nothing other than close the window
-
         self.close_window()
 
     def validate_inputs(self):
@@ -104,12 +101,27 @@ class AdjustStockLevelPopup(SmallPopup):
 
         return spinbox_value is not None
 
+    def show_confirm_messagebox(self, item_type):
+        """Displays a popup to confirm the item's stock level has been updated"""
+        MessageBox(
+            "Stock Level Updated",
+            f"Successfully updated the {self.item_type.lower()}'s stock level!"
+        )
+
 class ReduceComponentStockLevelPopup(SmallPopup):
     """
     This window asks the user if they also want to reduce the stock levels of the
     components that the item is made with
     """
-    def __init__(self, item_id, item_type, stock_level_change, presenter, tab_view):
+    def __init__(
+        self,
+        item_id,
+        item_type,
+        stock_level_change,
+        presenter,
+        tab_view,
+        confirm_delete_popup_func
+    ):
         super().__init__()
         self.title("Reduce Component Stock Levels?")
         self.geometry("300x150")
@@ -119,6 +131,7 @@ class ReduceComponentStockLevelPopup(SmallPopup):
         self.stock_level_change = stock_level_change
         self.presenter = presenter
         self.tab_view = tab_view
+        self.confirm_delete_popup_func =  confirm_delete_popup_func
 
         # widgets
         # frame to keep all widgets in centre without stretching them
@@ -164,6 +177,7 @@ class ReduceComponentStockLevelPopup(SmallPopup):
             )
         self.release_focus_and_hide()
         self.tab_view.reload_all_frames() # reloads UI to show new values
+        self.confirm_delete_popup_func(self.item_type)
 
     def on_yes_button_click(self):
         """
@@ -175,3 +189,4 @@ class ReduceComponentStockLevelPopup(SmallPopup):
         )
         self.release_focus_and_hide()
         self.tab_view.reload_all_frames() # reloads UI to show new values
+        self.confirm_delete_popup_func(self.item_type)
