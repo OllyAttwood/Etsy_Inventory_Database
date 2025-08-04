@@ -22,9 +22,9 @@ class DBTabView(customtkinter.CTkTabview):
         self.view_items_frame = self.create_view_items_frame()
         self.add_new_item_frame = self.create_add_new_item_frame()
         self.low_stock_frame = self.create_low_stock_frame()
-        self.tab_frames = (
+        self.tab_frames = [
             self.view_items_frame, self.add_new_item_frame, self.low_stock_frame
-        )
+        ]
 
         for i, frame in enumerate(self.tab_frames):
             self.display_frame_in_grid(frame)
@@ -61,6 +61,7 @@ class DBTabView(customtkinter.CTkTabview):
         frame = self.tab_frames[tab_num]
         frame.destroy()
         self.display_frame_in_grid(replacement_frame)
+        self.tab_frames[tab_num] = replacement_frame
 
     def _reload_view_items_frame(self, display_components):
         """
