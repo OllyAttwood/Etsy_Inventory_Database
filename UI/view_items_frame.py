@@ -43,7 +43,8 @@ class ViewItemsFrame(customtkinter.CTkFrame):
         sub_type_options = self.presenter.get_product_sub_types()
         colour_options =  self.presenter.get_product_colours()
 
-        self.filter_bar = FilterBarFrame(self,
+        self.filter_bar = FilterBarFrame(
+            self,
             design_options,
             theme_options,
             type_options,
