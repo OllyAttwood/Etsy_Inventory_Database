@@ -2,6 +2,7 @@ import customtkinter
 from UI.view_items_frame import ViewItemsFrame
 from UI.add_new_item_frame import AddNewItemFrame
 from UI.low_stock_frame import LowStockFrame
+from UI.splash import Splash
 
 class DBTabView(customtkinter.CTkTabview):
     """The main view which controls which of the main frames is being displayed"""
@@ -14,6 +15,8 @@ class DBTabView(customtkinter.CTkTabview):
         super().__init__(master, border_width=3, **kwargs)
 
         self.presenter = presenter
+
+        splash_screen = Splash(self, program_startup=True)
 
         for tab_name in DBTabView.TAB_NAMES:
             self.add(tab_name)
@@ -31,6 +34,8 @@ class DBTabView(customtkinter.CTkTabview):
             #configure grid weights so that the frame covers the whole area
             self.tab(self.TAB_NAMES[i]).grid_rowconfigure(0, weight=1)
             self.tab(self.TAB_NAMES[i]).grid_columnconfigure(0, weight=1)
+
+        splash_screen.destroy()
 
     def create_view_items_frame(self):
         return ViewItemsFrame(
@@ -90,6 +95,10 @@ class DBTabView(customtkinter.CTkTabview):
         controls whether the components should be initially displayed in the
         ViewItemsFrame (e.g. immediately after updating the stock level of a component)
         """
+        splash = Splash(self)
+
         self._reload_view_items_frame(display_components_in_view_items_frame)
         self._reload_add_new_item_frame()
         self._reload_low_stock_frame()
+
+        splash.destroy()
