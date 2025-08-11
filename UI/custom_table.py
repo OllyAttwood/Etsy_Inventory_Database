@@ -33,6 +33,7 @@ class CustomTable(customtkinter.CTkScrollableFrame):
         self.on_row_select_callback = on_row_select_callback
         self.font = (None, font_size)
         self.cell_hover_colour = cell_hover_colour
+        self.header_colour = header_colour
         self.data_colour = data_colour
         self.selected_row_colour = selected_row_colour
         self.selected_row = None
@@ -46,33 +47,7 @@ class CustomTable(customtkinter.CTkScrollableFrame):
         self.check_is_data_correct_shape()
 
         # display table
-        for row_num, row in enumerate(self.combined_data):
-            for col_num, cell_text in enumerate(row):
-                cell_width = self.column_widths[col_num]
-                # a CTkEntry widget is used despite not needing text input functionality
-                # because it is easier to achieve the appearance of a table cell with a
-                # CTkEntry widget
-                cell = customtkinter.CTkEntry(
-                    centre_frame,
-                    textvariable=StringVar(self, cell_text),
-                    font=self.font,
-                    state="disabled",
-                    fg_color=data_colour,
-                    width=cell_width
-                )
-                cell.grid(row=row_num, column=col_num)
-
-                # header row
-                if row_num == 0:
-                    cell.configure(fg_color=header_colour)
-                # data rows
-                else:
-                    # hover bindings
-                    cell.bind("<Enter>", self.on_mouse_enter_cell)
-                    cell.bind("<Leave>", self.on_mouse_leave_cell)
-                    cell.bind("<Motion>", self.on_mouse_motion)
-                    #click binding
-                    cell.bind("<Button-1>", self.click_row)
+        self.add_cells(centre_frame)
 
         # bindings for scrolling, as mouse wheel scrolling doesn't work in linux
         # see https://github.com/TomSchimansky/CustomTkinter/issues/1356
@@ -84,6 +59,50 @@ class CustomTable(customtkinter.CTkScrollableFrame):
         self.bind_widget_and_children(
             self, "<Button-5>", lambda e: self.scroll_table(self.SCROLL_DOWN)
         )
+
+    def add_cells(self, frame, row_num=0, col_num=0):
+        """
+        This function recursively adds all the cell widgets to the table. It has to be
+        implemented like this rather than a standard loop as otherwise when loading a
+        non-small table, the main thread will become blocked (and the display frozen)
+        until the UI is completely loaded. The recursive call is scheduled to run after
+        a millisecond - this is what frees up the main thread so it remains responsive.
+        """
+        if col_num >= len(self.combined_data[row_num]):
+            col_num = 0
+            row_num += 1
+
+        if row_num >= len(self.combined_data):
+            return
+
+        cell_text = self.combined_data[row_num][col_num]
+        cell_width = self.column_widths[col_num]
+        # a CTkEntry widget is used despite not needing text input functionality
+        # because it is easier to achieve the appearance of a table cell with a
+        # CTkEntry widget
+        cell = customtkinter.CTkEntry(
+            frame,
+            textvariable=StringVar(self, cell_text),
+            font=self.font,
+            state="disabled",
+            fg_color=self.data_colour,
+            width=cell_width
+        )
+        cell.grid(row=row_num, column=col_num)
+
+        # header row
+        if row_num == 0:
+            cell.configure(fg_color=self.header_colour)
+        # data rows
+        else:
+            # hover bindings
+            cell.bind("<Enter>", self.on_mouse_enter_cell)
+            cell.bind("<Leave>", self.on_mouse_leave_cell)
+            cell.bind("<Motion>", self.on_mouse_motion)
+            #click binding
+            cell.bind("<Button-1>", self.click_row)
+
+        self.after(1, lambda: self.add_cells(frame, row_num, col_num+1))
 
     def check_is_data_correct_shape(self):
         """Checks the data and the column headers are compatible shapes and consistent"""
