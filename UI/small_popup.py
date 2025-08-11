@@ -27,3 +27,16 @@ class SmallPopup(customtkinter.CTkToplevel):
         """Makes main window unclickable until popup is closed"""
         self.wait_visibility() # https://raspberrypi.stackexchange.com/a/105522
         self.grab_set()
+
+    def centre_popup(self):
+        """Position the popup in the centre of the screen"""
+        # force UI to fully update before the dimensions are calculated
+        self.update_idletasks()
+
+        width = self.winfo_width()
+        height = self.winfo_height()
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        x = int((screen_width / 2) - (width / 2))
+        y = int((screen_height / 2) - (height / 2))
+        self.geometry(f"{width}x{height}+{x}+{y}")

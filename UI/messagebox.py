@@ -21,3 +21,5 @@ class MessageBox(SmallPopup):
             self, text="OK", command=self.release_focus_and_hide
         )
         ok_button.grid(row=1, column=0)
+
+        self.centre_popup() # position in centre

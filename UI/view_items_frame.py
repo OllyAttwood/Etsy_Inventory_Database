@@ -224,6 +224,8 @@ class ViewProductsComponentsPopup(SmallPopup):
         table = CustomTable(self, table_data, ["Component Name", "Quantity"])
         table.grid(row=0, column=0, sticky="nsew")
 
+        self.centre_popup() # position in centre
+
 class ConfirmItemDeletePopup(SmallPopup):
     """
     A pop-up to confirm the user wants to delete the item - also refreshes the UI
@@ -269,6 +271,8 @@ class ConfirmItemDeletePopup(SmallPopup):
         no_button.grid(
             row=0, column=1, padx=config.WIDGET_X_PADDING, pady=config.WIDGET_Y_PADDING
         )
+
+        self.centre_popup() # position in centre
 
     def on_yes_button_click(self):
         """Deletes the item from the database"""

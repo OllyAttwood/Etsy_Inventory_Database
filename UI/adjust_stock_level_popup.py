@@ -39,6 +39,8 @@ class AdjustStockLevelPopup(SmallPopup):
         )
         ok_button.grid(row=2, column=0, pady=config.WIDGET_Y_PADDING)
 
+        self.centre_popup() # position in centre
+
     def close_window(self):
         """
         Closes the window and releases the focus (as the pop-up initially takes the
@@ -157,6 +159,8 @@ class ReduceComponentStockLevelPopup(SmallPopup):
             central_frame, text="No", command=self.on_no_button_click
         )
         no_button.grid(row=1, column=1)
+
+        self.centre_popup() # position in centre
 
     def lock_at_front(self):
         """Make main window unclickable until pop-up is closed"""

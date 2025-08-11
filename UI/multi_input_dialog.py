@@ -33,6 +33,8 @@ class MultiInputDialog(SmallPopup):
 
         self.display_widgets(input_field_names, dropdown_menu_options_list)
 
+        self.centre_popup() # position in centre
+
     def display_widgets(self, input_field_names, dropdown_menu_options_list):
         # loops through and creates a label/entry (or label/dropdown) pair of widgets
         # for each required input
